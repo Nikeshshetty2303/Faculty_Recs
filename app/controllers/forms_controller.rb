@@ -11,6 +11,7 @@ class FormsController < ApplicationController
 def create_response
   @form = Form.find(params[:id])
   @response = Response.new
+  @response.form_id = @form.id
   @questions = @form.questions
   answers_attributes = params.dig(:response, :answers_attributes)
   @response.user_id = @form.user_id
@@ -101,10 +102,11 @@ end
 
   # DELETE /forms/1 or /forms/1.json
   def destroy
+    @user_id =@form.user_id
     @form.destroy
 
     respond_to do |format|
-      format.html { redirect_to forms_url, notice: "Form was successfully destroyed." }
+      format.html { redirect_to home_index_path(userid: @user_id), notice: "Form was successfully destroyed." }
       format.json { head :no_content }
     end
   end

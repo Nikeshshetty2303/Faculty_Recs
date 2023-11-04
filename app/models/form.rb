@@ -1,7 +1,8 @@
 class Form < ApplicationRecord
   has_many :questions
+  has_many :responses
   belongs_to :user
-  
+
   def apply_template(template_form_id)
     template_form = Form.find_by(id: template_form_id)
     if template_form

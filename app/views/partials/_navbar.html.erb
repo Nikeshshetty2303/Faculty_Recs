@@ -23,7 +23,7 @@
                 </a>
                 <div class="navbar-nav col-lg-6 justify-content-lg-center" id="nav_grid_2">
                     <div class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <%= link_to 'Home', home_index_path(userid: @user.id), class:"nav-link" %>
                     </div>
                     <div class="nav-item">
                         <a class="nav-link" href="../credit_answers/new">About Us</a>
@@ -34,11 +34,11 @@
 
                     <% if user.adminrole == true %>
                     <div class="nav-item">
-                        <%= link_to 'Admin Portal', forms_path(userid: current_user.id), class:"nav-link" %>
+                        <%= link_to 'Admin Portal', forms_path(userid: @user.id), class:"nav-link" %>
                     </div>
                     <% end %>
                     <div class="nav-item">
-                        <a class="nav-link" href="#">Profile</a>
+                        <%= link_to 'Edit Profile', edit_user_registration_path, class:"nav-link" %>
                     </div>
                         <button class="btn btn-danger" id='log_out_mb'><%= link_to 'LogOut',destroy_user_session_path,method: :delete, class:"dropdown-item profile-dropdown", id:"log-out" %></button>
                     </div>

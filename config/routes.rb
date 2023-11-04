@@ -8,11 +8,21 @@ Rails.application.routes.draw do
   resources :questions
   resources :homes
 
+  resources :questions, only: %i[edit update]
+
   resources :forms do
   get 'submit_form', on: :member
   post 'create_response', on: :member
   post 'submit_form', on: :member
   end
+
+  resources :responses do
+  member do
+    get 'display'
+    get 'print'
+    get 'displaypdf'
+  end
+end
 
   devise_scope :user do
   root to: "devise/sessions#new"
@@ -23,4 +33,5 @@ Rails.application.routes.draw do
   end
 
    get 'home/index'
+   post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
 end

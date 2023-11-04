@@ -3,9 +3,31 @@ class ResponsesController < ApplicationController
 
   # GET /responses or /responses.json
   def index
-    @responses = Response.all
+    @form = Form.find(params[:id])
+    @user = User.find(params[:userid])
+    @responses = Response.where(form_id: @form.id)
   end
 
+  def display
+    @response = Response.find(params[:id])
+    @user = User.find(params[:userid])
+  end
+
+  def print
+    @response = Response.find(params[:id])
+    @user = User.find(params[:userid])
+    respond_to do |format|
+        format.html
+        format.pdf do
+          render pdf: 'Response Pdf', # file name
+                 template: 'responses/displaypdf.html.erb',
+                 layout: 'layouts/pdf.html.erb', # optional, use 'pdf.html' for a simple layout
+                 disposition: 'inline',
+                 locals: { response: @response, user: @user },
+                margin: { top: 0, bottom: 0, left: 0, right: 0 } # 'attachment' to download, 'inline' to display in the browser
+        end
+      end
+  end
   # GET /responses/1 or /responses/1.json
   def show
   end

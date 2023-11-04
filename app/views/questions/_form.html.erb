@@ -1,10 +1,10 @@
 <%= form_with(model: form, local: true) do |form| %>
-  <div>
+  <div class="child1">
     <%= form.label :title, style: "display: block" %>
     <%= form.text_field :title %>
   </div>
-
-  <div>
+<div class="child-second">
+  <div class="child2">
     <%= form.label :question_type_id, style: "display: block" %>
     <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), prompt: "Type of Question", class: "form-select" %>
   </div>
@@ -19,8 +19,10 @@
 
   <%= form.hidden_field :form_id, value: form.object.form_id %>
 
-  <div>
-    <%= form.submit %>
+  <div class="child3">
+    <%= form.submit class:"btn btn-primary" %>
+  </div>
+
   </div>
 <% end %>
 

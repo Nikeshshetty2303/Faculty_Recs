@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :set_question, only: %i[ show edit update destroy ]
-
+  skip_before_action :verify_authenticity_token, only: [:edit]
   # GET /questions or /questions.json
   def index
     @questions = Question.all
@@ -19,7 +19,22 @@ class QuestionsController < ApplicationController
 
   # GET /questions/1/edit
   def edit
+    @question = Question.find(params[:id])
+    respond_to do |format|
+       format.js { render layout: false, content_type: 'text/javascript' }
+    end
   end
+
+def update
+  @question = Question.find(params[:id])
+  if @question.update(question_params)
+    respond_to do |format|
+      format.js
+    end
+  else
+    # Handle validation errors
+  end
+end
 
   # POST /questions or /questions.json
   def create

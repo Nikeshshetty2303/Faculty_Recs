@@ -1,4 +1,4 @@
-class CreateForms < ActiveRecord::Migration[7.0]
+class CreateForms < ActiveRecord::Migration[6.1]
   def change
     create_table :forms do |t|
       t.string :name

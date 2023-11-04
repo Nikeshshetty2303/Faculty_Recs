@@ -6,9 +6,8 @@
   <% @responses.each do |response| %>
     <%= render response %>
     <p>
-      <%= link_to "Show this response", response %>
+      <%= link_to "Show this response", display_response_path(id: response.id, userid: @user.id) %> |
+      <%= link_to "Print response", print_response_path(id: response.id, userid: @user.id, format: :pdf) %>
     </p>
   <% end %>
 </div>
-
-<%= link_to "New response", new_response_path %>

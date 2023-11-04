@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_04_050554) do
+ActiveRecord::Schema.define(version: 2023_11_04_201922) do
+
   create_table "answers", force: :cascade do |t|
     t.string "content"
     t.integer "question_id", null: false
     t.integer "response_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["response_id"], name: "index_answers_on_response_id"
   end
@@ -26,8 +27,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_04_050554) do
     t.string "role"
     t.integer "salary"
     t.string "dept"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.integer "template_form_id"
     t.integer "readtime"
     t.text "description"
@@ -37,28 +38,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_04_050554) do
 
   create_table "homes", force: :cascade do |t|
     t.string "index"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "options", force: :cascade do |t|
     t.string "title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.integer "question_id"
     t.index ["question_id"], name: "index_options_on_question_id"
   end
 
   create_table "question_types", force: :cascade do |t|
     t.string "title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "questions", force: :cascade do |t|
     t.string "title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.integer "form_id"
     t.integer "question_type_id"
     t.index ["form_id"], name: "index_questions_on_form_id"
@@ -67,9 +68,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_04_050554) do
 
   create_table "responses", force: :cascade do |t|
     t.string "title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
+    t.integer "form_id"
+    t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
   end
 
@@ -77,10 +80,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_04_050554) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "reset_password_sent_at", precision: 6
+    t.datetime "remember_created_at", precision: 6
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.boolean "adminrole"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
