@@ -8,6 +8,11 @@ class ResponsesController < ApplicationController
     @responses = Response.where(form_id: @form.id)
   end
 
+  def myresponse
+    @user = User.find(params[:id])
+    @responses = Response.where(user_id: @user.id)
+  end
+
   def display
     @response = Response.find(params[:id])
     @user = User.find(params[:userid])

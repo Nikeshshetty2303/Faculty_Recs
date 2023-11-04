@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     get 'display'
     get 'print'
     get 'displaypdf'
+    get 'myresponse'
   end
 end
 

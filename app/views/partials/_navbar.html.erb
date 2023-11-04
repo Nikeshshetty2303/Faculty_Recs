@@ -29,7 +29,7 @@
                         <a class="nav-link" href="../credit_answers/new">About Us</a>
                     </div>
                     <div class="nav-item">
-                        <a class="nav-link" href="#">My Applications</a>
+                        <%= link_to 'My Applications', myresponse_response_path(id: @user.id), class:"nav-link" %>
                     </div>
 
                     <% if user.adminrole == true %>
