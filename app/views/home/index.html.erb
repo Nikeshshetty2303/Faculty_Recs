@@ -1,0 +1,134 @@
+ <%= stylesheet_link_tag 'home' %>
+ <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+
+ <div class="container_home">
+     <div id='left'>
+       <%= image_tag 'Advertisement',width:'1050px'%>
+     </div>
+     <div id='right'>
+         <div id='announce'>
+             <div class="card">
+                 <div class="card-body">
+                     <div id="notification">
+                         <button class="btn btn-primary" id='attract' type="button" disabled>
+                             <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                             <span class="visually-hidden" role="status">Loading...</span>
+                         </button>
+                         <h5 class="card-title text-center h2 fw-bold">Notifications</h5>
+                     </div>
+                 </div>
+                 <ul class="list-group list-group-flush li_hover">
+                   <% Form.all.each do |form|%>
+                     <li class="list-group-item">
+                         <div class='announcement_element'>
+                             <small class='fs-sm'><%= form.created_at.strftime('%d/%m/%Y') %></small> | <small><%= form.readtime %> Min read</small>
+                             <p class='fw-bold'><%= link_to  form.name, submit_form_form_path(id: form.id), class:"news_link"%></p>
+                             <p class='font_size_15'><%= form.description %></p>
+                         </div>
+                     </li>
+                     <% end %>
+
+                 </ul>
+                 <div class="card-body">
+                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                     <button type="button" class="btn btn-primary btn-sm">All Notifications</button>
+                 </div>
+             </div>
+
+         </div>
+     </div>
+ </div>
+
+
+ <div class="card vis" id='updates_tab'>
+                 <div class="card-body">
+                     <div id="notification">
+                         <button class="btn btn-primary" id='attract' type="button" disabled>
+                             <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                             <span class="visually-hidden" role="status">Loading...</span>
+                         </button>
+                         <h5 class="card-title text-center h2 fw-bold">Notifications</h5>
+                     </div>
+                         <p class="card-text text-center text-body-secondary">Stay informed with our latest updates.</p>
+                 </div>
+                 <ul class="list-group list-group-flush li_hover">
+                     <li class="list-group-item">
+                         <div class='announcement_element'>
+                             <small class='fs-sm'>Date</small> | <small>1 Min read</small>
+                             <p class='fw-bold'><a class='news_link' href="#">Announcement element heading</a></p>
+                             <p class='font_size_15'>The new body goes here and very well explain the updates. Will redirect to some other page when clicked</p>
+                         </div>
+                     </li>
+                     <li class="list-group-item">
+                         <div class='announcement_element'>
+                             <small class='fs-sm'>Date</small> | <small>1 Min read</small>
+                             <p class='fw-bold'><a class='news_link' href="#">Announcement element heading fo the new</a></p>
+                             <p class='font_size_15'>The new body goes here and very well explain the updates. Will redirect to some other page when clicked</p>
+                         </div>
+                     </li>
+                     <li class="list-group-item">
+                         <div class='announcement_element'>
+                             <small class='fs-sm'>Date</small> | <small>1 Min read</small>
+                             <p class='fw-bold'><a class='news_link' href="#">Announcement element heading fo the new</a></p>
+                             <p class='font_size_15'>The new body goes here and very well explain the updates. Will redirect to some other page when clicked</p>
+                         </div>
+                     </li>
+                     <li class="list-group-item">
+                         <div class='announcement_element'>
+                             <small class='fs-sm'>Date</small> | <small>1 Min read</small>
+                             <p class='fw-bold'><a class='news_link' href="#">Announcement element heading fo the new</a></p>
+                             <p class='font_size_15'>The new body goes here and very well explain the updates. Will redirect to some other page when clicked</p>
+                         </div>
+                     </li>
+                     <li class="list-group-item">
+                         <div class='announcement_element'>
+                             <small class='fs-sm'>Date</small> | <small>1 Min read</small>
+                             <p class='fw-bold'><a class='news_link' href="#">Announcement element heading fo the new</a></p>
+                             <p class='font_size_15'>The new body goes here and very well explain the updates. Will redirect to some other page when clicked</p>
+                         </div>
+                     </li>
+                 </ul>
+                 <div class="card-body">
+                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                     <button type="button" class="btn btn-primary btn-sm">All Notifications</button>
+                 </div>
+             </div>
+
+
+
+
+
+ <script>//to truncate the text in the announcement section
+ function truncateParagraphs(elementSelector, maxLength) {
+   const elements = document.querySelectorAll(elementSelector);
+
+   if (elements.length === 0) {
+     console.error(`No elements found with selector '${elementSelector}'.`);
+     return;
+   }
+
+   elements.forEach(element => {
+     const text = element.textContent.trim();
+
+     if (text.length > maxLength) {
+       const truncatedText = text.slice(0, maxLength) + '...';
+       element.textContent = truncatedText;
+     }
+   });
+ }
+
+ // Usage
+ truncateParagraphs('.font_size_15', 75); // Truncate text inside elements with class 'font_size_15' to 50 characters
+ truncateParagraphs('.news_link', 30); // Truncate text inside elements with class 'new_link' to 50 characters
+
+
+ </script>
+
+ <script> //to toggle the updates tab in phone view
+     let updates = document.getElementById('updates');
+     let updates_tab = document.getElementById('updates_tab');
+
+     updates.addEventListener('click', function(){
+         updates_tab.classList.toggle('vis');
+     })
+ </script>

@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost&display=swap");
+
+.font-jost {
+    font-family: "Jost", sans-serif;
+}
+
+* {
+    margin: 0%;
+    padding: 0%;
+}
+
+#credits_container {
+    width: 70%;
+    margin: auto;
+}
+.tick_pic {
+    width: 100%;
+}
+.tick_div {
+    width: 25px;
+    margin-left: 15px
+}

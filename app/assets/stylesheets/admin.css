@@ -1,0 +1,27 @@
+.admin_container {
+    margin: auto;
+    width: 98%;
+}
+.admin_body {
+    display: flex;
+    flex-direction: row;
+    margin: auto 1em;
+    height: 80vh;
+}
+.left_a {
+    width: 30%;
+    height: 100%;
+}
+.middle_a {
+    width: 60%;
+    height: 100%;
+    margin: auto;
+}
+#center_a {
+    margin: auto;
+    width: 98%;
+}
+.new_ques {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,58 @@
+<%= form_with(model: form, local: true) do |form| %>
+  <div>
+    <%= form.label :title, style: "display: block" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :question_type_id, style: "display: block" %>
+    <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), prompt: "Type of Question", class: "form-select" %>
+  </div>
+
+  <div id="option-fields" style="display: none;">
+    <div id="options-container">
+      <!-- Options will be appended here dynamically -->
+    </div>
+    <button type="button" id="add-option">Add Option</button>
+  </div>
+
+
+  <%= form.hidden_field :form_id, value: form.object.form_id %>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const questionTypeSelect = document.getElementById("question_question_type_id");
+    const optionFields = document.getElementById("option-fields");
+    const optionsContainer = document.getElementById("options-container");
+    const addOptionButton = document.getElementById("add-option");
+    let optionCount = 1;
+
+    questionTypeSelect.addEventListener("change", function() {
+      if (questionTypeSelect.value == 2 || questionTypeSelect.value == 3) {
+        optionFields.style.display = "block";
+      } else {
+        optionFields.style.display = "none";
+      }
+    });
+
+    addOptionButton.addEventListener("click", function() {
+      const optionLabel = document.createElement("label");
+      optionLabel.innerText = "Option " + optionCount + " : ";
+      optionsContainer.appendChild(optionLabel);
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.name = "question[options_attributes][" + optionCount + "][title]";
+      input.placeholder = "Enter option";
+      optionsContainer.appendChild(input);
+
+      optionsContainer.appendChild(document.createElement("br")); // Line break for the next option
+      optionCount++;
+    });
+  });
+</script>

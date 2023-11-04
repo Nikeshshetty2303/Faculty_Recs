@@ -1,0 +1,44 @@
+<%= form_with(model: form) do |f| %>
+  <% if form.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(f.errors.count, "error") %> prohibited this answer from being saved:</h2>
+
+      <ul>
+        <% form.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, style: "display: block" %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :salary, style: "display: block" %>
+    <%= f.number_field :salary %>
+  </div>
+
+  <div>
+    <%= f.label :role, style: "display: block" %>
+    <%= f.text_field :role %>
+  </div>
+
+  <div>
+    <%= f.label :dept, style: "display: block" %>
+    <%= f.text_field :dept %>
+  </div>
+
+  <div>
+    <%= f.hidden_field :user_id, value: @user.id %>
+  </div>
+
+  <div>
+    <%= collection_select(:form, :template_form_id, Form.all, :id, :name, { prompt: "Select Template Form" }, { class: "form-select" }) %>
+  <div>
+
+    <%= f.submit %>
+  </div>
+<% end %>

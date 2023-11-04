@@ -1,0 +1,99 @@
+/* importing and defining the fonts */
+@import url('https://fonts.googleapis.com/css2?family=Jost&display=swap');
+.font-jost {
+  font-family: 'Jost', sans-serif;
+}
+
+.sizing{
+  height:30rem;
+}
+
+.colors{
+  background-color: transparent;
+}
+
+.whole {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* styling cards */
+.card{
+  display: absolute;
+  position: relative;
+  width:100%;
+  height: auto;
+}
+
+#card-img {
+  width: 60%;
+}
+
+#card-form {
+  width: 40%;
+  display: flex;
+  align-items: center;
+}
+
+
+#logo_text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#logo_div {
+  width: 20%;
+}
+#logo_div img {
+  width: 100%;
+}
+
+.mobile_title {
+  display: none;
+}
+
+.background{
+  background: linear-gradient(rgba(65, 65, 65, 0.362), rgba(94, 94, 94, 0.08)) ,url(https://bl-i.thgim.com/public/news/w78508/article66656932.ece/alternates/LANDSCAPE_1200/NITK.jpg);
+  background-position: center;
+  border-radius: 7px;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: aliceblue;
+  padding: auto;
+}
+.background h3 {
+}
+.background h2 {
+  color: aliceblue;
+}
+
+
+/* MEDIA QUERIES */
+@media screen and (max-width:870px) {
+  .card {
+    padding: 1em 0;
+    height: auto!important; /*added becuase card height was less and casuing overflow */
+    margin: 4em auto;
+  }
+  #card-img {
+    display: none;
+  }
+  #card-form {
+    width: 100%;
+    margin: auto;
+  }
+  #card-form {
+    width: 90%;
+    margin: auto;
+    height: auto;
+  }
+  .mobile_title {
+    display: block;
+  }
+}

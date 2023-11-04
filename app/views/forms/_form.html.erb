@@ -1,0 +1,36 @@
+<div id="<%= dom_id @form %>">
+  <p>
+    <strong>Name:</strong>
+    <%= @form.name %>
+  </p>
+
+  <p>
+    <strong>Role:</strong>
+    <%= @form.role %>
+  </p>
+
+  <p>
+    <strong>Salary:</strong>
+    <%= @form.salary %>
+  </p>
+
+  <p>
+    <strong>Dept:</strong>
+    <%= @form.dept %>
+  </p>
+
+  <h2>Questions:</h2>
+  <% @form.questions.each do |question| %>
+    <p>
+      <strong>Title:</strong> <%= question.title %><br>
+      <strong>Type:</strong> <%= QuestionType.find(question.question_type_id).title %><br>
+      <strong>Options:</strong>
+      <% question.options.each do |option| %>
+        <%= option.title %> |
+      <% end %>
+    </p>
+  <% end %>
+
+  <h2>Add New Question:</h2>
+  <%= render 'questions/form', form: @form.questions.new %>
+</div>

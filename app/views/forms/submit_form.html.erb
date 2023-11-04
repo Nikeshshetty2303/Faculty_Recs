@@ -1,0 +1,28 @@
+<%= form_with(model: @response, url: create_response_form_path(id: @form.id), method: :post) do |form| %>
+  <% @questions.each do |question| %>
+    <div>
+      <p><strong><%= question.title %></strong></p>
+      <% if question.question_type_id == 1 %>
+        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]" %>
+      <% elsif question.question_type_id == 5 %>
+        <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]" %>
+      <% elsif question.question_type_id == 2 %>
+        <% question.options.each do |option| %>
+          <label>
+            <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]" %>
+            <%= option.title %>
+          </label>
+        <% end %>
+      <% elsif question.question_type_id == 3 %>
+        <% question.options.each do |option| %>
+          <label>
+             <%= form.check_box :content, { multiple: true, value: option.title }, nil %>
+               <%= option.title %>
+          </label>
+        <% end %>
+
+      <% end %>
+    </div>
+  <% end %>
+  <%= form.submit %>
+<% end %>

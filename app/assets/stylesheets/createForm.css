@@ -1,0 +1,52 @@
+/* importing and defining the fonts */
+@import url("https://fonts.googleapis.com/css2?family=Jost&display=swap");
+
+.font-jost {
+    font-family: "Jost", sans-serif;
+}
+
+*body {
+    margin: 0;
+    padding: 0;
+    font-family: "Jost", sans-serif;
+}
+
+#cont {
+    width: 80%;
+    margin: auto;
+}
+
+.form_details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3rem;
+}
+
+.btns {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 2em 0;
+}
+
+.ques_div {
+    width: 100%;
+}
+
+.quest_info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.element:hover {
+    background-color: rgb(236, 239, 239);
+    transition-duration: 200ms;
+}
+
+.view_form {
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 2em;
+}
