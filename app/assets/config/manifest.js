@@ -12,5 +12,7 @@
 //= link createForm.css
 //= link credits.css
 
+//= link application.js
+
 //= link_directory ../stylesheets .css
 //= link_tree ../builds

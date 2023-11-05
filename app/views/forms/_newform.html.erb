@@ -1,44 +1,46 @@
-<%= form_with(model: form) do |f| %>
-  <% if form.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(f.errors.count, "error") %> prohibited this answer from being saved:</h2>
+<div style="background-color:rgb(127 172 218 / 16%); padding:2em; border-radius:10px;">
+  <%= form_with(model: form) do |f| %>
+    <% if form.errors.any? %>
+      <div style="color: red">
+        <h2><%= pluralize(f.errors.count, "error") %> prohibited this answer from being saved:</h2>
+  
+        <ul>
+          <% form.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-      <ul>
-        <% form.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div class="mb-3">
+      <%= f.label :Name, style: "display: block", class:'form-label', for:'name' %>
+      <%= f.text_field :name, class:'form-control', id:'name', placeholder:'Name the Form' %>
     </div>
-  <% end %>
+    
+    <div class="mb-3">
+      <%= f.label :salary, style: "display: block", class:'form-label', for:'salary'  %>
+      <%= f.number_field :salary, class:'form-control', id:'salary', placeholder:'Salary Offered' %>
+    </div>
+    
+    <div class="mb-3">
+      <%= f.label :role, style: "display: block", class:'form-label', for:'role'  %>
+      <%= f.text_field :role, class:'form-control', id:'role', placeholder:'The Role' %>
+    </div>
 
-  <div>
-    <%= f.label :name, style: "display: block" %>
-    <%= f.text_field :name %>
-  </div>
-
-  <div>
-    <%= f.label :salary, style: "display: block" %>
-    <%= f.number_field :salary %>
-  </div>
-
-  <div>
-    <%= f.label :role, style: "display: block" %>
-    <%= f.text_field :role %>
-  </div>
-
-  <div>
-    <%= f.label :dept, style: "display: block" %>
-    <%= f.text_field :dept %>
-  </div>
-
-  <div>
-    <%= f.hidden_field :user_id, value: @user.id %>
-  </div>
-
-  <div>
-    <%= collection_select(:form, :template_form_id, Form.all, :id, :name, { prompt: "Select Template Form" }, { class: "form-select" }) %>
-  <div>
-
-    <%= f.submit %>
-  </div>
+    <div class="mb-3">
+      <%= f.label :dept, style: "display: block", class:'form-label', for:'dept'  %>
+      <%= f.text_field :dept, class:'form-control', id:'dept', placeholder:'Department Recruiting' %>
+    </div>
+  
+    <div>
+      <%= f.hidden_field :user_id, value: @user.id %>
+    </div>
+  
+    <div>
+      <label class="form-label">Pick a template</label>
+      <%= collection_select(:form, :template_form_id, Form.all, :id, :name, { prompt: "Select Template Form" }, { class: "form-select" }) %>
+    <div style='display:flex; justify-content:flex-end'>
+    <%= f.submit class:"btn btn-primary mt-3" %>
+    </div>
+    
 <% end %>

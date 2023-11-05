@@ -6,14 +6,14 @@
 <div class="child-second">
   <div class="child2">
     <%= form.label :question_type_id, style: "display: block" %>
-    <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), prompt: "Type of Question", class: "form-select" %>
+    <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), prompt: "Type of Question", class: "form-select",  id:'ques_type' %>
   </div>
 
-  <div id="option-fiels" style="display: none;">
-    <div id="options-containr">
+  <div id="option-fields" style="display: none;">
+    <div id="options-container">
       <!-- Options will be appended here dynamically -->
     </div>
-    <button type="button" id="add-optio">Add Option</button>
+    <button type="button" id="add-option">Add Option</button>
   </div>
 
 
@@ -28,13 +28,14 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const questionTypeSelect = document.getElementById("question_question_type_id");
+    const questionTypeSelect = document.getElementById("ques_type");
     const optionFields = document.getElementById("option-fields");
     const optionsContainer = document.getElementById("options-container");
     const addOptionButton = document.getElementById("add-option");
     let optionCount = 1;
 
-    questionTypeSelect.addEventListener("change", function() {
+
+        questionTypeSelect.addEventListener("change", function() {
       if (questionTypeSelect.value == 2 || questionTypeSelect.value == 3) {
         optionFields.style.display = "block";
       } else {
@@ -56,5 +57,6 @@
       optionsContainer.appendChild(document.createElement("br")); // Line break for the next option
       optionCount++;
     });
+
   });
 </script>
