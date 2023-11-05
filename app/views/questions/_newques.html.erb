@@ -6,14 +6,14 @@
 <div class="child-second">
   <div class="child2">
     <%= form.label :question_type_id, style: "display: block" %>
-    <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), prompt: "Type of Question", class: "form-select",  id:'ques_type' %>
+    <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), prompt: "Type of Question", class: "form-select" %>
   </div>
 
-  <div id="option-fields" style="display: none;">
-    <div id="options-container">
+  <div id="option-fields-new" style="display: none;">
+    <div id="options-container-new">
       <!-- Options will be appended here dynamically -->
     </div>
-    <button type="button" id="add-option">Add Option</button>
+    <button type="button" id="add-option-new">Add Option</button>
   </div>
 
 
@@ -28,10 +28,10 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const questionTypeSelect = document.getElementById("ques_type");
-    const optionFields = document.getElementById("option-fields");
-    const optionsContainer = document.getElementById("options-container");
-    const addOptionButton = document.getElementById("add-option");
+    const questionTypeSelect = document.getElementById("question_question_type_id");
+    const optionFields = document.getElementById("option-fields-new");
+    const optionsContainer = document.getElementById("options-container-new");
+    const addOptionButton = document.getElementById("add-option-new");
     let optionCount = 1;
 
 
