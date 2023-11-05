@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_05_200305) do
+ActiveRecord::Schema.define(version: 2023_11_05_214111) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -55,7 +55,9 @@ ActiveRecord::Schema.define(version: 2023_11_05_200305) do
     t.integer "credit_question_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "response_id"
     t.index ["credit_question_id"], name: "index_credit_answers_on_credit_question_id"
+    t.index ["response_id"], name: "index_credit_answers_on_response_id"
   end
 
   create_table "credit_questions", force: :cascade do |t|
@@ -63,6 +65,8 @@ ActiveRecord::Schema.define(version: 2023_11_05_200305) do
     t.integer "credit_section_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.float "max_credit"
+    t.float "obt_credit"
     t.index ["credit_section_id"], name: "index_credit_questions_on_credit_section_id"
   end
 
@@ -77,6 +81,8 @@ ActiveRecord::Schema.define(version: 2023_11_05_200305) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "upload_question_id"
+    t.integer "response_id"
+    t.index ["response_id"], name: "index_file_uploads_on_response_id"
     t.index ["upload_question_id"], name: "index_file_uploads_on_upload_question_id"
   end
 
@@ -91,6 +97,7 @@ ActiveRecord::Schema.define(version: 2023_11_05_200305) do
     t.integer "readtime"
     t.text "description"
     t.integer "user_id"
+    t.float "credit_req"
     t.index ["user_id"], name: "index_forms_on_user_id"
   end
 
@@ -130,7 +137,7 @@ ActiveRecord::Schema.define(version: 2023_11_05_200305) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
     t.integer "form_id"
-    t.integer "credit_score"
+    t.float "credit_score"
     t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
   end
