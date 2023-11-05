@@ -13,6 +13,7 @@ class FileUploadsController < ApplicationController
   # GET /file_uploads/new
   def new
     @file_upload = FileUpload.new
+    @user = User.find(params[:userid])
   end
 
   # GET /file_uploads/1/edit
@@ -21,16 +22,25 @@ class FileUploadsController < ApplicationController
 
   # POST /file_uploads or /file_uploads.json
   def create
-    @file_upload = FileUpload.new(file_upload_params)
+    file_params_array = params[:files][:files]
+    @files = []
+    responses = Response.where(user_id: current_user.id)
+    response = responses.last
 
-    respond_to do |format|
-      if @file_upload.save
-        format.html { redirect_to file_upload_url(@file_upload), notice: "File upload was successfully created." }
-        format.json { render :show, status: :created, location: @file_upload }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @file_upload.errors, status: :unprocessable_entity }
-      end
+    file_params_array.each do |file_param|
+      permitted_params = file_param.permit(:file)
+      file = FileUpload.new(permitted_params)
+      @files << file
+    end
+
+    response.update(credit_score: 0)
+    response.save!
+
+    if @files.all? { |file| file.valid? }
+      @files.each(&:save)
+      redirect_to submit_form_form_path(userid: current_user.id,id: form.id), notice: 'Files were successfully created.'
+    else
+      render :new
     end
   end
 
