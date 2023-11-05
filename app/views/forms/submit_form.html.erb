@@ -1,15 +1,40 @@
-<div class="container-md">
-  <div style="">
-  <%= link_to "Back to home", home_index_path(userid: current_user.id), class:"btn btn-info mt-3" %>
-  </div>
-  <h1 class="text-center fw-bold"><%= @form.name %></h1>
-  <div class="container-md" style="display:flex; justify-content:space-between ">
-    <div class="alert alert-info" style="width:49%" role="alert">
-    <b>Role</b>: <%= @form.role %>
+
+<%= form_with(model: @response, url: create_response_form_path(id: @form.id), method: :post) do |form| %>
+  <% @questions.sort_by(&:id).each do |question| %>
+    <div>
+      <p><strong><%= question.title %></strong></p>
+      <% if question.question_type_id == 1 %>
+        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]" %>
+      <% elsif question.question_type_id == 5 %>
+        <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]" %>
+      <% elsif question.question_type_id == 2 %>
+        <% question.options.each do |option| %>
+          <label>
+            <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]" %>
+            <%= option.title %>
+          </label>
+        <% end %>
+      <% elsif question.question_type_id == 3 %>
+        <% question.options.each do |option| %>
+          <label>
+             <%= form.check_box :content, { multiple: true, value: option.title }, nil %>
+               <%= option.title %>
+          </label>
+        <% end %>
+
+      <% end %>
     </div>
-    <div class="alert alert-success" style="width:50%" role="alert">
-    <b>Department</b>: <%= @form.dept %>
-    </div>
+    <div class="container-md">
+      <div style="">
+      <%= link_to "Back to home", home_index_path(userid: current_user.id), class:"btn btn-info mt-3" %>
+      </div>
+      <h1 class="text-center fw-bold"><%= @form.name %></h1>
+      <div class="container-md" style="display:flex; justify-content:space-between ">
+        <div class="alert alert-info" style="width:49%" role="alert">
+        <b>Role</b>: <%= @form.role %>
+        </div>
+        <div class="alert alert-success" style="width:50%" role="alert">
+        <b>Department</b>: <%= @form.dept %>
   </div>
   <div class="container-md py-4 px-5 mb-3" style="background-color:rgb(127 172 218 / 16%); border-radius:10px;">
     <%= form_with(model: @response, url: create_response_form_path(id: @form.id), method: :post) do |form| %>
@@ -19,14 +44,14 @@
           <label for="exampleFormControlInput1" class="form-label"><%= question.title %></label>
             <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
           <% elsif question.question_type_id == 5 %>
-  
+
           <label for="exampleFormControlInput1" class="form-label"></label>
           <div class="input-group mb-3">
     <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
             <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
   </div>
           <% elsif question.question_type_id == 2 %>
-  
+
           <label for="exampleFormControlInput1" class="form-label"><%= question.title %></label>
             <% question.options.each do |option| %>
               <label>
@@ -42,7 +67,7 @@
                 <%= option.title %>
               </label>
             <% end %>
-  
+
           <% end %>
         </div>
       <% end %>

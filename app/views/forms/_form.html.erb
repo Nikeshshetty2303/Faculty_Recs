@@ -34,7 +34,7 @@
       </div>
 
     <%= form_with(model: @response, url: create_response_form_path(id: @form.id), method: :post) do |form| %>
-      <% @form.questions.each do |question| %>
+      <% @form.questions.sort_by(&:id).each do |question| %>
         <div>
           <p><strong><%= question.title %></strong></p>
           <% if question.question_type_id == 1 %>
@@ -63,7 +63,7 @@
     <% end %>
   </div>
   <div class="right">
-      <% @form.questions.each do |question| %>
+      <% @form.questions.sort_by(&:id).each do |question| %>
          <div class="child">
          <%# <%= link_to"Edit", edit_question_path(question), remote: true %>
          <%= render 'questions/form', form: question %>
