@@ -25,18 +25,21 @@
                     <div class="nav-item">
                         <%= link_to 'Home', home_index_path(userid: @user.id), class:"nav-link" %>
                     </div>
-                    
+
                     <div class="nav-item">
                         <%= link_to 'My Applications', myresponse_response_path(id: @user.id), class:"nav-link" %>
                     </div>
 
-                    <% if user.adminrole == true %>
+                    <% if @user.adminrole == true %>
                     <div class="nav-item">
                         <%= link_to 'Admin Portal', forms_path(userid: @user.id), class:"nav-link" %>
                     </div>
                     <% end %>
                     <div class="nav-item">
                         <%= link_to 'Edit Profile', edit_user_registration_path, class:"nav-link" %>
+                    </div>
+                    <div class="nav-item">
+                        <%= link_to "Credit Form", new_credit_answer_path(userid: @user.id), class:"nav-link" %>
                     </div>
                         <button class="btn btn-danger" id='log_out_mb'><%= link_to 'LogOut',destroy_user_session_path,method: :delete, class:"dropdown-item profile-dropdown", id:"log-out" %></button>
                     </div>
