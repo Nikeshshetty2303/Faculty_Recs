@@ -5,15 +5,15 @@
   </div>
 <div class="child-second">
   <div class="child2">
-    <%= form.label :question_type_id, style: "display: block" %>
-    <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), prompt: "Type of Question", class: "form-select" %>
+    <%= form.label :question_type_id, "Type of Question", style: "display: block", id: "question_type_id_#{form.object.id}" %>
+    <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), { prompt: "Select a Question Type" }, id: "question_type_select_#{form.object.id}" %>
   </div>
 
-  <div id="option-fields" style="display: none;">
-    <div id="options-container">
+  <div id="option-fields_<%= form.object.id %>" style="display: none;">
+    <div id="options-container_<%= form.object.id %>">
       <!-- Options will be appended here dynamically -->
     </div>
-    <button type="button" id="add-option">Add Option</button>
+    <button type="button" id="add-option_<%= form.object.id %>">Add Option</button>
   </div>
 
 
@@ -24,37 +24,33 @@
   </div>
 
   </div>
-<% end %>
+
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const questionTypeSelect = document.getElementById("question_question_type_id");
-    const optionFields = document.getElementById("option-fields");
-    const optionsContainer = document.getElementById("options-container");
-    const addOptionButton = document.getElementById("add-option");
-    let optionCount = 1;
+   document.addEventListener("click", function(event) {
+     if (event.target.classList.contains("add-option_<%= form.object.id %>")) {
+       const questionId = <%= form.object.id %>;
+       const optionsContainer = document.getElementById(`options-container_<%=form.object.id%>`);
+       const optionCount = optionsContainer.children.length / 2 + 1;
 
-    questionTypeSelect.addEventListener("change", function() {
-      if (questionTypeSelect.value == 2 || questionTypeSelect.value == 3) {
-        optionFields.style.display = "block";
-      } else {
-        optionFields.style.display = "none";
-      }
-    });
+       const optionLabel = document.createElement("label");
+       optionLabel.innerText = `Option ${optionCount} : `;
+       optionsContainer.appendChild(optionLabel);
 
-    addOptionButton.addEventListener("click", function() {
-      const optionLabel = document.createElement("label");
-      optionLabel.innerText = "Option " + optionCount + " : ";
-      optionsContainer.appendChild(optionLabel);
+       const input = document.createElement("input");
+       input.type = "text";
+       input.name = `question[options_attributes][${questionId}][${optionCount}][title]`;
+       input.placeholder = "Enter option";
+       optionsContainer.appendChild(input);
 
-      const input = document.createElement("input");
-      input.type = "text";
-      input.name = "question[options_attributes][" + optionCount + "][title]";
-      input.placeholder = "Enter option";
-      optionsContainer.appendChild(input);
+       optionsContainer.appendChild(document.createElement("br")); // Line break for the next option
+     }
+   });
 
-      optionsContainer.appendChild(document.createElement("br")); // Line break for the next option
-      optionCount++;
-    });
-  });
+   // Rest of your JavaScript code...
+ });
+
 </script>
+<% end %>
