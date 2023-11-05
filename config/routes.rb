@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :file_uploads
   resources :credit_answers
   resources :credit_questions
   resources :credit_sections

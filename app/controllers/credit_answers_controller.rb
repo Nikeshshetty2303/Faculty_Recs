@@ -13,6 +13,7 @@ class CreditAnswersController < ApplicationController
   # GET /credit_answers/new
   def new
     puts "Reached the new action"
+    @form = Form.find(params[:id])
     @user = User.find(params[:userid])
     @section = CreditSection.all
     @questions = CreditQuestion.all
@@ -28,7 +29,7 @@ class CreditAnswersController < ApplicationController
     @questions = CreditQuestion.all
     answer_params_array = params[:answers][:answers]
     response = Response.create!
-
+    response.form_id = params[:form_id]
     @answers = []
 
     credit = 0
@@ -44,6 +45,7 @@ class CreditAnswersController < ApplicationController
       end
       response.credit_score = credit
       response.user_id = current_user.id
+      response.form_id = @form.id
       response.save
 
       @answers << answer
@@ -52,7 +54,7 @@ class CreditAnswersController < ApplicationController
 
     if @answers.all? { |answer| answer.valid? }
       @answers.each(&:save)
-      redirect_to new_credit_answer_path(userid: current_user.id), notice: 'Answers were successfully created.'
+      redirect_to new_file_upload_path(userid: current_user.id), notice: 'Answers were successfully created.'
     else
       render :new
     end

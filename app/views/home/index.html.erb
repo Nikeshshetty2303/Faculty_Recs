@@ -22,7 +22,7 @@
                      <li class="list-group-item">
                          <div class='announcement_element'>
                              <small class='fs-sm'><%= form.created_at.strftime('%d/%m/%Y') %></small> | <small><%= form.readtime %> Min read</small>
-                             <p class='fw-bold'><%= link_to  form.name, submit_form_form_path(id: form.id), class:"news_link"%></p>
+                             <p class='fw-bold'><%= link_to  form.name, new_credit_answer_path(id: form.id,userid: @user.id), class:"news_link"%></p>
                              <p class='font_size_15'><%= form.description %></p>
                          </div>
                      </li>
