@@ -1,5 +1,5 @@
 <%= form_with(model: @response, url: create_response_form_path(id: @form.id), method: :post) do |form| %>
-  <% @questions.each do |question| %>
+  <% @questions.sort_by(&:id).each do |question| %>
     <div>
       <p><strong><%= question.title %></strong></p>
       <% if question.question_type_id == 1 %>
