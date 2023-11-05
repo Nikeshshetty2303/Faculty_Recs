@@ -1,0 +1,2 @@
+module CreditAnswersHelper
+end
