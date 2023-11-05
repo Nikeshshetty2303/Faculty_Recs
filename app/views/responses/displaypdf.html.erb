@@ -1,3 +1,13 @@
-<% @response.answers.each do |answer| %>
- <%= answer.question.title %> : <%= answer.content %> <br>
-<% end %>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gabarito&display=swap" rel="stylesheet">
+
+
+<div style="border:2px dashed gray; font-family:Gabarito">
+    <%= image_tag wicked_pdf_asset_base64("NITK_Emblem.png"), style:'height:20px; width:20px' %
+    <h1 style='padding:0; margin:0; font-weight:600;font-size:40px; text-align:center'>National Institute of Technology Karnataka</h1>
+    <p style='padding:0; margin:0;font-size:20px; text-align:center'>National Institute of Technology Karnataka</p>
+    <% @response.answers.each do |answer| %>
+        <%= answer.question.title %> : <%= answer.content %> <br>
+    <% end %>
+</div>

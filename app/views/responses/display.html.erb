@@ -1,3 +1,15 @@
-<% @response.answers.each do |answer| %>
- <%= answer.question.title %> : <%= answer.content %> <br>
-<% end %>
+<div class="container-sm p-2">
+    <div style="">
+    <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-info mt-3" %>
+    </div>
+    <h1 class="text-center fw-bold">View Form Response</h1>
+    <div class="" style="padding:2em;background-color:rgb(127 172 218 / 16%); border-radius:6px">
+        <div class="alert alert-success" role="alert">
+            This is the response for form -
+        </div>
+        <% @response.answers.each do |answer| %>
+        <label class="form-label"><%= answer.question.title %></label>
+        <input readonly class="form-control" value=<%= answer.content %>>
+        <% end %>
+    </div>
+</div>

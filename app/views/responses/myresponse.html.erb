@@ -1,13 +1,20 @@
-<p style="color: green"><%= notice %></p>
-
-<h1>Responses</h1>
-
-<div id="responses">
-  <% @responses.each do |response| %>
-    <%= render response %>
-    <p>
-      <%= link_to "Show this response", display_response_path(id: response.id, userid: @user.id) %> |
-      <%= link_to "Print response", print_response_path(id: response.id, userid: @user.id, format: :pdf) %>
-    </p>
-  <% end %>
+<div class="container-sm p-2">
+  <div class="alert alert-info" role="alert">
+    <%= notice %>
+  </div>
+  
+  <h1 class="text-center">Your Responses</h1>
+  
+  <div class="responses container">
+    <% @responses.each do |response| %>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><%= render response %></h5>
+        <p class="card-text">Form Deatils</p>
+        <%= link_to "Show response", display_response_path(id: response.id, userid: @user.id), class:'btn btn-primary' %>
+        <%= link_to "Print response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class:'btn btn-dark' %>
+      </div>
+    </div>
+    <% end %>
+  </div>
 </div>
