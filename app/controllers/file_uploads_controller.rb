@@ -14,6 +14,9 @@ class FileUploadsController < ApplicationController
   def new
     @file_upload = FileUpload.new
     @user = User.find(params[:userid])
+    @section = UploadSection.all
+    @questions = UploadQuestion.all
+    @answers = @questions.map { |question| FileUpload.new(upload_question_id: question.id) }
   end
 
   # GET /file_uploads/1/edit
@@ -22,13 +25,15 @@ class FileUploadsController < ApplicationController
 
   # POST /file_uploads or /file_uploads.json
   def create
+    @questions = UploadQuestion.all
     file_params_array = params[:files][:files]
     @files = []
     responses = Response.where(user_id: current_user.id)
     response = responses.last
+    @form = response.form_id
 
     file_params_array.each do |file_param|
-      permitted_params = file_param.permit(:file)
+      permitted_params = file_param.permit(:file, :upload_question_id)
       file = FileUpload.new(permitted_params)
       @files << file
     end
@@ -38,7 +43,7 @@ class FileUploadsController < ApplicationController
 
     if @files.all? { |file| file.valid? }
       @files.each(&:save)
-      redirect_to submit_form_form_path(userid: current_user.id,id: form.id), notice: 'Files were successfully created.'
+      redirect_to submit_form_form_path(userid: current_user.id,id: @form), notice: 'Files were successfully created.'
     else
       render :new
     end
@@ -75,6 +80,6 @@ class FileUploadsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def file_upload_params
-      params.require(:file_upload).permit(:file)
+      params.require(:file_upload).permit(:file, :upload_question_id)
     end
 end

@@ -1,0 +1,27 @@
+<%= form_with(model: upload_question) do |form| %>
+  <% if upload_question.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(upload_question.errors.count, "error") %> prohibited this upload_question from being saved:</h2>
+
+      <ul>
+        <% upload_question.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :upload_section_id %>
+    <%= form.text_field :upload_section_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

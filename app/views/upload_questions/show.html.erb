@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @upload_question.title %>
+</p>
+
+<p>
+  <strong>Upload section:</strong>
+  <%= @upload_question.upload_section_id %>
+</p>
+
+<%= link_to 'Edit', edit_upload_question_path(@upload_question) %> |
+<%= link_to 'Back', upload_questions_path %>

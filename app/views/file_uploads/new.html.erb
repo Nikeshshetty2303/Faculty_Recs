@@ -9,20 +9,26 @@
 <div id="File_container" class="font-jost mt-3">
   <!-- Total sum display -->
   <!-- Questions section -->
-  <div>
-    <%= form_for :files, url: file_uploads_path do |form| %>
-        <div class="mb-3">
-        <%= form.fields_for "files[]", FileUpload.new do |upload_fields| %>
-            <%= upload_fields.label :file, "First Title", class: "form-label" %>
-            <%= upload_fields.file_field :file, class: "form-control numeric-input" %>
-        <%end%>
-        <%= form.fields_for "files[]", FileUpload.new do |upload_fields| %>
-            <%= upload_fields.label :file, "Second Title", class: "form-label" %>
-            <%= upload_fields.file_field :file, class: "form-control numeric-input" %>
-        <%end%>
-        </div>
-      <%= form.submit "SUBMIT", class: "btn btn-success" %>
-    <% end %>
-  </div>
+      <div>
+        <%= form_for :files, url: file_uploads_path do |form| %>
+          <% @section.each do |section| %>
+            <div class="mt-5">
+              <h2><%= section.title %></h2>
+              <div class="mb-3">
+              <% @questions.where(upload_section_id: section.id).each do |question| %>
+              <div class="mb-3">
+              <%= form.fields_for "files[]", FileUpload.new(upload_question_id: question.id) do |upload_fields| %>
+              <%= upload_fields.hidden_field :upload_question_id %>
+              <%= upload_fields.label :file, question.title, class: "form-label" %>
+              <%= upload_fields.file_field :file, class: "form-control numeric-input" %>
+              <%end%>
+              </div>
+              <% end %>
+              </div>
+            </div>
+          <% end %>
+        <%= form.submit "SUBMIT", class: "btn btn-success" %>
+        <% end %>
+      </div>
   <!-- End of Questions section -->
 </div>

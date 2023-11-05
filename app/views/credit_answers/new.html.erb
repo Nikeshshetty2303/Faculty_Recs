@@ -31,9 +31,11 @@
           </div>
         </div>
       <% end %>
-      <%= form.hidden_field :form_id, value: @form.id %>
+
+      <%= form.hidden_field :entry, value: @form.id %>
       <%= form.submit "Create Answers", class: "btn btn-success" %>
     <% end %>
+    <%=@entry%>
   </div>
   <!-- End of Questions section -->
 </div>
