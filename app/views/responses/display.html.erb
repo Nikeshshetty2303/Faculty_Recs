@@ -7,7 +7,7 @@
         <div class="alert alert-success" role="alert">
             This is the response for form -
         </div>
-        <% @response.answers.each do |answer| %>
+        <% @response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
         <label class="form-label"><%= answer.question.title %></label>
         <input readonly class="form-control" value=<%= answer.content %>>
         <% end %>

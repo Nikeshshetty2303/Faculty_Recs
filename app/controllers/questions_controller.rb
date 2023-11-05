@@ -67,6 +67,7 @@ end
 
   # DELETE /questions/1 or /questions/1.json
   def destroy
+    @question.options.destroy_all
     @question.destroy
 
     respond_to do |format|

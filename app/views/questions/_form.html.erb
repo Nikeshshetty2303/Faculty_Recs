@@ -21,6 +21,7 @@
 
   <div class="child3">
     <%= form.submit class:"btn btn-primary" %>
+     <%= link_to "Delete", form.object, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" } %>
   </div>
 
   </div>
