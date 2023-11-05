@@ -35,10 +35,9 @@ class FileUploadsController < ApplicationController
     file_params_array.each do |file_param|
       permitted_params = file_param.permit(:file, :upload_question_id)
       file = FileUpload.new(permitted_params)
+      file.response_id = response.id
       @files << file
     end
-
-    response.update(credit_score: 0)
     response.save!
 
     if @files.all? { |file| file.valid? }
