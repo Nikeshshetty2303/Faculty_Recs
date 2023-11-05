@@ -29,7 +29,8 @@ class CreditAnswersController < ApplicationController
     @questions = CreditQuestion.all
     answer_params_array = params[:answers][:answers]
     response = Response.create!
-    response.form_id = params[:form_id]
+    parameter_value = params[:answers][:entry]
+    response.form_id = parameter_value
     @answers = []
 
     credit = 0
@@ -45,7 +46,6 @@ class CreditAnswersController < ApplicationController
       end
       response.credit_score = credit
       response.user_id = current_user.id
-      response.form_id = @form.id
       response.save
 
       @answers << answer
@@ -91,6 +91,6 @@ class CreditAnswersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def credit_answer_params
-      params.require(:credit_answer).permit(:answer, :credit_question_id)
+      params.require(:credit_answer).permit(:answer, :credit_question_id, :entry)
     end
 end
