@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Credit Sections</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @credit_sections.each do |credit_section| %>
+      <tr>
+        <td><%= credit_section.title %></td>
+        <td><%= link_to 'Show', credit_section %></td>
+        <td><%= link_to 'Edit', edit_credit_section_path(credit_section) %></td>
+        <td><%= link_to 'Destroy', credit_section, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Credit Section', new_credit_section_path %>

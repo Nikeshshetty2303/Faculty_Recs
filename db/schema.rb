@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_04_201922) do
+ActiveRecord::Schema.define(version: 2023_11_05_111750) do
 
   create_table "answers", force: :cascade do |t|
     t.string "content"
@@ -20,6 +20,28 @@ ActiveRecord::Schema.define(version: 2023_11_04_201922) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["response_id"], name: "index_answers_on_response_id"
+  end
+
+  create_table "credit_answers", force: :cascade do |t|
+    t.integer "answer"
+    t.integer "credit_question_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["credit_question_id"], name: "index_credit_answers_on_credit_question_id"
+  end
+
+  create_table "credit_questions", force: :cascade do |t|
+    t.string "title"
+    t.integer "credit_section_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["credit_section_id"], name: "index_credit_questions_on_credit_section_id"
+  end
+
+  create_table "credit_sections", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "forms", force: :cascade do |t|
@@ -72,6 +94,7 @@ ActiveRecord::Schema.define(version: 2023_11_04_201922) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
     t.integer "form_id"
+    t.integer "credit_score"
     t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
   end
@@ -91,6 +114,8 @@ ActiveRecord::Schema.define(version: 2023_11_04_201922) do
 
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "responses"
+  add_foreign_key "credit_answers", "credit_questions"
+  add_foreign_key "credit_questions", "credit_sections"
   add_foreign_key "forms", "users"
   add_foreign_key "options", "questions"
   add_foreign_key "questions", "forms"
