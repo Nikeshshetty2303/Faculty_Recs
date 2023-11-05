@@ -1,0 +1,27 @@
+<%= form_with(model: credit_question) do |form| %>
+  <% if credit_question.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(credit_question.errors.count, "error") %> prohibited this credit_question from being saved:</h2>
+
+      <ul>
+        <% credit_question.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :credit_section_id %>
+    <%= form.text_field :credit_section_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

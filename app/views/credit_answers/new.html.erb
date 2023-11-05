@@ -1,0 +1,62 @@
+<%= stylesheet_link_tag "credits" %>
+<!--stylesheet imported-->
+<%= render 'partials/navbar' %>
+<!--partial for navbar-->
+
+<h1 class="font-jost text-center fw-bold">Credit Calculation</h1>
+
+<!--credits container div starts -->
+<div id="credits_container" class="font-jost mt-3">
+  <!-- Total sum display -->
+  <div id="total_sum" class="mt-3 font-jost fw-bold">
+    Total: <span id="total_value">0</span>
+  </div>
+  <!-- Questions section -->
+  <div>
+    <%= form_for :answers, url: credit_answers_path do |form| %>
+      <% @section.each do |section| %>
+        <div class="mt-5">
+          <h2><%= section.title %></h2>
+          <div class="mb-3">
+            <!-- Iterate over questions -->
+            <% @questions.where(credit_section_id: section.id).each do |question| %>
+              <div class="mb-3">
+                <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: question.id) do |answer_fields| %>
+                  <%= answer_fields.hidden_field :credit_question_id %>
+                  <%= answer_fields.label :answer, question.title, class: "form-label" %>
+                  <%= answer_fields.text_field :answer, class: "form-control numeric-input" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      <%= form.submit "Create Answers", class: "btn btn-success" %>
+    <% end %>
+  </div>
+  <!-- End of Questions section -->
+</div>
+<!-- End of credits container div -->
+
+<script>
+  // JavaScript code to calculate and display the sum of numeric inputs
+  document.addEventListener('DOMContentLoaded', function() {
+    const numericInputs = document.querySelectorAll('.numeric-input');
+    const totalValue = document.getElementById('total_value');
+
+    numericInputs.forEach(input => {
+      input.addEventListener('input', updateTotal);
+    });
+
+    function updateTotal() {
+      let total = 0;
+      numericInputs.forEach(input => {
+        const value = parseFloat(input.value) || 0;
+        total += value;
+      });
+
+      // Update the total value on the page
+      totalValue.innerText = total;
+    }
+  });
+</script>

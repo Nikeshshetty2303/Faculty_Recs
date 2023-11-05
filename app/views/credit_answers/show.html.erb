@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Answer:</strong>
+  <%= @credit_answer.answer %>
+</p>
+
+<p>
+  <strong>Credit question:</strong>
+  <%= @credit_answer.credit_question_id %>
+</p>
+
+<%= link_to 'Edit', edit_credit_answer_path(@credit_answer) %> |
+<%= link_to 'Back', credit_answers_path %>

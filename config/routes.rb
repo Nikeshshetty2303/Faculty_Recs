@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :credit_answers
+  resources :credit_questions
+  resources :credit_sections
   devise_for :users
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   resources :answers
