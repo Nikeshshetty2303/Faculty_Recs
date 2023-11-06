@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_05_214111) do
+ActiveRecord::Schema.define(version: 2023_11_06_062237) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -67,6 +67,8 @@ ActiveRecord::Schema.define(version: 2023_11_05_214111) do
     t.datetime "updated_at", precision: 6, null: false
     t.float "max_credit"
     t.float "obt_credit"
+    t.boolean "isheader"
+    t.integer "header_id"
     t.index ["credit_section_id"], name: "index_credit_questions_on_credit_section_id"
   end
 
@@ -127,6 +129,7 @@ ActiveRecord::Schema.define(version: 2023_11_05_214111) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "form_id"
     t.integer "question_type_id"
+    t.integer "position"
     t.index ["form_id"], name: "index_questions_on_form_id"
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
   end
@@ -174,6 +177,7 @@ ActiveRecord::Schema.define(version: 2023_11_05_214111) do
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "responses"
   add_foreign_key "credit_answers", "credit_questions"
+  add_foreign_key "credit_questions", "credit_questions", column: "header_id", on_delete: :cascade
   add_foreign_key "credit_questions", "credit_sections"
   add_foreign_key "file_uploads", "upload_questions"
   add_foreign_key "forms", "users"

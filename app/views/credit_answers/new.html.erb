@@ -20,13 +20,30 @@
           <div class="mb-3">
             <!-- Iterate over questions -->
             <% @questions.where(credit_section_id: section.id).each do |question| %>
+            <% if question.isheader == true %>
+
+            <h3> <%= question.title %> </h3>
+            <div style="display:flex;">
+              <% @questions.where(header_id: question.id).each do |sub_question|  %>
+              <div style="display:flex;margin:2%;">
+              <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: sub_question.id) do |answer_fields| %>
+                <%= answer_fields.hidden_field :credit_question_id %>
+                <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
+                <%= answer_fields.number_field :answer, class: "form-control numeric-input" %>
+              <% end %>
+                </div>
+              <% end %>
+            </div>
+
+            <% elsif question.header_id == nil %>
               <div class="mb-3">
                 <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: question.id) do |answer_fields| %>
                   <%= answer_fields.hidden_field :credit_question_id %>
                   <%= answer_fields.label :answer, question.title, class: "form-label" %>
-                  <%= answer_fields.text_field :answer, class: "form-control numeric-input" %>
+                  <%= answer_fields.number_field :answer, class: "form-control numeric-input" %>
                 <% end %>
               </div>
+              <% end %>
             <% end %>
           </div>
         </div>

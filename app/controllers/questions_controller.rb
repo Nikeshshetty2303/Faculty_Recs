@@ -1,11 +1,26 @@
 class QuestionsController < ApplicationController
   before_action :set_question, only: %i[ show edit update destroy ]
-  skip_before_action :verify_authenticity_token, only: [:edit]
+  skip_before_action :verify_authenticity_token, only: [:edit,:move_up,:move_down]
   # GET /questions or /questions.json
   def index
     @questions = Question.all
   end
 
+  def move_up
+    @question = Question.find(params[:id])
+    @question.move_higher
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def move_down
+    @question = Question.find(params[:id])
+    @question.move_lower
+    respond_to do |format|
+      format.js
+    end
+  end
   # GET /questions/1 or /questions/1.json
   def show
   end

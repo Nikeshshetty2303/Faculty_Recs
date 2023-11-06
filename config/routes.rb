@@ -14,12 +14,19 @@ Rails.application.routes.draw do
   resources :questions
   resources :homes
 
-  resources :questions, only: %i[edit update]
-
   resources :forms do
   get 'submit_form', on: :member
   post 'create_response', on: :member
   post 'submit_form', on: :member
+  end
+
+  resources :questions, only: %i[edit update]
+
+  resources :questions do
+  member do
+    post 'move_up'
+    post 'move_down'
+   end
   end
 
   resources :responses do

@@ -16,12 +16,19 @@
     <button type="button" id="add-option_<%= form.object.id %>">Add Option</button>
   </div>
 
-
+  <%= button_to 'Move Up', move_up_question_path(form.object.id), method: :patch %>
   <%= form.hidden_field :form_id, value: form.object.form_id %>
+  <%= form_for(form.object, url: move_up_question_path(form.object.id), method: :patch, remote: true) do |f| %>
+      <%= f.hidden_field :move_up, value: true %>
+      <%= f.submit "Move Up", class: "btn btn-secondary" %>
+    <% end %>
 
+    <%= form_for(form.object, url: move_down_question_path(form.object.id), method: :patch, remote: true) do |f| %>
+      <%= f.hidden_field :move_down, value: true %>
+      <%= f.submit "Move Down", class: "btn btn-secondary" %>
+    <% end %>
   <div class="child3">
     <%= form.submit class:"btn btn-primary" %>
-     <%= link_to "Delete", form.object, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" } %>
   </div>
 
   </div>
