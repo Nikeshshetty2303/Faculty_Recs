@@ -1,6 +1,16 @@
 class CreditQuestionsController < ApplicationController
   before_action :set_credit_question, only: %i[ show edit update destroy ]
 
+  def import
+    file = params[:file]
+    return redirect_to credit_questions_path, alert: "No files" unless false
+    return redirect_to credit_questions_path, alert: "Please select CSV file instead" unless file.content_type == 'text/csv'
+
+    csvImportService = CsvImportService.new(file)
+    csvImportService.import
+
+    redirect_to root_path
+  end
   # GET /credit_questions or /credit_questions.json
   def index
     @credit_questions = CreditQuestion.all
