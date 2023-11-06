@@ -1,35 +1,37 @@
 <%= form_with(model: form, local: true) do |form| %>
-  <div class="child1">
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div class="child1 mb-3">
+    <%= form.label :title, style: "display: block", class:'form-label' %>
+    <%= form.text_field :title, class:'form-control' %>
   </div>
-<div class="child-second">
-  <div class="child2">
-    <%= form.label :question_type_id, "Type of Question", style: "display: block", id: "question_type_id_#{form.object.id}" %>
-    <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), { prompt: "Select a Question Type" }, id: "question_type_select_#{form.object.id}" %>
-  </div>
-
-  <div id="option-fields_<%= form.object.id %>" style="display: none;">
-    <div id="options-container_<%= form.object.id %>">
-      <!-- Options will be appended here dynamically -->
+  <div class="">
+    <div class="child2 px-2">
+      <%= form.label :question_type_id, "Type of Question", style: "display: block", id: "question_type_id_#{form.object.id}", class:'form-label' %>
+      <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), { prompt: "Select a Question Type" }, id: "question_type_select_#{form.object.id}", class:'form-select' %>
     </div>
-    <button type="button" id="add-option_<%= form.object.id %>">Add Option</button>
-  </div>
 
-  <%= button_to 'Move Up', move_up_question_path(form.object.id), method: :patch %>
-  <%= form.hidden_field :form_id, value: form.object.form_id %>
-  <%= form_for(form.object, url: move_up_question_path(form.object.id), method: :patch, remote: true) do |f| %>
-      <%= f.hidden_field :move_up, value: true %>
-      <%= f.submit "Move Up", class: "btn btn-secondary" %>
-    <% end %>
+    <div id="option-fields_<%= form.object.id %>" style="display: none;">
+      <div id="options-container_<%= form.object.id %>">
+        <!-- Options will be appended here dynamically -->
+      </div>
+      <button type="button" id="add-option_<%= form.object.id %>">Add Option</button>
+    </div>
 
-    <%= form_for(form.object, url: move_down_question_path(form.object.id), method: :patch, remote: true) do |f| %>
-      <%= f.hidden_field :move_down, value: true %>
-      <%= f.submit "Move Down", class: "btn btn-secondary" %>
-    <% end %>
-  <div class="child3">
-    <%= form.submit class:"btn btn-primary" %>
-  </div>
+      <div style="display:flex; justify-content:space-around; margin:8px">
+        <%= form_for(form.object, url: move_up_question_path(form.object.id), method: :patch, remote: true) do |f| %>
+          <%= f.hidden_field :move_up, value: true %>
+          <%= f.submit "Move Up", class: "btn btn-sm btn-secondary" %>
+        <% end %>
+
+        <%= form_for(form.object, url: move_down_question_path(form.object.id), method: :patch, remote: true) do |f| %>
+          <%= f.hidden_field :move_down, value: true %>
+          <%= f.submit "Move Down", class: "btn btn-sm btn-secondary" %>
+        <% end %>
+
+        <%= button_to 'Move Up', move_up_question_path(form.object.id), method: :patch, class:'btn btn-sm btn-warning' %>
+        <%= form.hidden_field :form_id, value: form.object.form_id %>
+        <%= form.submit class:"btn btn-sm btn-primary" %>
+      </div>
+
 
   </div>
 

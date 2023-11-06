@@ -1,89 +1,101 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 <%= stylesheet_link_tag 'forms' %>
-<div class="contain">
-  <div class="heading">
-      <div class="">
-        <h1>Preview</h1>
-      </div>
-      <div class="">
-        <h1>Form Editing</h1>
-      </div>
-  </div>
+
+<div class="contain" style="font-family:Gabarito">
+    <div id='top' class="mx-4"style='display:flex; justify-content: space-between'>
+      <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-success" %>
+      <a class='btn btn-primary' href='#add'>Add Question</a>
+    </div>
   <div class="bodies">
-  <div class="left">
-    <div id="<%= dom_id @form %>" style="display:flex;flex-direction:column;">
-      <p>
-        <strong>Name:</strong>
-        <%= @form.name %>
-      </p>
+    <div class="left" style="padding:0 1em 1em 1em">
+      <h1 style="position:sticky; top:0; text-align:center; background-color:white; padding:0.4em; z-index:10">Preview</h1>
+      <div>
+        <div id="<%= dom_id @form %>" class="alert alert-success" style="display:flex;flex-direction:column">
+          <p>
+            <strong>Form Name:</strong>
+            <%= @form.name %>
+          </p>
+          <p>
+            <strong>Role:</strong>
+            <%= @form.role %>
+          </p>
+          <p>
+            <strong>Salary:</strong>
+            <%= @form.salary %>
+          </p>
+          <p>
+            <strong>Dept:</strong>
+            <%= @form.dept %>
+          </p>
+        </div>
 
-      <p>
-        <strong>Role:</strong>
-        <%= @form.role %>
-      </p>
-
-      <p>
-        <strong>Salary:</strong>
-        <%= @form.salary %>
-      </p>
-
-      <p>
-        <strong>Dept:</strong>
-        <%= @form.dept %>
-      </p>
-      </div>
-
-    <%= form_with(model: @response, url: create_response_form_path(id: @form.id), method: :post) do |form| %>
-      <% @form.questions.each do |question| %>
-        <div>
-          <p><strong><%= question.title %></strong></p>
-          <% if question.question_type_id == 1 %>
-            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]" %>
-          <% elsif question.question_type_id == 5 %>
-            <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]" %>
-          <% elsif question.question_type_id == 2 %>
-            <% question.options.each do |option| %>
-              <label>
-                <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]" %>
-                <%= option.title %>
-              </label>
+        <div style="background-color:#cfe2ff; padding:1em; border-radius:10px; margin:10px 0">
+          <%= form_with(model: @response, url: create_response_form_path(id: @form.id), method: :post) do |form| %>
+            <% @form.questions.each do |question| %>
+              <div class="mb-3">
+                <label class="form-label"><%= question.title %></label>
+                <% if question.question_type_id == 1 %> 
+                  <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:"form-control", placeholder:"Applicant response" %>
+                <% elsif question.question_type_id == 5 %>
+                  <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', placeholder:"Applicant response" %>
+                <% elsif question.question_type_id == 2 %>
+                    <% question.options.each do |option| %>
+                      <div style='margin:5px'>
+                          <label>
+                            <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", class:'form-check-input' %>
+                            <%= option.title %>
+                          </label>
+                      </div>
+                  <% end %>
+                <% elsif question.question_type_id == 3 %>
+                  <% question.options.each do |option| %>
+                    <div>
+                      <label>
+                        <%= form.check_box :content, { multiple: true, value: option.title }, nil, class:'form-check-input' %>
+                        <%= option.title %>
+                      </label>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
             <% end %>
-          <% elsif question.question_type_id == 3 %>
-            <% question.options.each do |option| %>
-              <label>
-                 <%= form.check_box :content, { multiple: true, value: option.title }, nil %>
-                   <%= option.title %>
-              </label>
-            <% end %>
-
+            <% form.submit %>
           <% end %>
         </div>
-      <% end %>
-      <% form.submit %>
-    <% end %>
-  </div>
-  <div class="right">
-      <% @form.questions.each do |question| %>
-         <div class="child">
-         <%# <%= link_to"Edit", edit_question_path(question), remote: true %>
-         <%= render 'questions/form', form: question %>
-         <div class="child-option">
-         <% question.options.each do |option|%>
-         <div class="child-option">
-         <%= render 'options/form', option: option %>
-         </div>
-         <% end %>
-         </div>
-         </div>
-      <% end %>
-
-      <h2><center>Add New Question:</center></h2>
-      <%= render 'questions/newques', form: @form.questions.new %>
+      </div>
     </div>
+    <div class="right px-3 pb-2" >
+      <h1 style="position:sticky; top:0; text-align:center; background-color:white; padding:0.2em; z-index:10">Edit Form</h1>
+        <div>
+          <% @form.questions.each do |question| %>
+            <div class="child my-2" style="background-color:#cfe2ff; border-radius:10px">
+              <%# <%= link_to"Edit", edit_question_path(question), remote: true %>
+              <%= render 'questions/form', form: question, class:'form-control' %>
+              <div class="child-option">
+                <% question.options.each do |option|%>
+                  <div class="child-option">
+                    <%= render 'options/form', option: option %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <div id='add' style="background-color:#d1e7dd; padding: 1em; border-radius:10px; margin-top:1em">
+            <h2 class="text-center">Add New Question:</h2>
+            <%= render 'questions/newques', form: @form.questions.new %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+</div>
+<div class="m-4"style='display:flex; justify-content: space-between'>
+  <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-success" %>
+  <a class='btn btn-primary' href='#top'>Back to Top</a>
+</div>
+  <div class="container-xl" style="border:3px solid red; border-radius: 5px; margin: 2em auto; padding: 2em; display:flex; align-items: center; flex-direction:column">
+    <h2 class="text-center text-danger">Danger Zone</h2>
+    <div><%= link_to "Destroy this form", @form, method: :delete, class:"btn btn-danger" %></div>
   </div>
- </div>
- <div><center>
-   <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-success" %>
-   <%= link_to "Destroy this form", @form, method: :delete, class:"btn btn-danger" %>
-   </center>
- </div>
+

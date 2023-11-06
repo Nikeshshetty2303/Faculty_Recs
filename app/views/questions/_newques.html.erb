@@ -1,30 +1,30 @@
 <%= form_with(model: form, local: true) do |form| %>
   <div class="child1">
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+    <%= form.label :title, style: "display: block" , class:'form-label'%>
+    <%= form.text_field :title, class:"form-control", placeholder:'Enter Question Title' %>
   </div>
-<div class="child-second">
-  <div class="child2">
-    <%= form.label :question_type_id, style: "display: block" %>
-    <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), prompt: "Type of Question", class: "form-select" %>
+
+  <div class="">
+    <%= form.label :question_type_id, style: "display: block", class:'form-label' %>
+    <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), prompt: "Type of Question" %>
   </div>
 
   <div id="option-fields-new" style="display: none;">
-    <div id="options-container-new">
+    <div id="options-container-new" style="display:flex; flex-direction:column; padding: 0.5em">
       <!-- Options will be appended here dynamically -->
     </div>
-    <button type="button" id="add-option-new">Add Option</button>
+    <button type="button" id="add-option-new" class="btn btn-sm btn-light">Add Option</button>
   </div>
 
 
-  <%= form.hidden_field :form_id, value: form.object.form_id %>
+    <%= form.hidden_field :form_id, value: form.object.form_id %>
 
-  <div class="child3">
-    <%= form.submit class:"btn btn-primary" %>
-  </div>
+    <div class="child3" style="display:flex; justify-content:flex-end; margin-top:5px">
+      <%= form.submit class:"btn btn-success" %>
+    </div>
 
-  </div>
 <% end %>
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -33,6 +33,8 @@
     const optionsContainer = document.getElementById("options-container-new");
     const addOptionButton = document.getElementById("add-option-new");
     let optionCount = 1;
+
+    questionTypeSelect.classList.add("form-select");
 
 
         questionTypeSelect.addEventListener("change", function() {
@@ -45,13 +47,14 @@
 
     addOptionButton.addEventListener("click", function() {
       const optionLabel = document.createElement("label");
-      optionLabel.innerText = "Option " + optionCount + " : ";
+      optionLabel.innerText = "Option " + optionCount;
       optionsContainer.appendChild(optionLabel);
 
       const input = document.createElement("input");
       input.type = "text";
       input.name = "question[options_attributes][" + optionCount + "][title]";
       input.placeholder = "Enter option";
+      input.classList.add("form-control");
       optionsContainer.appendChild(input);
 
       optionsContainer.appendChild(document.createElement("br")); // Line break for the next option
