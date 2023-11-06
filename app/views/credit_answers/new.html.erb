@@ -27,9 +27,10 @@
               <% @questions.where(header_id: question.id).each do |sub_question|  %>
               <div style="display:flex;margin:2%;">
               <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: sub_question.id) do |answer_fields| %>
-                <%= answer_fields.hidden_field :credit_question_id %>
+                <%= answer_fields.hidden_field :credit_question_id,  class: "question_id" %>
                 <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
-                <%= answer_fields.number_field :answer, class: "form-control numeric-input" %>
+                <%= answer_fields.number_field :answer, class: "form-control numeric-input" ,data: {questionId: sub_question.id,maxCredit: sub_question.max_credit,obtCredit: sub_question.obt_credit }%>
+              <span id="credit_value_<%= sub_question.id %>">0</span>
               <% end %>
                 </div>
               <% end %>
@@ -38,9 +39,10 @@
             <% elsif question.header_id == nil %>
               <div class="mb-3">
                 <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: question.id) do |answer_fields| %>
-                  <%= answer_fields.hidden_field :credit_question_id %>
+                  <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
                   <%= answer_fields.label :answer, question.title, class: "form-label" %>
-                  <%= answer_fields.number_field :answer, class: "form-control numeric-input" %>
+                  <%= answer_fields.number_field :answer, class: "form-control numeric-input" ,data: {questionId: question.id,maxCredit: question.max_credit,obtCredit: question.obt_credit } %>
+                <span id="credit_value_<%= question.id %>">0</span>
                 <% end %>
               </div>
               <% end %>
@@ -49,8 +51,12 @@
         </div>
       <% end %>
 
+
+
+      
       <%= form.hidden_field :entry, value: @form.id %>
-      <%= form.submit "Create Answers", class: "btn btn-success" %>
+      <div id="error-message" style="color: red;"></div>
+      <%= form.submit "Create Answers", class: "btn btn-success",  id: "submit-button" %>
     <% end %>
     <%=@entry%>
   </div>
@@ -59,24 +65,49 @@
 <!-- End of credits container div -->
 
 <script>
-  // JavaScript code to calculate and display the sum of numeric inputs
-  document.addEventListener('DOMContentLoaded', function() {
-    const numericInputs = document.querySelectorAll('.numeric-input');
-    const totalValue = document.getElementById('total_value');
+document.addEventListener('DOMContentLoaded', function() {
+  const numericInputs = document.querySelectorAll('.numeric-input');
+  const totalValue = document.getElementById('total_value');
+  const submitButton = document.getElementById('submit-button');
+  const errorMessage = document.getElementById('error-message');
+
+  numericInputs.forEach(input => {
+    input.addEventListener('input', updateTotal);
+  });
+
+  function updateTotal() {
+    var total = 0.0;
 
     numericInputs.forEach(input => {
-      input.addEventListener('input', updateTotal);
+      const value = parseFloat(input.value) ||0;
+      const questionId = input.dataset.questionid||0;
+      const maxCredit = input.dataset.maxcredit||0;
+      const obtCredit = input.dataset.obtcredit||0;
+
+      // Calculate the credit for this question
+      const credit = Math.min(maxCredit, obtCredit * value);
+
+      // Update the total
+      total += credit;
+
+      // Update the credit value for this question
+      const creditValueElement = document.getElementById(`credit_value_${questionId}`);
+        creditValueElement.textContent = credit;
     });
 
-    function updateTotal() {
-      let total = 0;
-      numericInputs.forEach(input => {
-        const value = parseFloat(input.value) || 0;
-        total += value;
-      });
+    console.log(total);
 
-      // Update the total value on the page
-      totalValue.innerText = total;
+    // Update the total value on the page
+    totalValue.innerText = total;
+
+      if (total < <%= @form.credit_req %> ) {
+      const creditDifference = <%= @form.credit_req %> - total;
+      submitButton.disabled = true; // Disable the submit button
+      errorMessage.textContent = "Your credit score is "+ total +". You fell "+ creditDifference + " from the cutoff!";
+    } else {
+      submitButton.disabled = false; // Enable the submit button
+      errorMessage.textContent = ""; // Clear the error message
     }
-  });
+  }
+});
 </script>

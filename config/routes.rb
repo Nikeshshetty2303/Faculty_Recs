@@ -29,6 +29,7 @@ Rails.application.routes.draw do
    end
   end
 
+
   resources :responses do
   member do
     get 'display'
@@ -48,4 +49,11 @@ end
 
    get 'home/index'
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
+
+   resources :credit_questions do
+    collection do
+      post :import
+    end
+  end
+
 end

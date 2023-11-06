@@ -18,6 +18,7 @@ class CreditAnswersController < ApplicationController
     @section = CreditSection.all
     @questions = CreditQuestion.all
     @answers = @questions.map { |question| CreditAnswer.new(credit_question_id: question.id) }
+    @file_upload = FileUpload.new
   end
 
   # GET /credit_answers/1/edit
@@ -28,11 +29,13 @@ class CreditAnswersController < ApplicationController
   def create
     @questions = CreditQuestion.all
     answer_params_array = params[:answers][:answers]
+
     response = Response.create!
+
     parameter_value = params[:answers][:entry]
     response.form_id = parameter_value
-    @answers = []
 
+    @answers = []
     credit = 0
     answer_params_array.each do |answer_param|
       permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id)
@@ -48,18 +51,24 @@ class CreditAnswersController < ApplicationController
       end
       answer.response_id = response.id
       @answers << answer
-
     end
 
     response.credit_score = credit
     response.user_id = current_user.id
-    response.save
+    form_id = response.form_id
+    @form = Form.find(form_id)
 
-    if @answers.all? { |answer| answer.valid? }
-      @answers.each(&:save)
-      redirect_to new_file_upload_path(userid: current_user.id, response_id: response.id), notice: 'Answers were successfully created.'
+    if credit >= @form.credit_req
+      response.save
+      if @answers.all? { |answer| answer.valid? }
+        @answers.each(&:save)
+        redirect_to new_file_upload_path(userid: current_user.id, response_id: response.id), notice: 'Answers were successfully created.'
+      else
+        render :new
+      end
     else
-      render :new
+      redirect_to new_credit_answer_path(id: @form.id,userid: current_user.id)
+      response.destroy
     end
   end
 
