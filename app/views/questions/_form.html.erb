@@ -27,7 +27,7 @@
           <%= f.submit "Move Down", class: "btn btn-sm btn-secondary" %>
         <% end %>
 
-        <%= button_to 'Move Up', move_up_question_path(form.object.id), method: :patch, class:'btn btn-sm btn-warning' %>
+         <%= button_to "Delete", form.object, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" } %>
         <%= form.hidden_field :form_id, value: form.object.form_id %>
         <%= form.submit class:"btn btn-sm btn-primary" %>
       </div>

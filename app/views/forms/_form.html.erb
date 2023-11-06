@@ -34,10 +34,10 @@
             <% @form.questions.each do |question| %>
               <div class="mb-3">
                 <label class="form-label"><%= question.title %></label>
-                <% if question.question_type_id == 1 %> 
-                  <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:"form-control", placeholder:"Applicant response" %>
+                <% if question.question_type_id == 1 %>
+                  <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:"form-control" %>
                 <% elsif question.question_type_id == 5 %>
-                  <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', placeholder:"Applicant response" %>
+                  <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
                 <% elsif question.question_type_id == 2 %>
                     <% question.options.each do |option| %>
                       <div style='margin:5px'>
@@ -59,7 +59,7 @@
                 <% end %>
               </div>
             <% end %>
-            <% form.submit %>
+
           <% end %>
         </div>
       </div>

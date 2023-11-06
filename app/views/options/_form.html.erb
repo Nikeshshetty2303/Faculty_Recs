@@ -18,5 +18,6 @@
 
   <div>
     <%= form.submit class:"btn btn-warning" %>
+    <%= button_to "Delete", option, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" } %>
   </div>
 <% end %>
