@@ -18,7 +18,6 @@ class CreditAnswersController < ApplicationController
     @section = CreditSection.all
     @questions = CreditQuestion.all
     @answers = @questions.map { |question| CreditAnswer.new(credit_question_id: question.id) }
-    @file_upload = FileUpload.new
   end
 
   # GET /credit_answers/1/edit
@@ -37,12 +36,14 @@ class CreditAnswersController < ApplicationController
 
     @answers = []
     credit = 0
+
     answer_params_array.each do |answer_param|
-      permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id)
+      permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id, :file_upload)
       answer = CreditAnswer.new(permitted_params)
       if answer.answer == nil
         answer.answer =0
       end
+
       #credit calculations
       if answer.credit_question.obt_credit * answer.answer >  answer.credit_question.max_credit
         credit = credit + answer.credit_question.max_credit
@@ -62,7 +63,7 @@ class CreditAnswersController < ApplicationController
       response.save
       if @answers.all? { |answer| answer.valid? }
         @answers.each(&:save)
-        redirect_to new_file_upload_path(userid: current_user.id, response_id: response.id), notice: 'Answers were successfully created.'
+        redirect_to submit_form_form_path(userid: current_user.id, id: @form.id), notice: 'Answers were successfully created.'
       else
         render :new
       end
@@ -103,6 +104,6 @@ class CreditAnswersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def credit_answer_params
-      params.require(:credit_answer).permit(:answer, :credit_question_id, :entry, :response_id)
+      params.require(:credit_answer).permit(:answer, :credit_question_id, :entry, :response_id, :file_upload, :credit_section_id)
     end
 end
