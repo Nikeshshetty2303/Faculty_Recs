@@ -38,9 +38,6 @@
                     <div class="nav-item">
                         <%= link_to 'Edit Profile', edit_user_registration_path, class:"nav-link" %>
                     </div>
-                    <div class="nav-item">
-                        <%= link_to "Credit Form", new_credit_answer_path(userid: @user.id), class:"nav-link" %>
-                    </div>
                         <button class="btn btn-danger" id='log_out_mb'><%= link_to 'LogOut',destroy_user_session_path,method: :delete, class:"dropdown-item profile-dropdown", id:"log-out" %></button>
                     </div>
                 <div class="d-lg-flex col-lg-3 justify-content-lg-end" id="non_collapse_login">
