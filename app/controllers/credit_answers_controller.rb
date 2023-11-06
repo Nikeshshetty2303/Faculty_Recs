@@ -28,18 +28,22 @@ class CreditAnswersController < ApplicationController
   def create
     @questions = CreditQuestion.all
     answer_params_array = params[:answers][:answers]
+
     response = Response.create!
+
     parameter_value = params[:answers][:entry]
     response.form_id = parameter_value
-    @answers = []
 
+    @answers = []
     credit = 0
+
     answer_params_array.each do |answer_param|
-      permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id)
+      permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id, :file_upload)
       answer = CreditAnswer.new(permitted_params)
       if answer.answer == nil
         answer.answer =0
       end
+
       #credit calculations
       if answer.credit_question.obt_credit * answer.answer >  answer.credit_question.max_credit
         credit = credit + answer.credit_question.max_credit
@@ -48,18 +52,24 @@ class CreditAnswersController < ApplicationController
       end
       answer.response_id = response.id
       @answers << answer
-
     end
 
     response.credit_score = credit
     response.user_id = current_user.id
-    response.save
+    form_id = response.form_id
+    @form = Form.find(form_id)
 
-    if @answers.all? { |answer| answer.valid? }
-      @answers.each(&:save)
-      redirect_to new_file_upload_path(userid: current_user.id, response_id: response.id), notice: 'Answers were successfully created.'
+    if credit >= @form.credit_req
+      response.save
+      if @answers.all? { |answer| answer.valid? }
+        @answers.each(&:save)
+        redirect_to submit_form_form_path(userid: current_user.id, id: @form.id), notice: 'Answers were successfully created.'
+      else
+        render :new
+      end
     else
-      render :new
+      redirect_to new_credit_answer_path(id: @form.id,userid: current_user.id)
+      response.destroy
     end
   end
 
@@ -94,6 +104,6 @@ class CreditAnswersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def credit_answer_params
-      params.require(:credit_answer).permit(:answer, :credit_question_id, :entry, :response_id)
+      params.require(:credit_answer).permit(:answer, :credit_question_id, :entry, :response_id, :file_upload, :credit_section_id)
     end
 end

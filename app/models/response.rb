@@ -4,5 +4,5 @@ class Response < ApplicationRecord
   has_many :credit_answers, dependent: :destroy
   has_many :file_uploads, dependent: :destroy
   belongs_to :user, optional:true
-  accepts_nested_attributes_for :answers
+  accepts_nested_attributes_for :answers, allow_destroy: true
 end
