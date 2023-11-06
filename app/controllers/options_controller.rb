@@ -37,8 +37,10 @@ class OptionsController < ApplicationController
   # PATCH/PUT /options/1 or /options/1.json
   def update
     respond_to do |format|
+      @question = Question.find(@option.question_id)
+      @form = Form.find(@question.form_id)
       if @option.update(option_params)
-        format.html { redirect_to option_url(@option), notice: "Option was successfully updated." }
+        format.html { redirect_to form_url(@form.id, userid:@form.user_id), notice: "Option was successfully updated." }
         format.json { render :show, status: :ok, location: @option }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -49,10 +51,12 @@ class OptionsController < ApplicationController
 
   # DELETE /options/1 or /options/1.json
   def destroy
+    @question = Question.find(@option.question_id)
+    @form = Form.find(@question.form_id)
     @option.destroy
 
     respond_to do |format|
-      format.html { redirect_to options_url, notice: "Option was successfully destroyed." }
+      format.html { redirect_to form_url(@form.id, userid:@form.user_id), notice: "Option was successfully destroyed." }
       format.json { head :no_content }
     end
   end

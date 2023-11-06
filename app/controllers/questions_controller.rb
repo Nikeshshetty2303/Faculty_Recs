@@ -70,8 +70,9 @@ end
   # PATCH/PUT /questions/1 or /questions/1.json
   def update
     respond_to do |format|
+      @form = Form.find(@question.form_id)
       if @question.update(question_params)
-        format.html { redirect_to question_url(@question), notice: "Question was successfully updated." }
+        format.html { redirect_to form_url(@question.form_id, userid:@form.user_id), notice: "Question was successfully updated." }
         format.json { render :show, status: :ok, location: @question }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -82,11 +83,12 @@ end
 
   # DELETE /questions/1 or /questions/1.json
   def destroy
+    @form = Form.find(@question.form_id)
     @question.options.destroy_all
     @question.destroy
 
     respond_to do |format|
-      format.html { redirect_to questions_url, notice: "Question was successfully destroyed." }
+      format.html { redirect_to form_url(@form.id, userid:@form.user_id), notice: "Question was successfully destroyed." }
       format.json { head :no_content }
     end
   end
