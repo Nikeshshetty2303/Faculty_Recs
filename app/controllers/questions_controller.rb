@@ -1,25 +1,26 @@
 class QuestionsController < ApplicationController
   before_action :set_question, only: %i[ show edit update destroy ]
-  skip_before_action :verify_authenticity_token, only: [:edit,:move_up,:move_down]
+  skip_before_action :verify_authenticity_token, only: [:edit]
+  skip_before_action :verify_authenticity_token
   # GET /questions or /questions.json
   def index
     @questions = Question.all
   end
 
-  def move_up
+  def moveup
     @question = Question.find(params[:id])
+    @question.form_id = params[:question][:form_id]
+    @form =Form.find(  @question.form_id )
     @question.move_higher
-    respond_to do |format|
-      format.js
-    end
+    redirect_to home_index_path(@question.form_id,userid:@form.user_id)
   end
 
-  def move_down
+  def movedown
     @question = Question.find(params[:id])
+    @question.form_id = params[:question][:form_id]
+    @form =Form.find(  @question.form_id )
     @question.move_lower
-    respond_to do |format|
-      format.js
-    end
+    redirect_to form_url(@question.form_id,userid:@form.user_id)
   end
   # GET /questions/1 or /questions/1.json
   def show
@@ -40,17 +41,6 @@ class QuestionsController < ApplicationController
     end
   end
 
-def update
-  @question = Question.find(params[:id])
-  if @question.update(question_params)
-    respond_to do |format|
-      format.js
-    end
-  else
-    # Handle validation errors
-  end
-end
-
   # POST /questions or /questions.json
   def create
     @question = Question.new(question_params)
@@ -70,6 +60,7 @@ end
   # PATCH/PUT /questions/1 or /questions/1.json
   def update
     respond_to do |format|
+
       @form = Form.find(@question.form_id)
       if @question.update(question_params)
         format.html { redirect_to form_url(@question.form_id, userid:@form.user_id), notice: "Question was successfully updated." }
@@ -101,6 +92,6 @@ end
 
     # Only allow a list of trusted parameters through.
     def question_params
-      params.require(:question).permit(:title, :form_id, :question_type_id, options_attributes: [:title])
+      params.require(:question).permit(:title, :form_id, :position, :question_type_id, options_attributes: [:title])
     end
 end

@@ -1,14 +1,13 @@
 <%= form_with(model: form, local: true) do |form| %>
   <div class="child1 mb-3">
     <%= form.label :title, style: "display: block", class:'form-label' %>
-    <%= form.text_field :title, class:'form-control' %>
+    <%= form.object.position %><%= form.text_field :title, class:'form-control' %>
   </div>
   <div class="">
     <div class="child2 px-2">
       <%= form.label :question_type_id, "Type of Question", style: "display: block", id: "question_type_id_#{form.object.id}", class:'form-label' %>
-      <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), { prompt: "Select a Question Type" }, id: "question_type_select_#{form.object.id}", class:'form-select' %>
+     <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), { prompt: "Select a Question Type" }, id: "question_type_select_#{form.object.id}", class:'form-select' %>
     </div>
-
     <div id="option-fields_<%= form.object.id %>" style="display: none;">
       <div id="options-container_<%= form.object.id %>">
         <!-- Options will be appended here dynamically -->
@@ -17,15 +16,7 @@
     </div>
 
       <div style="display:flex; justify-content:space-around; margin:8px">
-        <%= form_for(form.object, url: move_up_question_path(form.object.id), method: :patch, remote: true) do |f| %>
-          <%= f.hidden_field :move_up, value: true %>
-          <%= f.submit "Move Up", class: "btn btn-sm btn-secondary" %>
-        <% end %>
-
-        <%= form_for(form.object, url: move_down_question_path(form.object.id), method: :patch, remote: true) do |f| %>
-          <%= f.hidden_field :move_down, value: true %>
-          <%= f.submit "Move Down", class: "btn btn-sm btn-secondary" %>
-        <% end %>
+           <%= button_to 'Move Up', moveup_question_path(form.object.id),method: :patch, class: "btn btn-sm btn-secondary" %> 
 
          <%= button_to "Delete", form.object, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" } %>
         <%= form.hidden_field :form_id, value: form.object.form_id %>

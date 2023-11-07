@@ -20,14 +20,15 @@ Rails.application.routes.draw do
   post 'submit_form', on: :member
   end
 
-  resources :questions, only: %i[edit update]
-
-  resources :questions do
-  member do
-    post 'move_up'
-    post 'move_down'
+   # resources :questions, only: %i[edit update]
+   # patch 'questions/moveup' ,on: :member
+   resources :questions do
+     post 'moveup', on: :member
+       patch 'moveup' ,on: :member
+       patch 'movedown' ,on: :member
    end
-  end
+
+
 
 
   resources :responses do
