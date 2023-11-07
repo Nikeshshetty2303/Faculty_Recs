@@ -58,7 +58,7 @@
                         <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
                       </div>
                     </div>
-                 
+
                   <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
                 <% end %>
               </div>
@@ -69,7 +69,7 @@
       <% end %>
 
       <%= form.hidden_field :entry, value: @form.id %>
-      
+
       <div class="alert alert-info" role="alert">
         <div id="error-message" style="color: red;"></div>
       </div>
@@ -118,10 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if(total_progress > 100){
       total_progress = 100;
     }
-    progres_bar.innerText = total_progress +"%";
-    progres_bar.style.width = total_progress +"%";
+    progres_bar.innerText = total_progress.toFixed(2) +"%";
+    progres_bar.style.width = total_progress.toFixed(2) +"%";
 
-    
+
       if (total < <%= @form.credit_req %> ) {
       const creditDifference = <%= @form.credit_req %> - total;
       submitButton.disabled = true; // Disable the submit button

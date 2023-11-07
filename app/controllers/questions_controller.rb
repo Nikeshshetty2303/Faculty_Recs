@@ -9,15 +9,13 @@ class QuestionsController < ApplicationController
 
   def moveup
     @question = Question.find(params[:id])
-    @question.form_id = params[:question][:form_id]
     @form =Form.find(  @question.form_id )
     @question.move_higher
-    redirect_to home_index_path(@question.form_id,userid:@form.user_id)
+    redirect_to form_url(@question.form_id,userid:@form.user_id)
   end
 
   def movedown
     @question = Question.find(params[:id])
-    @question.form_id = params[:question][:form_id]
     @form =Form.find(  @question.form_id )
     @question.move_lower
     redirect_to form_url(@question.form_id,userid:@form.user_id)

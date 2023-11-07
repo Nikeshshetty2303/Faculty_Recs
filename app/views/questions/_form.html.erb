@@ -16,9 +16,11 @@
     </div>
 
       <div style="display:flex; justify-content:space-around; margin:8px">
-           <%= button_to 'Move Up', moveup_question_path(form.object.id),method: :patch, class: "btn btn-sm btn-secondary" %> 
+          <%= button_to "Delete", form.object, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" } %>
+           <%= button_to 'Move Up', moveup_question_path(form.object.id), method: :patch, class: "btn btn-sm btn-secondary" %>
+           <%= button_to 'Move Down', movedown_question_path(form.object.id), method: :patch, class: "btn btn-sm btn-secondary" %>
 
-         <%= button_to "Delete", form.object, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" } %>
+
         <%= form.hidden_field :form_id, value: form.object.form_id %>
         <%= form.submit class:"btn btn-sm btn-primary" %>
       </div>
