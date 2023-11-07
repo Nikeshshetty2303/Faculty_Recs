@@ -11,13 +11,15 @@
     </div>
   <% end %>
 
-  <div class="">
-    <%= form.label :option, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div style="">
+    <div class="mb-2;">
+      <%= form.label :option, style: "display: block", class:'form-label small' %>
+    </div>
+    <div style="display:flex">
+      <%= form.text_field :title, class:'form-control form-control-sm' %>
+      <%= button_to "Delete", option, method: :delete, class: "btn btn-sm btn-danger mx-2", data: { confirm: "Are you sure?" } %>
+      <%= form.submit class:"btn btn-sm btn-warning" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.submit class:"btn btn-warning" %>
-    <%= button_to "Delete", option, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" } %>
-  </div>
 <% end %>
