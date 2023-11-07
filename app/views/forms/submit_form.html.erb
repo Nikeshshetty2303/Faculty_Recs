@@ -9,7 +9,7 @@
     </div>
     <div class="alert alert-success" style="width:50%" role="alert">
     <b>Department</b>: <%= @form.dept %>
-     </div>
+  </div>
   </div>
   <div class="container-md py-4 px-5 mb-3" style="background-color:rgb(127 172 218 / 16%); border-radius:10px;">
     <%= form_with(model: @response, url: create_response_form_path(id: @form.id), method: :post) do |form| %>
