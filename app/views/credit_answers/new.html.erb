@@ -58,7 +58,7 @@
                         <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
                       </div>
                     </div>
-                 
+
                   <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
                 <% end %>
               </div>
@@ -69,7 +69,7 @@
       <% end %>
 
       <%= form.hidden_field :entry, value: @form.id %>
-      
+
       <div class="alert alert-info" role="alert">
         <div id="error-message" style="color: red;"></div>
       </div>
@@ -80,61 +80,51 @@
   <!-- End of Questions section -->
 </div>
 <!-- End of credits container div -->
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const numericInputs = document.querySelectorAll('.numeric-input');
   const totalValue = document.getElementById('total_value');
   const submitButton = document.getElementById('submit-button');
   const errorMessage = document.getElementById('error-message');
-  const progres_bar = document.getElementById('progres_bar');
+  const progressBar = document.getElementById('progres_bar');
 
   numericInputs.forEach(input => {
     input.addEventListener('input', updateTotal);
   });
 
   function updateTotal() {
-    var total = 0.0;
+    let total = 0;
+    let totalProgress = 0;
 
     numericInputs.forEach(input => {
-      const value = parseFloat(input.value) ||0;
-      const questionId = input.dataset.questionid||0;
-      const maxCredit = input.dataset.maxcredit||0;
-      const obtCredit = input.dataset.obtcredit||0;
+      const value = parseFloat(input.value) || 0;
+      const questionId = input.dataset.questionid || 0;
+      const maxCredit = input.dataset.maxcredit || 0;
+      const obtCredit = input.dataset.obtcredit || 0;
 
-      // Calculate the credit for this question
       const credit = Math.min(maxCredit, obtCredit * value);
-
-      // Update the total
       total += credit;
 
-      // Update the credit value for this question
       const creditValueElement = document.getElementById(`credit_value_${questionId}`);
-        creditValueElement.textContent = credit;
+      creditValueElement.textContent = credit;
 
-           // Update the total value on the page
-    const total_progress = (total/<%= @form.credit_req %>)*100;
-    totalValue.innerText = total;
-    if(total_progress > 100){
-      total_progress = 100;
-    }
-    progres_bar.innerText = total_progress +"%";
-    progres_bar.style.width = total_progress +"%";
-
-    
-      if (total < <%= @form.credit_req %> ) {
-      const creditDifference = <%= @form.credit_req %> - total;
-      submitButton.disabled = true; // Disable the submit button
-       errorMessage.style.color = "red";
-      errorMessage.textContent = "Your credit score is "+ total +". You fell "+ creditDifference + " from the cutoff!";
-    } else {
-      submitButton.disabled = false; // Enable the submit button
-      errorMessage.style.color = "green";
-      errorMessage.textContent = "Congratulations! You meet credit requirements!"; // Clear the error message
-    }
-
+      totalProgress += (credit / <%= @form.credit_req %>) * 100;
     });
 
+    totalValue.innerText = total;
+    progressBar.style.width = Math.min(totalProgress, 100) + "%";
+    progressBar.textContent = Math.min(totalProgress, 100) + "%";
+
+    if (total < <%= @form.credit_req %>) {
+      const creditDifference = <%= @form.credit_req %> - total;
+      submitButton.disabled = true;
+      errorMessage.style.color = "red";
+      errorMessage.textContent = `Your credit score is ${total}. You are ${creditDifference} credits away from the cutoff!`;
+    } else {
+      submitButton.disabled = false;
+      errorMessage.style.color = "green";
+      errorMessage.textContent = "Congratulations! You meet the credit requirements!";
+    }
   }
 });
 </script>
