@@ -67,7 +67,7 @@
     <div class="right px-3 pb-2" >
       <h1 style="position:sticky; top:0; text-align:center; background-color:white; padding:0.2em; z-index:10">Edit Form</h1>
         <div>
-          <% @form.questions.each do |question| %>
+          <% @form.questions.order(:position).each do |question| %>
             <div class="child my-2" style="background-color:#cfe2ff; border-radius:10px">
               <%# <%= link_to"Edit", edit_question_path(question), remote: true %>
               <%= render 'questions/form', form: question, class:'form-control' %>
@@ -98,4 +98,3 @@
     <h2 class="text-center text-danger">Danger Zone</h2>
     <div><%= link_to "Destroy this form", @form, method: :delete, class:"btn btn-danger" %></div>
   </div>
-

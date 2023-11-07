@@ -4,9 +4,6 @@ class FormsController < ApplicationController
   def submit_form
     @form = Form.find(params[:id])
     @questions = @form.questions
-
-
-    # render :submit_form
   end
 
 def create_response

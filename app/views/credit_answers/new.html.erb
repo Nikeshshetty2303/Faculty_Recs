@@ -112,10 +112,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     totalValue.innerText = total;
-    progressBar.style.width = Math.min(totalProgress, 100) + "%";
-    progressBar.textContent = Math.min(totalProgress, 100) + "%";
+    progressBar.style.width = Math.min(totalProgress.toFixed(2), 100) + "%";
+    progressBar.textContent = Math.min(totalProgress.toFixed(2), 100) + "%";
 
-    if (total < <%= @form.credit_req %>) {
+
+      if (total < <%= @form.credit_req %> ) {
       const creditDifference = <%= @form.credit_req %> - total;
       submitButton.disabled = true;
       errorMessage.style.color = "red";
