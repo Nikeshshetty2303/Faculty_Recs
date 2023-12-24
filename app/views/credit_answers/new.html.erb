@@ -18,6 +18,7 @@
   <div>
     <%= form_for :answers, url: credit_answers_path do |form| %>
       <% @section.each do |section| %>
+
         <div class="my-3" style="background-color:#cfe2ff; border-radius:8px; padding:1em">
           <h2><%= section.title %></h2>
           <div class="mb-1">
@@ -32,6 +33,7 @@
               <div style="display:flex;">
               <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: sub_question.id) do |answer_fields| %>
                 <%= answer_fields.hidden_field :credit_question_id,  class: "question_id" %>
+                <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
                   <div class="my-3 mx-2">
                     <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
                     <div class='input-group mb-1'>
@@ -49,7 +51,7 @@
               <div class="mb-3">
                 <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: question.id) do |answer_fields| %>
                   <%if @count == 1%>
-                  <%= answer_fields.file_field :file_upload, class: "form-control"%>
+                  <%= answer_fields.file_field :file_upload, class: "form-control" %>
                    <%end%>
                     <div class="my-4">
                       <%= answer_fields.label :answer, question.title, class: "form-label" %>
@@ -60,6 +62,7 @@
                     </div>
 
                   <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
+                  <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
                 <% end %>
               </div>
               <% end %>

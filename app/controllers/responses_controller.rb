@@ -1,5 +1,5 @@
 class ResponsesController < ApplicationController
-  before_action :set_response, only: %i[ show edit update destroy ]
+  before_action :set_response, only: %i[ show edit update destroy]
 
   # GET /responses or /responses.json
   def index
@@ -11,6 +11,16 @@ class ResponsesController < ApplicationController
   def myresponse
     @user = User.find(params[:id])
     @responses = Response.where(user_id: @user.id)
+  end
+
+  def validate
+    @responses = Response.find(params[:id])
+  end
+
+  def my_credit
+    @response = Response.find(params[:id])
+    @user = User.find(params[:userid])
+    @section = CreditSection.all
   end
 
   def display
@@ -33,6 +43,13 @@ class ResponsesController < ApplicationController
         end
       end
   end
+
+  def view_pdf
+    @answer = CreditAnswer.find(params[:ansid])
+    send_data @answer.file_upload.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+  end
+
+
   # GET /responses/1 or /responses/1.json
   def show
   end
@@ -63,9 +80,10 @@ class ResponsesController < ApplicationController
 
   # PATCH/PUT /responses/1 or /responses/1.json
   def update
+    @response.validation = 0
     respond_to do |format|
       if @response.update(response_params)
-        format.html { redirect_to response_url(@response), notice: "Response was successfully updated." }
+        format.html { redirect_to home_validate_url(@response), notice: "Response was successfully updated." }
         format.json { render :show, status: :ok, location: @response }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -92,6 +110,6 @@ class ResponsesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def response_params
-      params.require(:response).permit(:title)
+      params.require(:response).permit(:title, :validation)
     end
 end

@@ -1,0 +1,30 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Credit Answer</th>
+      <th scope="col">Credits</th>
+      <th scope="col">Uploads</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% CreditAnswer.all.each do |answer| %>
+      <% if answer.response_id == @responses.id %>
+        <tr>
+          <% @question = CreditQuestion.where(id: answer.credit_question_id).first %>
+          <% @response = Response.where(id: answer.response_id).first %>
+          <th scope="row"><%= answer.answer %></th>
+          <% if answer.answer > @question.max_credit %>
+            <td><%= @question.max_credit %></td>
+          <% else %>
+            <td><%= @question.obt_credit * answer.answer %></td>
+          <% end %>
+            <%if answer.file_upload %>
+            <td><%= link_to "View",  view_pdf_response_path(ansid:answer.id, id:@response.id ), class:"btn btn-warning" %> </td>
+          <%else%>
+            <td><%"uploads"%></td>
+          <%end%>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

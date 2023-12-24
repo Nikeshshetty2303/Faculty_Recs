@@ -38,7 +38,7 @@ class CreditAnswersController < ApplicationController
     credit = 0
 
     answer_params_array.each do |answer_param|
-      permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id, :file_upload)
+      permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id, :file_upload,:credit_section_id)
       answer = CreditAnswer.new(permitted_params)
       if answer.answer == nil
         answer.answer =0
@@ -50,6 +50,7 @@ class CreditAnswersController < ApplicationController
       else
          credit = credit + answer.credit_question.obt_credit * answer.answer
       end
+
       answer.response_id = response.id
       @answers << answer
     end

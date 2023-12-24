@@ -30,6 +30,10 @@
                         <%= link_to 'My Applications', myresponse_response_path(id: @user.id), class:"nav-link" %>
                     </div>
 
+                    <div class="nav-item">
+                        <%= link_to 'Validate Credit', home_validate_path(id: @user.id), class:"nav-link" %>
+                    </div>
+
                     <% if @user.adminrole == true %>
                     <div class="nav-item">
                         <%= link_to 'Admin Portal', forms_path(userid: @user.id), class:"nav-link" %>
