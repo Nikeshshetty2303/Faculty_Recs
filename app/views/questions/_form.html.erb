@@ -1,59 +1,72 @@
 <%= form_with(model: form, local: true) do |form| %>
-  <div class="child1 mb-3">
-    <%= form.label :title, style: "display: block", class:'form-label' %>
-    <%= form.object.position %><%= form.text_field :title, class:'form-control' %>
-  </div>
-  <div class="">
-    <div class="child2 px-2">
-      <%= form.label :question_type_id, "Type of Question", style: "display: block", id: "question_type_id_#{form.object.id}", class:'form-label' %>
-     <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), { prompt: "Select a Question Type" }, id: "question_type_select_#{form.object.id}", class:'form-select' %>
-    </div>
-    <div id="option-fields_<%= form.object.id %>" style="display: none;">
-      <div id="options-container_<%= form.object.id %>">
-        <!-- Options will be appended here dynamically -->
+  <div style="display:flex; justify-content:space-around">
+    <!--title and fiels-->
+    <div style='width:95%'>
+      <div class="child1 mb-2">
+        <%= form.label :title, style: "display: block", class:'form-label' %>
+        <%= form.object.position %><%= form.text_field :title, class:'form-control' %>
       </div>
-      <button type="button" id="add-option_<%= form.object.id %>">Add Option</button>
-    </div>
 
-      <div style="display:flex; justify-content:space-around; margin:8px">
+      <!--actions on question-->
+      <div class="">
+
+        <!--type-->
+        <div class="child2 px-2">
+          <%= form.label :question_type_id, "Type of Question", style: "display: block", id: "question_type_id_#{form.object.id}", class:'form-label' %>
+          <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), { prompt: "Select a Question Type" }, id: "question_type_select_#{form.object.id}", class:'form-select' %>
+        </div>
+        <!--options-->
+        <div id="option-fields_<%= form.object.id %>" style="display: none;">
+          <div id="options-container_<%= form.object.id %>">
+            <!-- Options will be appended here dynamically -->
+          </div>
+          <button type="button" id="add-option_<%= form.object.id %>">Add Option</button>
+        </div>
+        <!--move up move-down, delete, update-->
+        <div style="display:flex; justify-content:space-around; margin:8px">
           <%= button_to "Delete", form.object, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure?" } %>
-           <%= button_to 'Move Up', moveup_question_path(form.object.id), method: :patch, class: "btn btn-sm btn-secondary" %>
-           <%= button_to 'Move Down', movedown_question_path(form.object.id), method: :patch, class: "btn btn-sm btn-secondary" %>
-
-
-        <%= form.hidden_field :form_id, value: form.object.form_id %>
-        <%= form.submit class:"btn btn-sm btn-primary" %>
+          <%= form.hidden_field :form_id, value: form.object.form_id %>
+          <%= form.submit class:"btn btn-sm btn-success" %>
+        </div>
       </div>
+    </div>
 
-
+    <!---->
+    <div style="display:flex;flex-direction:column; justify-content:space-around; margin:8px">
+      <%= button_to '▲', moveup_question_path(form.object.id), method: :patch, class: "btn btn-sm btn-primary px-2" %>
+      <%= button_to '▼', movedown_question_path(form.object.id), method: :patch, class: "btn btn-sm btn-primary px-2" %>
+      <%= form.hidden_field :form_id, value: form.object.form_id %>
+    </div>
   </div>
+
 
 
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-   document.addEventListener("click", function(event) {
-     if (event.target.classList.contains("add-option_<%= form.object.id %>")) {
-       const questionId = <%= form.object.id %>;
-       const optionsContainer = document.getElementById(`options-container_<%=form.object.id%>`);
-       const optionCount = optionsContainer.children.length / 2 + 1;
 
-       const optionLabel = document.createElement("label");
-       optionLabel.innerText = `Option ${optionCount} : `;
-       optionsContainer.appendChild(optionLabel);
+  document.addEventListener("click", function(event) {
+      if (event.target.classList.contains("add-option_<%= form.object.id %>")) {
+        const questionId = <%= form.object.id %>;
+        const optionsContainer = document.getElementById(`options-container_<%=form.object.id%>`);
+        const optionCount = optionsContainer.children.length / 2 + 1;
 
-       const input = document.createElement("input");
-       input.type = "text";
-       input.name = `question[options_attributes][${questionId}][${optionCount}][title]`;
-       input.placeholder = "Enter option";
-       optionsContainer.appendChild(input);
+        const optionLabel = document.createElement("label");
+        optionLabel.innerText = `Option ${optionCount} : `;
+        optionsContainer.appendChild(optionLabel);
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.name = `question[options_attributes][${questionId}][${optionCount}][title]`;
+        input.placeholder = "Enter option";
+        optionsContainer.appendChild(input);
 
        optionsContainer.appendChild(document.createElement("br")); // Line break for the next option
-     }
-   });
+      }
+    });
 
    // Rest of your JavaScript code...
- });
+  } );
 
 </script>
 <% end %>
