@@ -34,15 +34,23 @@
                 <%= option.title %>
               </label>
             <% end %>
-          <% elsif question.question_type_id == 3 %>
-          <label for="exampleFormControlInput1" class="form-label"><%= question.title %></label>
-            <% question.options.each do |option| %>
-              <label>
-                <%= form.check_box :content, { multiple: true, value: option.title }, nil %>
-                <%= option.title %>
-              </label>
-            <% end %>
+      <% elsif question.question_type_id == 3 %>
+        <label for="exampleFormControlInput1" class="form-label"><%= question.title %></label>
+          <% question.options.each do |option| %>
+            <label>
+              <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil %>
+              <%= option.title %>
+              <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
+                <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title %>
+              <% end %>
+            </label>
           <% end %>
+      <% end %>
+
+
+
+
+
         </div>
       <% end %>
       <div style="display:flex; justify-content:flex-end;"><%= form.submit class:"btn btn-success mt-3"%></div>
