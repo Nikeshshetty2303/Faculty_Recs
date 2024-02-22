@@ -13,8 +13,9 @@
                 <div class="logo-div"><%= image_tag "NITK_Emblem.png", id:'collapse_logo' %></div>
             </a>
             <div class="d-lg-flex col-lg-3 justify-content-lg-end" id="collapse_login">
-                <button type="button" class="btn btn-outline-dark" id="updates">Updates</button>
-
+            <button type="button" class="btn btn-outline-dark mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Updates
+            </button>
             </div>
             <div class="collapse navbar-collapse d-lg-flex mt-1" id="hello_1">
 
@@ -44,9 +45,53 @@
                     </div>
                         <button class="btn btn-danger" id='log_out_mb'><%= link_to 'LogOut',destroy_user_session_path,method: :delete, class:"dropdown-item profile-dropdown", id:"log-out" %></button>
                     </div>
-                <div class="d-lg-flex col-lg-3 justify-content-lg-end" id="non_collapse_login">
-                    <button class="btn btn-danger"><%= link_to 'LogOut',destroy_user_session_path,method: :delete, class:"dropdown-item profile-dropdown", id:"log-out" %></button>
-                </div>
+                    <div class="d-lg-flex col-lg-3 justify-content-lg-end" id="non_collapse_login">
+                    <button type="button" class="btn btn-outline-dark mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Updates
+                    </button>
+                        <button class="btn btn-danger"><%= link_to 'LogOut',destroy_user_session_path,method: :delete, class:"dropdown-item profile-dropdown", id:"log-out" %></button>
+                    </div>
             </div>
         </div>
     </nav>
+
+
+
+<!-- MODAL -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Notifications</h1>
+        </div>
+        <div class="modal-body">
+        <ul class="list-group list-group-flush">
+        <li class="list-group-item" style="
+            border-radius: 10px;
+            background-color: aliceblue;
+            margin:3px auto">
+            <div class='announcement_element'>
+                <small class='fs-sm'>Date</small> | <small>1 Min read</small>
+                <p class='fw-bold'><a class='news_link' href="#">Announcement element heading</a></p>
+                <p class='font_size_15'>The new body goes here and very well explain the updates. Will redirect to some other page when clicked</p>
+            </div>
+        </li>
+        <li class="list-group-item" style="
+            border-radius: 10px;
+            background-color: aliceblue;
+            margin:3px auto">
+            <div class='announcement_element'>
+                <small class='fs-sm'>Date</small> | <small>1 Min read</small>
+                <p class='fw-bold'><a class='news_link' href="#">Announcement element heading</a></p>
+                <p class='font_size_15'>The new body goes here and very well explain the updates. Will redirect to some other page when clicked</p>
+            </div>
+        </li>
+    </ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">All Notifications</button>
+        </div>
+        </div>
+    </div>
+</div>

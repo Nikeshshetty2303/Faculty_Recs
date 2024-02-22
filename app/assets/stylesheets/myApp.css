@@ -39,3 +39,14 @@
     width: 65%;
     margin: 2em auto;
 }
+
+/* media query medium screen*/
+@media (max-width: 992px){
+    #the_right {
+        width: 95%;
+    }
+
+    .buttons_action {
+        flex-direction: column;
+    }
+}

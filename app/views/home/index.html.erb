@@ -1,43 +1,84 @@
  <%= stylesheet_link_tag 'home' %>
  <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
- <div class="container_home">
-     <div id='left'>
-       <%= image_tag 'Advertisement',width:'1050px'%>
-     </div>
-     <div id='right'>
-         <div id='announce'>
-             <div class="card">
-                 <div class="card-body">
-                     <div id="notification">
-                         <button class="btn btn-primary" id='attract' type="button" disabled>
-                             <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-                             <span class="visually-hidden" role="status">Loading...</span>
-                         </button>
-                         <h5 class="card-title text-center h2 fw-bold">Notifications</h5>
-                     </div>
-                 </div>
-                 <ul class="list-group list-group-flush li_hover">
-                   <% Form.all.each do |form|%>
-                     <li class="list-group-item">
-                         <div class='announcement_element'>
-                             <small class='fs-sm'><%= form.created_at.strftime('%d/%m/%Y') %></small> | <small><%= form.readtime %> Min read</small>
-                             <p class='fw-bold'><%= link_to  form.name, new_credit_answer_path(id: form.id,userid: @user.id), class:"news_link"%></p>
-                             <p class='font_size_15'><%= form.description %></p>
-                         </div>
-                     </li>
-                     <% end %>
+ <style>
+    .card_div {
+        width:75%;
+        margin:auto;
+    }
+    .info {
+        display:flex;
+        flex-wrap: wrap;
+    }
 
-                 </ul>
-                 <div class="card-body">
-                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                     <button type="button" class="btn btn-primary btn-sm">All Notifications</button>
-                 </div>
-             </div>
+    /* media query medium screen*/
+    @media (max-width: 992px){
+        .card_div {
+            width:95%;
+        }
+        .card_div img {
+            margin-right:1em;
+        }
+    }
 
-         </div>
-     </div>
- </div>
+ </style>
+
+<% Form.all.each do |form|%>
+
+    <div class='card_div'>
+        <div class="card my-4">
+            <div class="card-header">
+                <h3 class='my-3 fw-bold'><%= form.name%></h4>
+                <div class="info">
+                    <div>
+                        <%= image_tag "building.png", id:'', width:'15', height:'15', class:'mx-1' %>
+                        <span class='d-inline-flex align-items-end' style="font-size:14px; color:grey; margin-right:1em">Mechanical</span>
+                    </div>
+                    <div>
+                        <%= image_tag "suitcase.png", id:'', width:'15', height:'15', class:'mx-1' %>
+                        <span class='d-inline-flex align-items-end text-body-secondary' style="font-size:14px; color:grey; margin-right:1em">Full-Time</span>
+                    </div>
+                    <div>
+                        <%= image_tag "play.png", id:'', width:'15', height:'15', class:'mx-1' %>
+                        <span class='d-inline-flex align-items-end text-body-secondary' style="font-size:14px; color:grey; margin-right:1em"><%= form.created_at.strftime('%d/%m/%Y') %></span>
+                    </div>
+                    <div>
+                        <%= image_tag "exclamation-mark-in-a-circle.png", id:'', width:'15', height:'15', class:'mx-1' %>
+                        <span class='d-inline-flex align-items-end text-body-secondary' style="font-size:14px; color:grey; margin-right:1em">12 - 12- 2003</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-1">
+                    <h6 class="fw-bold">Required Qualifications</h5>
+                    <ul class='pt-1 pb-2 px-4'>
+                        <li class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste consequuntur facere exercitationem iusto nemo, perspiciatis similique accusantium animi quasi nesciunt.</p>
+                        <li class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates, id a quaerat officiis ullam repellat?</p>
+                        <li class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptate, deleniti magni? Blanditiis?</p>
+                    </ui>
+                </div>
+            <%= link_to  "Learn More", new_credit_answer_path(id: form.id,userid: @user.id), class:"btn btn-outline-primary mt-3"%>
+            </div>
+        </div>
+    </div>
+
+<% end %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
  <div class="card vis" id='updates_tab'>
@@ -88,11 +129,11 @@
                          </div>
                      </li>
                  </ul>
-                 <div class="card-body">
-                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                     <button type="button" class="btn btn-primary btn-sm">All Notifications</button>
-                 </div>
-             </div>
+<div class="card-body">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-primary btn-sm">All Notifications</button>
+    </div>
+</div>
 
 
 

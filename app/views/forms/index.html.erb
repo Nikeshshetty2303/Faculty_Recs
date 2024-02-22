@@ -5,9 +5,6 @@
 <div class='app_page_container'>
 
     <h1 class='progress_heading text-center fw-bold'>My Forms</h1>
-    <div class="the_body">
-
-    </div>
 
 </div>
         <div id='the_right'>
@@ -19,11 +16,11 @@
                 <div class="card-body">
                     <div>
                         <% @forms.each do |form| %>
-                            <div style="display:flex; padding:2em; justify-content:space-between;background-color:#cfe2ff; border-radius:10px; margin:5px">
+                            <div style="display:flex; padding:2em; justify-content:space-between;background-color:#cfe2ff; border-radius:10px; margin:5px" class="buttons_action">
                                 <h5 class='fw-bold'><%= form.name %></h5>
                                 <div>
-                                    <%= link_to "Show this form",form_path(form, userid: @user.id), class:'btn btn-primary' %>
-                                    <%= link_to "Show the responses",responses_path(id: form.id, userid: @user.id), class:'btn btn-success' %>
+                                    <%= link_to "See form",form_path(form, userid: @user.id), class:'btn btn-primary' %>
+                                    <%= link_to "See responses",responses_path(id: form.id, userid: @user.id), class:'btn btn-success' %>
                                 </div>
                             </div>
                         <% end %>
