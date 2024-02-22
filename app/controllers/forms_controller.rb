@@ -20,10 +20,9 @@ def create_response
       next unless question
       content = answer_data[:content]
       if question.question_type_id == 3
-       # If content is an array, store it as is, otherwise convert it to an array
-       content = content.is_a?(Array) ? content : [content].compact
-       redirect_to forms_path
-     end
+        # If content is an array, store it as is, otherwise convert it to an array
+        content = content.is_a?(Array) ? content : [content].compact
+      end
       @response.answers.build(question: question, content: content)
     end
   end
@@ -43,16 +42,20 @@ def update_response
   @response = Response.find(params[:id])
   @questions = @form.questions
   answers_attributes = params.dig(:response, :answers_attributes)
+
   if answers_attributes.present?
     answers_attributes.each do |question_id, answer_data|
       question = @questions.find_by(id: question_id)
       next unless question
       content = answer_data[:content]
+
       if question.question_type_id == 3
-       # If content is an array, store it as is, otherwise convert it to an array
-       content = content.is_a?(Array) ? content : [content].compact
-       redirect_to forms_path
-     end
+        # Ensure content is an array
+        
+        content = content.reject(&:empty?) if content.is_a?(Array)
+        content = content.present? ? content : nil
+      end
+
       @response.answers.build(question: question, content: content)
     end
   end
@@ -61,10 +64,13 @@ def update_response
     redirect_to home_index_path, notice: 'Form submitted successfully.'
   else
     # If there are validation errors, re-render the form with errors.
-    @questions = @form.questions.includes(:options)  # Ensure questions are preloaded with options to avoid N+1 query.
-    render 'forms/show'  # Assuming you have a show template to render the form.
+    @questions = @form.questions.includes(:options)
+    render 'forms/show'
   end
 end
+
+
+
 
   # GET /forms or /forms.json
   def index
