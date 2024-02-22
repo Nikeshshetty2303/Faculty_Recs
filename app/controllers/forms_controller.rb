@@ -51,9 +51,10 @@ def update_response
 
       if question.question_type_id == 3
         # Ensure content is an array
-        
+
         content = content.reject(&:empty?) if content.is_a?(Array)
         content = content.present? ? content : nil
+        puts"The vallue is #{content[1]}"
       end
 
       @response.answers.build(question: question, content: content)
