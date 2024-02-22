@@ -80,9 +80,14 @@ class ResponsesController < ApplicationController
 
   # PATCH/PUT /responses/1 or /responses/1.json
   def update
-    @response.validation = 0
+    @user = @response.user
     respond_to do |format|
       if @response.update(response_params)
+        if @response.validation == true 
+          CreditValidateMailer.with(userid: @user.id).success.deliver_later
+        else
+          CreditValidateMailer.with(userid: @user.id).failure.deliver_later
+        end
         format.html { redirect_to home_validate_url(@response), notice: "Response was successfully updated." }
         format.json { render :show, status: :ok, location: @response }
       else
