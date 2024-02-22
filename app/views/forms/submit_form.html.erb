@@ -13,7 +13,7 @@
   </div>
   <div class="container-md py-4 px-5 mb-3" style="background-color:rgb(127 172 218 / 16%); border-radius:10px;">
     <%= form_with(model: @response, url: update_response_form_path(form_id: @form.id, id: @response.id), method: :post) do |form| %>
-      <% @questions.sort_by(&:id).each do |question| %>
+      <% @questions.sort_by(&:position).each do |question| %>
         <div>
           <% if question.question_type_id == 1 %>
           <label for="exampleFormControlInput1" class="form-label"><%= question.title %></label>
@@ -46,11 +46,6 @@
             </label>
           <% end %>
       <% end %>
-
-
-
-
-
         </div>
       <% end %>
       <div style="display:flex; justify-content:flex-end;"><%= form.submit class:"btn btn-success mt-3"%></div>
