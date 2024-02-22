@@ -2,7 +2,8 @@ class FormsController < ApplicationController
   before_action :set_form, only: %i[ show edit update destroy ]
 
   def submit_form
-    @form = Form.find(params[:id])
+    @form = Form.find(params[:form_id])
+    @response = Response.find(params[:id])
     @questions = @form.questions
   end
 
@@ -36,6 +37,34 @@ def create_response
   end
 end
 
+
+def update_response
+  @form = Form.find(params[:form_id])
+  @response = Response.find(params[:id])
+  @questions = @form.questions
+  answers_attributes = params.dig(:response, :answers_attributes)
+  if answers_attributes.present?
+    answers_attributes.each do |question_id, answer_data|
+      question = @questions.find_by(id: question_id)
+      next unless question
+      content = answer_data[:content]
+      if question.question_type_id == 3
+       # If content is an array, store it as is, otherwise convert it to an array
+       content = content.is_a?(Array) ? content : [content].compact
+       redirect_to forms_path
+     end
+      @response.answers.build(question: question, content: content)
+    end
+  end
+
+  if @response.save
+    redirect_to home_index_path, notice: 'Form submitted successfully.'
+  else
+    # If there are validation errors, re-render the form with errors.
+    @questions = @form.questions.includes(:options)  # Ensure questions are preloaded with options to avoid N+1 query.
+    render 'forms/show'  # Assuming you have a show template to render the form.
+  end
+end
 
   # GET /forms or /forms.json
   def index

@@ -12,7 +12,7 @@
   </div>
   </div>
   <div class="container-md py-4 px-5 mb-3" style="background-color:rgb(127 172 218 / 16%); border-radius:10px;">
-    <%= form_with(model: @response, url: create_response_form_path(id: @form.id), method: :post) do |form| %>
+    <%= form_with(model: @response, url: update_response_form_path(form_id: @form.id, id: @response.id), method: :post) do |form| %>
       <% @questions.sort_by(&:id).each do |question| %>
         <div>
           <% if question.question_type_id == 1 %>
@@ -22,7 +22,7 @@
 
           <label for="exampleFormControlInput1" class="form-label"></label>
           <div class="input-group mb-3">
-    <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
+          <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
             <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
   </div>
           <% elsif question.question_type_id == 2 %>

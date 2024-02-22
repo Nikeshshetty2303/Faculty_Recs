@@ -64,7 +64,7 @@ class CreditAnswersController < ApplicationController
       response.save
       if @answers.all? { |answer| answer.valid? }
         @answers.each(&:save)
-        redirect_to submit_form_form_path(userid: current_user.id, id: @form.id), notice: 'Answers were successfully created.'
+        redirect_to submit_form_form_path(id: response.id, userid: current_user.id, form_id: @form.id), notice: 'Answers were successfully created.'
       else
         render :new
       end
