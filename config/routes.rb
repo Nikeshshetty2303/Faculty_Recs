@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :questions
   resources :homes
 
+
   resources :forms do
   get 'submit_form', on: :member
   post 'create_response', on: :member
@@ -37,6 +38,10 @@ Rails.application.routes.draw do
     get 'print'
     get 'displaypdf'
     get 'myresponse'
+    get 'my_credit'
+    get 'view_pdf'
+    get 'validate'
+    patch 'validate'
   end
 end
 
@@ -49,6 +54,7 @@ end
   end
 
    get 'home/index'
+   get 'home/validate'
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
 
    resources :credit_questions do

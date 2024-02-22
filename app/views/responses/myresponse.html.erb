@@ -6,15 +6,24 @@
   </div> -->
   <div class="container-md mb-3"><%= link_to "Back", :back , class:"btn btn-info mt-3" %></div>
   <h1 class="text-center fw-bold mb-3">Your Responses</h1>
-  
+
   <div class="responses container">
     <% @responses.each do |response| %>
     <div class="card mb-2">
       <div class="card-body">
         <h5 class="card-title"><%= render response %></h5>
-        <p class="card-text">Form Deatils</p>
+        <p class="card-text">Form Details</p>
+        <%= link_to "Show credit response", my_credit_response_path(id: response.id, userid: @user.id), class:'btn btn-primary' %>
         <%= link_to "Show response", display_response_path(id: response.id, userid: @user.id), class:'btn btn-primary' %>
         <%= link_to "Print response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class:'btn btn-dark' %>
+        <%= response.credit_score%>
+        <% if response.validation.nil? %>
+          <%= "yet to get validation"%>
+        <% elsif response.validation == true %>
+          <%= "Successful validation"%>
+        <% elsif response.validation == false%>
+          <%= "Unsuccessful validation"%>
+        <% end %>
       </div>
     </div>
     <% end %>

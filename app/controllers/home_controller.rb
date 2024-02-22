@@ -3,6 +3,10 @@ class HomeController < ApplicationController
     @user = User.find(current_user.id)
   end
 
+  def validate
+    @response = Response.all
+  end
+
   # respond_to do |format|
   #     format.html
   #     format.pdf do
