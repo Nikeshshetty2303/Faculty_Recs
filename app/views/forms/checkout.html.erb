@@ -1,0 +1,35 @@
+<div class="container-md">
+  <div style="">
+  <%= link_to "Back to home", home_index_path(userid: current_user.id), class:"btn btn-info mt-3" %>
+  </div>
+  <h1 class="text-center fw-bold"><%= @form.name %></h1>
+  <div class="container-md" style="display:flex; justify-content:space-between ">
+    <div class="alert alert-info" style="width:49%" role="alert">
+    <b>Role</b>: <%= @form.role %>
+    </div>
+    <div class="alert alert-success" style="width:50%" role="alert">
+    <b>Department</b>: <%= @form.dept %>
+  </div>
+  </div>
+  <div class="container-md py-4 px-5 mb-3" style="background-color:rgb(127 172 218 / 16%); border-radius:10px;">
+    <%= form_tag payment_form_path(id: @response.id, form_id: @form.id), method: :patch do %>
+      <script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        data-key="rzp_test_Bl2LHXvHavZ3p4"
+        data-amount= <%= (@form.fee)*100 %>
+        data-currency="INR"
+        data-buttontext="Pay with Razorpay"
+        data-name= <%= @form.name %>
+        data-description="Purchase Description"
+        data-image="your_logo_url"
+        data-prefill.name="Your z"
+        data-prefill.email="your_email@example.com"
+        data-theme.color="#c"
+        data-options='{"retry": {"enabled": true}, "method": {"netbanking": true, "upi": true}}'
+      ></script>
+
+      <input type="hidden" custom="Hidden Element" name="hidden">
+
+      <%# <button type="submit">Pay with Razorpay</button> %>
+    <% end %>
+</div>

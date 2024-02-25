@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   post 'create_response', on: :member
   post 'update_response', on: :member
   post 'submit_form', on: :member
+  get 'checkout', on: :member
+  patch 'payment', on: :member
   end
 
    # resources :questions, only: %i[edit update]

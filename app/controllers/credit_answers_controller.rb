@@ -57,6 +57,7 @@ class CreditAnswersController < ApplicationController
 
     response.credit_score = credit
     response.user_id = current_user.id
+    response.title = current_user.email
     form_id = response.form_id
     @form = Form.find(form_id)
 
