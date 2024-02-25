@@ -14,6 +14,7 @@ class ResponsesController < ApplicationController
   end
 
   def validate
+    @user = User.find(current_user.id)
     @responses = Response.find(params[:id])
   end
 

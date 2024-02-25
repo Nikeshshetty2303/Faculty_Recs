@@ -12,18 +12,21 @@
     <div class="card mb-2">
       <div class="card-body">
         <h5 class="card-title"><%= render response %></h5>
-        <p class="card-text">Form Details</p>
-        <%= link_to "Show credit response", my_credit_response_path(id: response.id, userid: @user.id), class:'btn btn-primary' %>
-        <%= link_to "Show response", display_response_path(id: response.id, userid: @user.id), class:'btn btn-primary' %>
-        <%= link_to "Print response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class:'btn btn-dark' %>
-        <%= response.credit_score%>
-        <% if response.validation.nil? %>
-          <%= "yet to get validation"%>
-        <% elsif response.validation == true %>
-          <%= "Successful validation"%>
-        <% elsif response.validation == false%>
-          <%= "Unsuccessful validation"%>
-        <% end %>
+        <div style="width:max-content; padding:5px; margin:2px 0;">
+          <% if response.validation.nil? %>
+            <span class="text-primary"><%= "Validation in progress 🚀"%></span>
+          <% elsif response.validation == true %>
+            <span class="text-success"><%= "Successful validation ✅"%></span>
+          <% elsif response.validation == false%>
+            <span class="text-danger"><%= "Validation unsuccessful ❌"%></span>
+          <% end %>
+        </div>
+        <p>
+          <strong>Credits</strong>: <%= response.credit_score%>
+        </p>
+        <%= link_to "Credit Response", my_credit_response_path(id: response.id, userid: @user.id), class:'btn btn-outline-primary btn-md mt-2' %>
+        <%= link_to "Form Response", display_response_path(id: response.id, userid: @user.id), class:'btn btn-outline-secondary btn-md mt-2' %>
+        <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class:'btn btn-success btn-md mt-2' %>
       </div>
     </div>
     <% end %>

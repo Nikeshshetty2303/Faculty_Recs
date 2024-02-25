@@ -36,24 +36,18 @@
                     </div>
                     <div>
                         <%= image_tag "rupees.png", id:'', width:'15', height:'15', class:'mx-1' %>
-                        <span class='d-inline-flex align-items-end text-body-secondary' style="font-size:14px; color:grey; margin-right:1em"><%= form.fee%>rs</span>
+                        <span class='d-inline-flex align-items-end text-body-secondary' style="font-size:14px; color:grey; margin-right:1em">₹<%= form.fee%></span>
                     </div>
                     <div>
-                        <%= image_tag "play.png", id:'', width:'15', height:'15', class:'mx-1' %>
-                        <span class='d-inline-flex align-items-end text-body-secondary' style="font-size:14px; color:grey; margin-right:1em"><%= form.created_at.strftime('%d/%m/%Y') %></span>
-                    </div>
-                    <div>
-                        <%= image_tag "exclamation-mark-in-a-circle.png", id:'', width:'15', height:'15', class:'mx-1' %>
-                        <span class='d-inline-flex align-items-end text-body-secondary' style="font-size:14px; color:grey; margin-right:1em">12 - 12- 2003</span>
+                        <%= image_tag "payment.png", id:'', width:'15', height:'15', class:'mx-1' %>
+                        <span class='d-inline-flex align-items-end text-body-secondary' style="font-size:14px; color:grey; margin-right:1em">₹<%= form.salary %></span>
                     </div>
                 </div>
             </div>
             <div class="card-body">
                 <div class="mb-1">
                     <h6 class="fw-bold">Job Description</h5>
-                    <ul class='pt-1 pb-2 px-4'>
-                        <li class="card-text"><%=form.description%></p>
-                    </ui>
+                        <p class="card-text pt-1 px-4"><%=form.description%></p>
                 </div>
             <%= link_to  "Apply now", new_credit_answer_path(id: form.id,userid: @user.id), class:"btn btn-outline-primary mt-3"%>
             </div>
