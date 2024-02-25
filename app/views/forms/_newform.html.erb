@@ -37,6 +37,11 @@
       <%= f.text_field :credit_req, class:'form-control', id:'dept', placeholder:'minimum credit requirement' %>
     </div>
 
+    <div class="mb-3">
+      <%= f.label :fee, style: "display: block", class:'form-label', for:'fee'  %>
+      <%= f.text_field :fee, class:'form-control', id:'fee', placeholder:'Enter the application fee' %>
+    </div>
+
     <div>
       <%= f.hidden_field :user_id, value: @user.id %>
     </div>

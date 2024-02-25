@@ -62,7 +62,7 @@ def update_response
   end
 
   if @response.save
-    redirect_to home_index_path, notice: 'Form submitted successfully.'
+    redirect_to checkout_form_path(id: @response.id, form_id: @form.id), notice: 'Form submitted successfully.'
   else
     # If there are validation errors, re-render the form with errors.
     @questions = @form.questions.includes(:options)
@@ -71,6 +71,21 @@ def update_response
 end
 
 
+  def checkout
+    @response = Response.find(params[:id])
+    @form = Form.find(params[:form_id])
+  end
+
+
+  def payment
+    @response = Response.find(params[:id])
+    @form = Form.find(params[:form_id])
+    @response.update(amount: @form.fee, payment_status: true)
+    if(@response.payment_status == true)
+      PaymentMailer.with(user_id: current_user.id, response_id: @response.id, form_id: @form.id).payment.deliver_later
+    end
+    redirect_to home_index_path
+  end
 
 
   # GET /forms or /forms.json
@@ -152,7 +167,7 @@ end
   end
 
   def form_params
-    params.require(:form).permit(:name, :role, :salary, :dept, :template_form_id, :user_id)
+    params.require(:form).permit(:name, :role, :salary, :dept, :template_form_id, :user_id, :fee, :credit_req)
   end
 
   def template_form_id
