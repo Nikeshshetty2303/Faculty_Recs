@@ -40,6 +40,8 @@
                 <label class="form-label"><%= question.title %></label>
                 <% if question.question_type_id == 1 %>
                   <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:"form-control" %>
+                <% elsif question.question_type_id == 4 %>
+                  <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
                 <% elsif question.question_type_id == 5 %>
                   <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
                 <% elsif question.question_type_id == 2 %>
