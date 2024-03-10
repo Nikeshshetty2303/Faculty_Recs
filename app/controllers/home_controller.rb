@@ -1,8 +1,10 @@
 class HomeController < ApplicationController
   def index
     @user = User.find(current_user.id)
+    @forms = Form.all
+    @departments = Department.all
   end
-  
+
   def validate
     @user = User.find(current_user.id)
     @response = Response.all

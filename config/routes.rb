@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :departments
   resources :upload_questions
   resources :upload_sections
   resources :file_uploads

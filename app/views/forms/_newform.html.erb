@@ -28,8 +28,8 @@
     </div>
 
     <div class="mb-3">
-      <%= f.label :dept, style: "display: block", class:'form-label', for:'dept'  %>
-      <%= f.text_field :dept, class:'form-control', id:'dept', placeholder:'Department Recruiting' %>
+      <%= f.label :dept, style: "display: block", class:'form-label' %>
+      <%= f.collection_select :dept, Department.all, :title, :title, { prompt: "Select Department" }, { class: 'form-select' } %>
     </div>
 
     <div class="mb-3">
