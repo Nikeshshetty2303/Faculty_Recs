@@ -84,12 +84,12 @@ class ResponsesController < ApplicationController
     @user = @response.user
     respond_to do |format|
       if @response.update(response_params)
-        if @response.validation == true 
-          CreditValidateMailer.with(userid: @user.id).success.deliver_later
-        else
-          CreditValidateMailer.with(userid: @user.id).failure.deliver_later
-        end
-        format.html { redirect_to home_validate_url(@response), notice: "Response was successfully updated." }
+        # if @response.validation == true
+        #   CreditValidateMailer.with(userid: @user.id).success.deliver_later
+        # else
+        #   CreditValidateMailer.with(userid: @user.id).failure.deliver_later
+        # end
+        format.html { redirect_to validate_response_path(@response), notice: "Response was successfully updated." }
         format.json { render :show, status: :ok, location: @response }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -116,6 +116,6 @@ class ResponsesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def response_params
-      params.require(:response).permit(:title, :validation)
+      params.require(:response).permit(:title, :validation,:new_count)
     end
 end

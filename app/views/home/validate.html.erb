@@ -1,37 +1,63 @@
- <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Response Id</th>
-      <th scope="col">User</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-  <% @response.each do |response| %>
-    <tr>
-      <%@user = User.where(id: response.user_id)%>
-      <th scope="row"><%=response.id%></th>
-      <td><%=@user[0].email%></td>
-      <td><%=response.credit_score%></td>
-      <td><%= link_to "Validate Credit Response", validate_response_path(id: response.id), class:'btn btn-warning btn-sm' %></td>
-      <td>
+<div class="container">
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Application</th>
+        <th scope="col">Credit Score</th>
+        <th scope="col">Validate Credit Response</th>
+        <%# <th scope="col">Validation Status</th> %>
+        <th scope="col">Eligibility</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @response.each do |response| %>
+        <tr>
+          <% @user = User.find_by(id: response.user_id) %>
+          <td><%= "#{response.form.name} by #{response.user.email}" %></td>
 
-      <%= form_with(model: @response.find_or_initialize_by(id: response.id)) do |f| %>
-              <%if response.validation == true%>
+          <td><%= response.credit_score %></td>
+          <td><%= link_to "Validate Credit Response", validate_response_path(id: response.id), class: 'btn btn-warning btn-sm' %></td>
+          <!--
+          <td>
+          <% if response.validation == true%>
+            <%="✅"%>
+          <%else%>
+            <%="❌"%>
+          <%end%>
+          </td>
+          -->
+          <td>
+          <% if (response.validation ==true) %>
+            <% if response.credit_score >= response.form.credit_req%>
+              <%="Eligible"%>
+            <% elsif %>
+              <%="Not Eligible"%>
+            <%end%>
+          <%else%>
+            <%="Validation pending"%>
+          <%end%>
+          </td>
+          <!--
+            <%= form_with(model: response) do |f| %>
+              <% if response.validation? %>
                 <%="✅"%>
-              <%elsif%>
+              <% else %>
                 <%="❌"%>
-              <%end%>
-              <%@new = response.validation ? false : true%>
-              <%= f.hidden_field :validation, value: @new%>
-              <%= f.submit "Update", class:'btn btn-success btn-sm' %>
+              <% end %>
+              <% new_validation = response.validation ? false : true %>
+              <%= f.hidden_field :validation, value: new_validation %>
+            <% end %>
+
+          </td>
+
+          <td>
+            <%= submit_tag "Update", class: 'btn btn-success btn-sm' %>
+          </td>
+           -->
+        </tr>
       <% end %>
-      </td>
-    </tr>
-    <%end%>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>

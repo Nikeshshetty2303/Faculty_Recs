@@ -1,33 +1,60 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
+<div class="container">
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Question</th>
+        <th scope="col">Count</th>
+        <th scope="col">Credit</th>
+        <th scope="col">Uploads</th>
+        <th scope="col">Verified Count</th>
+        <th scope="col">Verified Credit</th>
+        <th scope="col">Update</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% CreditAnswer.all.each do |answer| %>
+        <% if answer.response_id == @responses.id %>
+          <tr>
+            <% @question = CreditQuestion.find_by(id: answer.credit_question_id) %>
+            <% @response = Response.find_by(id: answer.response_id) %>
+            <td><%= @question.title %></td>
+            <td><%= answer.answer %></td>
+            <td><%= answer.credit %></td>
+            <td>
+              <% if answer.file_upload.present? %>
+                <%= link_to "View", view_pdf_response_path(ansid: answer.id, id: @response.id), class: "btn btn-warning" %>
+              <% else %>
+                No Upload
+              <% end %>
+            </td>
+            <%= form_with(model: answer) do |f| %>
+              <td><%= f.number_field :verified_count, class: 'form-control', id: "credit_answer_#{answer.id}", value: answer.verified_count, step: 'any' %></td>
+              <td>
+                <%= f.number_field :verified_credit, class: 'form-control', id: "credit_#{answer.id}", value: answer.verified_credit, readonly: true, step: 'any'  %>
+                <script>
+                  document.addEventListener('DOMContentLoaded', function () {
+                    var answerField = document.getElementById("credit_answer_<%= answer.id %>");
+                    var creditField = document.getElementById("credit_<%= answer.id %>");
+                    var maxCredit = <%= @question.max_credit %>;
+                    var obtCredit = <%= @question.obt_credit %>;
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Credit Answer</th>
-      <th scope="col">Credits</th>
-      <th scope="col">Uploads</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% CreditAnswer.all.each do |answer| %>
-      <% if answer.response_id == @responses.id %>
-        <tr>
-          <% @question = CreditQuestion.where(id: answer.credit_question_id).first %>
-          <% @response = Response.where(id: answer.response_id).first %>
-          <th scope="row"><%= answer.answer %></th>
-          <% if answer.answer > @question.max_credit %>
-            <td><%= @question.max_credit %></td>
-          <% else %>
-            <td><%= @question.obt_credit * answer.answer %></td>
-          <% end %>
-            <%if answer.file_upload %>
-            <td><%= link_to "View",  view_pdf_response_path(ansid:answer.id, id:@response.id ), class:"btn btn-warning" %> </td>
-          <%else%>
-            <td><%"uploads"%></td>
-          <%end%>
-        </tr>
+                    answerField.addEventListener('input', function () {
+                      var newAnswer = parseFloat(answerField.value);
+                      var newCredit = ((newAnswer * obtCredit) > maxCredit) ? maxCredit : (obtCredit * newAnswer);
+                      creditField.value = newCredit;
+                    });
+                  });
+                </script>
+              </td>
+              <td>
+                <%= f.submit "Update", class: "btn btn-primary" %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
       <% end %>
-    <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>

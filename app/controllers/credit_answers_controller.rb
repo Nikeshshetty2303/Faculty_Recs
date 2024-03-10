@@ -44,14 +44,20 @@ class CreditAnswersController < ApplicationController
         answer.answer =0
       end
 
+      credit_per_answer = 0
       #credit calculations
       if answer.credit_question.obt_credit * answer.answer >  answer.credit_question.max_credit
+        credit_per_answer = answer.credit_question.max_credit
         credit = credit + answer.credit_question.max_credit
       else
+        credit_per_answer = answer.credit_question.obt_credit * answer.answer
          credit = credit + answer.credit_question.obt_credit * answer.answer
       end
 
       answer.response_id = response.id
+      answer.credit = credit_per_answer
+      answer.verified_count = answer.answer
+      answer.verified_credit = credit_per_answer
       @answers << answer
     end
 
@@ -77,9 +83,19 @@ class CreditAnswersController < ApplicationController
 
   # PATCH/PUT /credit_answers/1 or /credit_answers/1.json
   def update
+    response = Response.find_by(id: @credit_answer.response_id)
     respond_to do |format|
       if @credit_answer.update(credit_answer_params)
-        format.html { redirect_to credit_answer_url(@credit_answer), notice: "Credit answer was successfully updated." }
+
+        answer_credit=0
+        response.credit_answers.each do |answer|
+          answer_credit = answer_credit + answer.verified_credit
+        end
+        response.credit_score = answer_credit
+        response.validation = true
+        response.save
+
+        format.html { redirect_to validate_response_path(id: @credit_answer.response_id), notice: "Credit answer was successfully updated." }
         format.json { render :show, status: :ok, location: @credit_answer }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -106,6 +122,6 @@ class CreditAnswersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def credit_answer_params
-      params.require(:credit_answer).permit(:answer, :credit_question_id, :entry, :response_id, :file_upload, :credit_section_id)
+      params.require(:credit_answer).permit(:answer, :credit_question_id, :entry, :credit, :verified_count, :verified_credit, :response_id, :file_upload, :credit_section_id)
     end
 end
