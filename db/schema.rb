@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_10_081336) do
+ActiveRecord::Schema.define(version: 2024_03_10_114355) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 2024_03_10_081336) do
     t.float "credit"
     t.float "verified_credit"
     t.float "verified_count"
+    t.boolean "is_upload"
     t.index ["credit_question_id"], name: "index_credit_answers_on_credit_question_id"
     t.index ["credit_section_id"], name: "index_credit_answers_on_credit_section_id"
     t.index ["response_id"], name: "index_credit_answers_on_response_id"

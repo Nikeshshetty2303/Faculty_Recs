@@ -47,11 +47,14 @@
             </div>
 
             <% elsif question.header_id == nil %>
-            <%@count = @count +1%>
+            <% @count = @count + 1%>
               <div class="mb-3">
                 <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: question.id) do |answer_fields| %>
                   <%if @count == 1%>
+                    <%= answer_fields.hidden_field :is_upload, class: "form-control", value: true%>
                     <%= answer_fields.file_field :file_upload, class: "form-control"%>
+                  <%else%>
+                    <%= answer_fields.hidden_field :is_upload, class: "form-control", value: false%>
                   <%end%>
                     <div class="my-4">
                       <%= answer_fields.label :answer, question.title, class: "form-label" %>
@@ -61,7 +64,7 @@
                       </div>
                     </div>
 
-                  <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
+                  <%= answer_fields.hidden_field :credit_question_id, class: "question_id" , value: question.id%>
                   <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
                 <% end %>
               </div>

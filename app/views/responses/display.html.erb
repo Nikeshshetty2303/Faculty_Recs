@@ -1,15 +1,20 @@
 <div class="container-sm p-2">
-    <div style="">
-    <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-info mt-3" %>
+    <div class="text-center">
+        <%= link_to "Back to My Response", myresponse_response_path(id: @user.id), class:"btn btn-info mt-3" %>
     </div>
-    <h1 class="text-center fw-bold">View Form Response</h1>
-    <div class="" style="padding:2em;background-color:rgb(127 172 218 / 16%); border-radius:6px">
+
+    <h1 class="text-center fw-bold mt-3">View Form Response</h1>
+
+    <div class="response-container p-4" style="background-color: rgba(127, 172, 218, 0.16); border-radius: 6px;">
         <div class="alert alert-success" role="alert">
-            This is the response for form -
+            This is the response for the form:
         </div>
+
         <% @response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
-        <label class="form-label"><%= answer.question.title %></label>
-        <input readonly class="form-control" value=<%= answer.content %>>
+            <div class="mb-3">
+                <label class="form-label"><%= answer.question.title %></label>
+                <input readonly class="form-control" value="<%= answer.content %>">
+            </div>
         <% end %>
     </div>
 </div>

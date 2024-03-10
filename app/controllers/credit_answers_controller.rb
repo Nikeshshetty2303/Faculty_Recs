@@ -38,11 +38,17 @@ class CreditAnswersController < ApplicationController
     credit = 0
 
     answer_params_array.each do |answer_param|
-      permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id, :file_upload,:credit_section_id)
+      permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id, :is_upload,:credit_section_id)
       answer = CreditAnswer.new(permitted_params)
       if answer.answer == nil
         answer.answer =0
       end
+
+      if answer.is_upload
+        permitted_file = answer_param.permit(:file_upload)
+        answer.file_upload = permitted_file[:file_upload]
+      end
+
 
       credit_per_answer = 0
       #credit calculations
@@ -122,6 +128,6 @@ class CreditAnswersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def credit_answer_params
-      params.require(:credit_answer).permit(:answer, :credit_question_id, :entry, :credit, :verified_count, :verified_credit, :response_id, :file_upload, :credit_section_id)
+      params.require(:credit_answer).permit(:answer, :credit_question_id, :entry, :credit, :verified_count, :verified_credit, :response_id, :file_upload, :is_upload, :credit_section_id)
     end
 end
