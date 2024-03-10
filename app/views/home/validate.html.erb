@@ -15,7 +15,7 @@
       <% @response.each do |response| %>
         <tr>
           <% @user = User.find_by(id: response.user_id) %>
-          <td><%= "#{response.form.name} by #{response.user.email}" %></td>
+          <td><%="#{response.form.name}_#{response.id}" %></td>
 
           <td><%= response.credit_score %></td>
           <td><%= link_to "Validate Credit Response", validate_response_path(id: response.id), class: 'btn btn-warning btn-sm' %></td>

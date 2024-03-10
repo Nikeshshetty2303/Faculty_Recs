@@ -1,39 +1,48 @@
-<div class="container-sm p-2">
-    <div style="">
-    <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-info mt-3" %>
+<div class="container p-4">
+    <div class="text-center">
+        <%= link_to "Back to my response", myresponse_response_path(id: @user.id), class: "btn btn-info mt-3" %>
     </div>
-    <h1 class="text-center fw-bold">View Credit Form Response</h1>
-    <div class="" style="padding:2em;background-color:rgb(127 172 218 / 16%); border-radius:6px">
+
+    <div class="text-center mt-3">
+        <h1 class="fw-bold">View Credit Form Response</h1>
+    </div>
+
+    <div class="response-container p-4 mt-3 bg-light rounded">
         <div class="alert alert-success" role="alert">
-            This is the response for credit form -
+            This is the response for the credit form.
         </div>
 
-        <% @section.each do |section|%>
-        <h3><label class="form-label"><%= section.title%></label></h3>
-        <br>
-            <% @response.credit_answers.sort_by { |answer| answer.credit_question_id }.each do |answer| %>
-                    <%if section.id == answer.credit_section_id%>
-                         <%if answer.file_upload.attached? %>
-                        <td><%= link_to "View",  view_pdf_response_path(ansid:answer, id:@response.id ), class:"btn btn-warning" %> </td>
-                    <%end%>
-            <%end%>
-            <br>
+        <% @section.each do |section| %>
+            <div class="section-container mt-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3><%= section.title %></h3>
+                    <% file_view =0 %>
+                    <% @response.credit_answers.sort_by { |answer| answer.credit_question_id }.each do |answer| %>
+                        <%if file_view == 0%>
+                            <% if section.id == answer.credit_section_id && answer.file_upload.attached? %>
+                                <div class="ml-3">
+                                    <%= link_to "View", view_pdf_response_path(ansid: answer, id: @response.id), class: "btn btn-warning btn-sm" %>
+                                </div>
+                                <% file_view = 1 %>
+                            <% end %>
+                        <%end%>
+                    <% end %>
+                </div>
 
+                <% section.credit_questions.each do |question| %>
+                    <div class="question-container mt-3">
+                        <label class="form-label"><%= question.title %></label>
+
+                        <% @response.credit_answers.sort_by { |answer| answer.credit_question_id }.each do |answer| %>
+                            <% if question.id == answer.credit_question_id %>
+                                <div class="mt-2">
+                                    <input readonly class="form-control" value="<%= answer.answer %>">
+                                </div>
+                            <% end %>
+                        <% end %>
+                    </div>
                 <% end %>
-            <%section.credit_questions.each do |question|%>
-            <label class="form-label"><%= question.title%></label>
-                <% @response.credit_answers.sort_by { |answer| answer.credit_question_id }.each do |answer| %>
-                    <%if question.id == answer.credit_question_id%>
-                        <input readonly class="form-control" value=<%= answer.answer %>>
-                         <%if answer.file_upload.attached? %>
-                        <td><%= link_to "View",  view_pdf_response_path(ansid:answer, id:@response.id ), class:"btn btn-warning" %> </td>
-                    <%end%>
-                    <%end%>
-
-                <% end %>
-            <br>
-
-            <%end%>
-        <%end%>
+            </div>
+        <% end %>
     </div>
 </div>

@@ -9,7 +9,7 @@ class ResponsesController < ApplicationController
   end
 
   def myresponse
-    @user = User.find(params[:id])
+    @user = User.find(current_user.id)
     @responses = Response.where(user_id: @user.id)
   end
 
@@ -20,13 +20,13 @@ class ResponsesController < ApplicationController
 
   def my_credit
     @response = Response.find(params[:id])
-    @user = User.find(params[:userid])
+    @user = User.find(current_user.id)
     @section = CreditSection.all
   end
 
   def display
     @response = Response.find(params[:id])
-    @user = User.find(params[:userid])
+    @user = User.find(current_user.id)
   end
 
   def print
