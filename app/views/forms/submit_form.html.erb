@@ -18,6 +18,9 @@
           <% if question.question_type_id == 1 %>
           <label for="exampleFormControlInput1" class="form-label"><%= question.title %></label>
             <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+          <% elsif question.question_type_id == 4%>
+            <label for="exampleFormControlInput1" class="form-label"><%= question.title %></label>
+              <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
           <% elsif question.question_type_id == 5 %>
 
           <label for="exampleFormControlInput1" class="form-label"></label>

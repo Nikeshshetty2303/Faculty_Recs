@@ -23,20 +23,29 @@
 
  </style>
 
+<!-- Add this dropdown above your existing code -->
+<div class="container mt-3 mb-3">
+  <label for="departmentFilter" class="form-label">Filter by Department:</label>
+  <select class="form-select" id="departmentFilter">
+    <option value="">All Departments</option>
+    <% Department.all.each do |department| %>
+      <option value="<%= department.title %>"><%= department.title %></option>
+    <% end %>
+  </select>
+</div>
+
 <% Form.all.each do |form|%>
 
     <div class='card_div'>
         <div class="card my-4">
-            <div class="card-header">
+           <div class="card-header">
                 <h3 class='my-3 fw-bold'><%= form.name%></h4>
                 <div class="info">
+                    <!-- Add the department information here -->
+                    <div class="dept" style="display: none;"><%= form.dept %></div>
                     <div>
                         <%= image_tag "building.png", id:'', width:'15', height:'15', class:'mx-1' %>
                         <span class='d-inline-flex align-items-end' style="font-size:14px; color:grey; margin-right:1em"><%= form.dept %></span>
-                    </div>
-                    <div>
-                        <%= image_tag "rupees.png", id:'', width:'15', height:'15', class:'mx-1' %>
-                        <span class='d-inline-flex align-items-end text-body-secondary' style="font-size:14px; color:grey; margin-right:1em">₹<%= form.fee%></span>
                     </div>
                     <div>
                         <%= image_tag "payment.png", id:'', width:'15', height:'15', class:'mx-1' %>
@@ -53,6 +62,7 @@
             </div>
         </div>
     </div>
+
 
 <% end %>
 
@@ -149,3 +159,24 @@
          updates_tab.classList.toggle('vis');
      })
  </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let departmentFilter = document.getElementById('departmentFilter');
+    let cardDivs = document.querySelectorAll('.card_div');
+
+    departmentFilter.addEventListener('change', function () {
+      let selectedDepartment = departmentFilter.value;
+
+      cardDivs.forEach(function (cardDiv) {
+        let cardDepartment = cardDiv.querySelector('.dept').textContent.trim();
+
+        if (selectedDepartment === '' || cardDepartment === selectedDepartment) {
+          cardDiv.style.display = 'block';
+        } else {
+          cardDiv.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
