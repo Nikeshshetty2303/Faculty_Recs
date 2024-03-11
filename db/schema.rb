@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_10_114355) do
+ActiveRecord::Schema.define(version: 2024_03_11_045259) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 2024_03_10_114355) do
   create_table "forms", force: :cascade do |t|
     t.string "name"
     t.string "role"
-    t.integer "salary"
+    t.string "salary"
     t.string "dept"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
