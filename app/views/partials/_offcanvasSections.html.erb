@@ -1,0 +1,63 @@
+<style>
+
+    @media screen and (min-width:870px) {
+        /* Add your CSS rules for the breakpoint here */
+        #offcanvasBtn {
+            display: none;
+        }
+    }
+</style>
+
+
+
+<div class="container">
+    <button id="offcanvasBtn" class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        Navigate sections
+    </button>
+</div>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Sections</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+          <ul class="nav nav-pills flex-column mb-auto">
+            <li class="option_sidebar_cont" id="active_sidebar" >
+              <%= render 'partials/doneLoader' %>
+              <a class="option_sidebar text-white" aria-current="page">
+                Personal information
+              </a>
+            </li>
+            <li class="option_sidebar_cont">
+              <%= render 'partials/fillLoader' %>
+              <a class="option_sidebar text-black">
+                Dashboard
+              </a>
+            </li class="option_sidebar_cont">
+            <li class="option_sidebar_cont">
+              <%= render 'partials/doneLoader' %>
+              <a class="option_sidebar text-black">
+                Orders
+              </a>
+            </li>
+            <li class="option_sidebar_cont">
+              <%= render 'partials/doneLoader' %>
+              <a class="option_sidebar text-black">
+                Products
+              </a>
+            </li>
+            <% i = 0 %>
+            <% while i < 10 %>
+              <li class="option_sidebar_cont">
+                <%= render 'partials/fillLoader' %>
+                <a class="option_sidebar text-black">
+                  Customers
+                </a>
+              </li>
+              <% i += 1 %>
+            <% end %>
+          </ul>
+
+  </div>
+</div>

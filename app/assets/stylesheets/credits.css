@@ -11,7 +11,7 @@
 
 #credits_container {
     width: 70%;
-    margin: auto;
+    margin: 0 auto;
 }
 .tick_pic {
     width: 100%;
@@ -19,4 +19,53 @@
 .tick_div {
     width: 25px;
     margin-left: 15px
+}
+
+.application {
+    display: flex;
+}
+
+.sidebar {
+    background-color: rgb(248, 249, 250, 1);
+    height: 80vh;
+    border-radius: 10px;
+    margin: 5px;
+    overflow-y: scroll;
+}
+
+#active_sidebar {
+    background-color: #0d6efd;
+    color: white !important;
+    border-radius: 10px;
+}
+.option_sidebar{
+    padding: 10px;
+    margin: 0%;
+    display: block;
+    text-decoration: none;
+}
+.option_sidebar_cont {
+    cursor: pointer;
+}
+.option_sidebar_cont:hover {
+    background-color: #619efb56;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
+.option_sidebar_cont {
+    display: flex;
+}
+
+/* Breakpoint at 800px */
+@media screen and (max-width:870px) {
+    /* Add your CSS rules for the breakpoint here */
+    #credits_container {
+        width: 90%;
+    }
+
+    #side_div {
+        display: none;
+    }
 }

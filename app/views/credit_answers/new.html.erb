@@ -3,89 +3,162 @@
 <%= render 'partials/navbar' %>
 <!--partial for navbar-->
 
+<div class="container"><%= link_to "Back", :back, class: "btn btn-info mt-3" %></div>
+
 <h1 class="font-jost text-center fw-bold">Credit Calculation</h1>
 
-<!--credits container div starts -->
-<div id="credits_container" class="font-jost my-3 mb-5">
-  <!-- Total sum display -->
-  <div id="total_sum" class="mt-3 font-jost fw-bold">
-      <div class="mb-2">Credit Score : <span class="badge text-bg-success" id="total_value">0</span> credits</div>
-    <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-      <div class="progress-bar" id="progres_bar" style="width: 0%">0%</div>
+
+  <%= render 'partials/offcanvasSections' %>
+  <div class="application">
+
+
+    <div class='mx-2' id='side_div'>
+      <h4 class="mb-3">
+        Sections
+      </h4>
+      <div class="d-flex flex-column flex-shrink-0 p-3 sidebar" style="width: 280px;">
+          <ul class="nav nav-pills flex-column mb-auto">
+            <li class="option_sidebar_cont" id="active_sidebar" >
+              <%= render 'partials/doneLoader' %>
+              <a class="option_sidebar text-white" aria-current="page">
+                Personal information
+              </a>
+            </li>
+            <li class="option_sidebar_cont">
+              <%= render 'partials/fillLoader' %>
+              <a class="option_sidebar text-black">
+                Dashboard
+              </a>
+            </li class="option_sidebar_cont">
+            <li class="option_sidebar_cont">
+              <%= render 'partials/doneLoader' %>
+              <a class="option_sidebar text-black">
+                Orders
+              </a>
+            </li>
+            <li class="option_sidebar_cont">
+              <%= render 'partials/doneLoader' %>
+              <a class="option_sidebar text-black">
+                Products
+              </a>
+            </li>
+            <% i = 0 %>
+            <% while i < 10 %>
+              <li class="option_sidebar_cont">
+                <%= render 'partials/fillLoader' %>
+                <a class="option_sidebar text-black">
+                  Customers
+                </a>
+              </li>
+              <% i += 1 %>
+            <% end %>
+          </ul>
+        </div>
     </div>
-  </div>
-  <!-- Questions section -->
-  <div>
-    <%= form_for :answers, url: credit_answers_path do |form| %>
-      <% @section.each do |section| %>
 
-        <div class="my-3" style="background-color:#cfe2ff; border-radius:8px; padding:1em">
-          <h2><%= section.title %></h2>
-          <div class="mb-1">
-            <!-- Iterate over questions -->
-            <%@count =0%>
-            <% @questions.where(credit_section_id: section.id).each do |question| %>
-            <% if question.isheader == true %>
 
-            <p> <%= question.title %> </p>
-            <div style="display:flex;">
-              <% @questions.where(header_id: question.id).each do |sub_question|  %>
+  <!--credits container div starts -->
+  <div id="credits_container" class="font-jost">
+    <!-- Total sum display -->
+    <div id="total_sum" class="mt-3 font-jost fw-bold">
+        <div class="mb-2">Credit Score : <span class="badge text-bg-success" id="total_value">0</span> credits</div>
+      <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" id="progres_bar" style="width: 0%">0%</div>
+      </div>
+    </div>
+    <!-- Questions section -->
+
+  
+  <%= form_for :answers, url: credit_answers_path do |form| %>
+  <div class="accordion my-3" id="accordionExample">
+
+    <% @section.each do |section| %>
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <%= section.title %>
+        </button>
+      </h2>
+
+      <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+              <div>
+
+          <div class="my-3" style="">
+            <div class="mb-1">
+              <!-- Iterate over questions -->
+              <%@count =0%>
+              <% @questions.where(credit_section_id: section.id).each do |question| %>
+              <% if question.isheader == true %>
+
+              <p> <%= question.title %> </p>
               <div style="display:flex;">
-              <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: sub_question.id) do |answer_fields| %>
-                <%= answer_fields.hidden_field :credit_question_id,  class: "question_id" %>
-                <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
-                  <div class="my-3 mx-2">
-                    <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
-                    <div class='input-group mb-1'>
-                      <%= answer_fields.number_field :answer, class: "form-control numeric-input" ,data: {questionId: sub_question.id,maxCredit: sub_question.max_credit,obtCredit: sub_question.obt_credit }%>
-                      <span id="credit_value_<%= sub_question.id %>" class="input-group-text">0</span>
-                    </div>
-                  </div>
-              <% end %>
-                </div>
-              <% end %>
-            </div>
-
-            <% elsif question.header_id == nil %>
-            <% @count = @count + 1%>
-              <div class="mb-3">
-                <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: question.id) do |answer_fields| %>
-                  <%if @count == 1%>
-                    <%= answer_fields.hidden_field :is_upload, class: "form-control", value: true%>
-                    <%= answer_fields.file_field :file_upload, class: "form-control"%>
-                  <%else%>
-                    <%= answer_fields.hidden_field :is_upload, class: "form-control", value: false%>
-                  <%end%>
-                    <div class="my-4">
-                      <%= answer_fields.label :answer, question.title, class: "form-label" %>
-                      <div class="input-group mb-3">
-                        <%= answer_fields.number_field :answer, class: "form-control numeric-input" ,data: {questionId: question.id,maxCredit: question.max_credit,obtCredit: question.obt_credit } %>
-                        <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
+                <% @questions.where(header_id: question.id).each do |sub_question|  %>
+                <div style="display:flex;">
+                <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: sub_question.id) do |answer_fields| %>
+                  <%= answer_fields.hidden_field :credit_question_id,  class: "question_id" %>
+                  <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
+                    <div class="my-3 mx-2">
+                      <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
+                      <div class='input-group mb-1'>
+                        <%= answer_fields.number_field :answer, class: "form-control numeric-input" ,data: {questionId: sub_question.id,maxCredit: sub_question.max_credit,obtCredit: sub_question.obt_credit }%>
+                        <span id="credit_value_<%= sub_question.id %>" class="input-group-text">0</span>
                       </div>
                     </div>
-
-                  <%= answer_fields.hidden_field :credit_question_id, class: "question_id" , value: question.id%>
-                  <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
+                <% end %>
+                  </div>
                 <% end %>
               </div>
+
+              <% elsif question.header_id == nil %>
+              <% @count = @count + 1%>
+                <div class="mb-3">
+                  <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: question.id) do |answer_fields| %>
+                    <%if @count == 1%>
+                      <%= answer_fields.hidden_field :is_upload, class: "form-control", value: true%>
+                      <%= answer_fields.file_field :file_upload, class: "form-control"%>
+                    <%else%>
+                      <%= answer_fields.hidden_field :is_upload, class: "form-control", value: false%>
+                    <%end%>
+                      <div class="my-4">
+                        <%= answer_fields.label :answer, question.title, class: "form-label" %>
+                        <div class="input-group mb-3">
+                          <%= answer_fields.number_field :answer, class: "form-control numeric-input" ,data: {questionId: question.id,maxCredit: question.max_credit,obtCredit: question.obt_credit } %>
+                          <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
+                        </div>
+                      </div>
+
+                    <%= answer_fields.hidden_field :credit_question_id, class: "question_id" , value: question.id%>
+                    <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
+                  <% end %>
+                </div>
+                <% end %>
               <% end %>
-            <% end %>
+            </div>
           </div>
+        <% end %>
+
+        <%= form.hidden_field :entry, value: @form.id %>
+
+    </div>
+    <!-- End of Questions section -->
         </div>
-      <% end %>
-
-      <%= form.hidden_field :entry, value: @form.id %>
-
-      <div class="alert alert-info" role="alert">
-        <div id="error-message" style="color: red;"></div>
       </div>
-      <div  style="display:flex; justify-content:flex-end"><%= form.submit "Create Answers", class: "btn btn-success ",  id: "submit-button", disabled: true  %></div>
-    <% end %>
-    <%=@entry%>
-  </div>
-  <!-- End of Questions section -->
+    </div>
+        <div class="alert alert-info mt-3" role="alert">
+          <div id="error-message" style="color: red;"></div>
+        </div>
+        <div  style="display:flex; justify-content:flex-end"><%= form.submit "Create Answers", class: "btn btn-success ",  id: "submit-button", disabled: true  %></div>
+      <% end %>
+      <%=@entry%>
 </div>
-<!-- End of credits container div -->
+
+
+  </div>
+  <!-- End of credits container div -->
+
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const numericInputs = document.querySelectorAll('.numeric-input');
