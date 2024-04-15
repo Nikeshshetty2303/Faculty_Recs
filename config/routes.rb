@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :tabs
   resources :departments
   resources :upload_questions
   resources :upload_sections
@@ -59,6 +60,7 @@ end
 
    get 'home/index'
    get 'home/validate'
+   get 'home/app_profile'
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
 
    resources :credit_questions do

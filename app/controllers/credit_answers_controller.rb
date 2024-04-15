@@ -29,7 +29,7 @@ class CreditAnswersController < ApplicationController
     @questions = CreditQuestion.all
     answer_params_array = params[:answers][:answers]
 
-    response = Response.create!
+    response = Response.where(user_id: current_user.id).last
 
     parameter_value = params[:answers][:entry]
     response.form_id = parameter_value

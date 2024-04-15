@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_10_114355) do
+ActiveRecord::Schema.define(version: 2024_03_25_155837) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 2024_03_10_114355) do
   create_table "forms", force: :cascade do |t|
     t.string "name"
     t.string "role"
-    t.integer "salary"
+    t.string "salary"
     t.string "dept"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -144,8 +144,10 @@ ActiveRecord::Schema.define(version: 2024_03_10_114355) do
     t.integer "form_id"
     t.integer "question_type_id"
     t.integer "position"
+    t.integer "tab_id"
     t.index ["form_id"], name: "index_questions_on_form_id"
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
+    t.index ["tab_id"], name: "index_questions_on_tab_id"
   end
 
   create_table "responses", force: :cascade do |t|
@@ -160,6 +162,13 @@ ActiveRecord::Schema.define(version: 2024_03_10_114355) do
     t.integer "amount"
     t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
+  end
+
+  create_table "tabs", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "tab_no", default: 0
   end
 
   create_table "upload_questions", force: :cascade do |t|
@@ -185,6 +194,7 @@ ActiveRecord::Schema.define(version: 2024_03_10_114355) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "adminrole"
+    t.integer "tab_no", default: 1
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
