@@ -40,6 +40,12 @@
                         <%= link_to 'Admin Portal', forms_path(userid: @user.id), class:"nav-link" %>
                     </div>
                     <% end %>
+                    <%if @user.tab_no < Tab.count%>
+                    <div class="nav-item">
+                        <%= link_to 'Application Profile', home_app_profile_path(id: @user.id), class:"nav-link" %>
+                    </div>
+                    <%end%>
+
                     <div class="nav-item">
                         <%= link_to 'Edit Profile', edit_user_registration_path, class:"nav-link" %>
                     </div>

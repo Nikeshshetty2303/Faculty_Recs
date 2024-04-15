@@ -8,12 +8,18 @@ class FormsController < ApplicationController
   end
 
 def create_response
-  @form = Form.find(params[:id])
-  @response = Response.new
-  @response.form_id = @form.id
-  @questions = @form.questions
+  @user = User.find(current_user.id)
+  if @user.tab_no !=1
+    @response = @user.responses.last
+  else
+    @response = Response.new
+  end
+  @questions = Question.where(tab_id: @user.tab_no)
+  present_tab_no = @user.tab_no
+  @user.tab_no = present_tab_no +1
+  @user.save
   answers_attributes = params.dig(:response, :answers_attributes)
-  @response.user_id = @form.user_id
+  @response.user_id = current_user.id
   if answers_attributes.present?
     answers_attributes.each do |question_id, answer_data|
       question = @questions.find_by(id: question_id)
@@ -28,7 +34,11 @@ def create_response
   end
 
   if @response.save
-    redirect_to home_index_path, notice: 'Form submitted successfully.'
+    if @user.tab_no > Tab.count
+      redirect_to home_index_path(id: @user.id), notice: 'Form submitted successfully.'
+    else
+      redirect_to home_app_profile_path(id: @user.id), notice: 'Form submitted successfully.'
+    end
   else
     # If there are validation errors, re-render the form with errors.
     @questions = @form.questions.includes(:options)  # Ensure questions are preloaded with options to avoid N+1 query.

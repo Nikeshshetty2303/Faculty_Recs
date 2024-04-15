@@ -24,9 +24,9 @@
  </style>
 
 <!-- Add this dropdown above your existing code -->
-<div class="card_div mt-3 mb-3">
- 
-  <select class="card_div form-select" id="departmentFilter">
+<div class="container mt-3 mb-3">
+  <label for="departmentFilter" class="form-label">Filter by Department:</label>
+  <select class="form-select" id="departmentFilter">
     <option value="">All Departments</option>
     <% Department.all.each do |department| %>
       <option value="<%= department.title %>"><%= department.title %></option>
@@ -58,7 +58,11 @@
                     <h6 class="fw-bold">Job Description</h5>
                         <p class="card-text pt-1 px-4"><%=form.description%></p>
                 </div>
-            <%= link_to  "Apply now", new_credit_answer_path(id: form.id,userid: @user.id), class:"btn btn-outline-primary mt-3"%>
+            <%if @user.tab_no > Tab.count %>
+                <%= link_to  "Apply now", new_credit_answer_path(id: form.id,userid: @user.id), class:"btn btn-outline-primary mt-3"%>
+            <% else %>
+                <p>You can't apply now, please complete your <%= link_to  "Application Profile", home_app_profile_path%></p>
+            <% end %>
             </div>
         </div>
     </div>

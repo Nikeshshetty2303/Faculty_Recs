@@ -5,6 +5,14 @@ class HomeController < ApplicationController
     @departments = Department.all
   end
 
+  def app_profile
+    @user = User.find(current_user.id)
+    @response = Response.new
+    @questions = Question.all
+    tab_no = current_user.tab_no
+    @tab= Tab.find(@user.tab_no)
+  end
+
   def validate
     @user = User.find(current_user.id)
     @response = Response.all
