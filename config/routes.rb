@@ -62,6 +62,7 @@ end
    get 'home/validate'
    get 'home/app_profile'
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
+   get 'home/edit_app_profile'
 
    resources :credit_questions do
     collection do
