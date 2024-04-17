@@ -13,6 +13,14 @@ class HomeController < ApplicationController
     @tab= Tab.find(@user.tab_no)
   end
 
+  def edit_app_profile
+    @user = User.find(current_user.id)
+    @response = Response.where(id: @res_id)
+    @questions = Question.all
+    tab_no = current_user.tab_no
+    @tab= Tab.find(@user.tab_no)
+  end
+
   def validate
     @user = User.find(current_user.id)
     @response = Response.all
