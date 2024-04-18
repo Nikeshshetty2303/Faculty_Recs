@@ -32,6 +32,67 @@ h1, h2, h3, h4, h5, h6 {
 
 }
 
+/* Existing styles */
+.tab-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tab-title {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+  }
+
+  .tab-title.active {
+    background-color: #ffffff;
+    color: #fff;
+  }
+
+  .tab-title.present {
+    background-color: #ffffff;
+    color: #fff;
+    border: 2px solid green
+  }
+
+  .tab-title.dimmed {
+    opacity: 0.5;
+    pointer-events: none; /* Prevent interaction with dimmed tabs */
+  }
+
+  .tab-title.light {
+    background-color: #EBE8E8;
+    color: #fff; /* Prevent interaction with dimmed tabs */
+  }
+
+  /* New styles for progress bar */
+  .progress-bar {
+    position: relative;
+    height: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .progress-arrow {
+    position: absolute;
+    top: -10px;
+  }
+
+  .progress-arrow:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border: solid transparent;
+    border-width: 10px;
+    border-bottom-color: #f9f9f9; /* Adjust arrow color to match background */
+  }
+
 /* Announcement card */
 .card {
     max-height: 34em;
@@ -88,7 +149,7 @@ p {
 
 .vis {
     /* added to toggle element */
-    display: none!important; 
+    display: none!important;
 }
 #log_out_mb {
     display: none;
@@ -109,7 +170,7 @@ p {
     #log_out_mb {
         display: block;
     }
-    
+
 }
 
 /* media query mobile screen*/

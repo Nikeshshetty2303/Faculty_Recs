@@ -7,10 +7,17 @@ class HomeController < ApplicationController
 
   def app_profile
     @user = User.find(current_user.id)
-    @response = Response.new
+    if @user.tab_no == 1
+      @response = Response.new
+      @tab= Tab.find(@user.tab_no)
+    else
+      @response = Response.find(params[:res_id])
+      @user.nav_tab_no = params[:nav_tab_no]
+      @tab= Tab.find(@user.nav_tab_no)
+      @user.save
+    end
     @questions = Question.all
-    tab_no = current_user.tab_no
-    @tab= Tab.find(@user.tab_no)
+
   end
 
   def edit_app_profile

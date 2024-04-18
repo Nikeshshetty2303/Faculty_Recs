@@ -59,9 +59,13 @@
                         <p class="card-text pt-1 px-4"><%=form.description%></p>
                 </div>
             <%if @user.tab_no > Tab.count %>
-                <%= link_to  "Apply now", new_credit_answer_path(id: form.id,userid: @user.id), class:"btn btn-outline-primary mt-3"%>
+            <%= link_to  "Apply now", new_credit_answer_path(id: form.id,userid: @user.id), class:"btn btn-outline-primary mt-3"%>
             <% else %>
-                <p>You can't apply now, please complete your <%= link_to  "Application Profile", home_app_profile_path%></p>
+                 <%if @user.tab_no != 1%>
+                    <p>You can't apply now, please complete your <%= link_to 'Application Profile', home_app_profile_path(id: @user.id, res_id: @user.responses.last.id, nav_tab_no: @user.nav_tab_no)%>
+                <%else%>
+                    <p>You can't apply now, please complete your <%= link_to 'Application Profile', home_app_profile_path(id: @user.id)%>
+                <%end%>
             <% end %>
             </div>
         </div>
