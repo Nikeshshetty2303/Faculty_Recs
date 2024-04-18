@@ -79,6 +79,10 @@
     padding-left: 1px;
 }
 
+a {
+   white-space: nowrap;
+}
+
 hr {
     margin: 0;
 }

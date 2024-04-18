@@ -168,7 +168,6 @@ ActiveRecord::Schema.define(version: 2024_03_25_155837) do
     t.string "title"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "tab_no", default: 0
   end
 
   create_table "upload_questions", force: :cascade do |t|
@@ -194,7 +193,7 @@ ActiveRecord::Schema.define(version: 2024_03_25_155837) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "adminrole"
-    t.integer "tab_no", default: 1
+    t.integer "tab_no", default: 0
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
