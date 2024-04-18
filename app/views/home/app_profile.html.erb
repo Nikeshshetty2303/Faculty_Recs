@@ -1,108 +1,47 @@
- <%= stylesheet_link_tag 'home' %>
- <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%= stylesheet_link_tag 'home' %>
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
-<div class="container-md py-4 px-5 mb-3" style="background-color:rgb(127 172 218 / 16%); border-radius:10px;">
+<!-- Creating a new entry -->
+<%if @user.nav_tab_no == @user.tab_no%>
+  <div class="container-md py-4 px-5 mb-3" style="background-color: rgb(127 172 218 / 16%); border-radius: 10px;">
     <%= form_with(model: @response, url: create_response_form_path(id: @user.id), method: :post) do |form| %>
-        <html lang="en">
-        <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Navigation Tabs</title>
-        <%= stylesheet_link_tag 'home' %>
-        <style>
-        /* Existing styles */
-        .tab-container {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .tab-title {
-          padding: 10px 20px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          background-color: #f9f9f9;
-          transition: all 0.3s ease;
-        }
-
-        .tab-title.active {
-          background-color: #007bff;
-          color: #fff;
-        }
-
-        .tab-title.dimmed {
-          opacity: 0.5;
-          pointer-events: none; /* Prevent interaction with dimmed tabs */
-        }
-
-        /* New styles for progress bar */
-        .progress-bar {
-          position: relative;
-          height: 10px;
-          background-color: #f9f9f9;
-          border-radius: 5px;
-          width: 100%;
-          margin-top: 20px;
-        }
-
-        .progress-arrow {
-          position: absolute;
-          top: -10px;
-        }
-
-        .progress-arrow:before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          border: solid transparent;
-          border-width: 10px;
-          border-bottom-color: #f9f9f9; /* Adjust arrow color to match background */
-        }
-        </style>
-        </head>
-        <body>
-        <div class="tab-container">
+      <div class="tab-container">
         <% Tab.all.each_with_index do |tab, index| %>
-            <% if tab.id == @user.tab_no %>
-              <div class="tab-title">
-                <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id) %>
-              </div>
-            <% elsif tab.id < @user.tab_no %>
-              <div class="tab-title">
-              <%= link_to "#{tab.title}", home_edit_app_profile_path(id: @user.id, res_id: @response.id) %>
-              </div>
-            <% else %>
-              <div class="tab-title dimmed">
+          <% if tab.id == @user.tab_no %>
+            <div class="tab-title present">
+              <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, res_id: @response.id, nav_tab_no: tab.id) %>
+            </div>
+          <% elsif tab.id < @user.tab_no %>
+            <div class="tab-title light">
+              <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id)%>
+            </div>
+          <% else %>
+            <div class="tab-title dimmed">
               <%= tab.title %>
-              </div>
-            <% end %>
+            </div>
+          <% end %>
         <% end %>
-        </div>
+      </div>
+      <br>
 
-        <!-- Progress bar -->
-        <div class="progress-bar">
-        <div class="progress-arrow"></div>
-        </div>
-        </body>
-        </html>
 
       <h5 class='text-center fw-bold'><%=@tab.title%></h5>
-      <% @questions.where(tab_id: @user.tab_no).sort_by(&:position).each do |question| %>
+
+      <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
         <div style="margin-bottom: 20px;">
           <% if question.question_type_id == 1 %>
             <label class="form-label"><%= question.title %></label>
-            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
           <% elsif question.question_type_id == 4 %>
             <label class="form-label"><%= question.title %></label>
-            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
           <% elsif question.question_type_id == 5 %>
             <label class="form-label"><%= question.title %></label>
             <div class="input-group mb-3">
               <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
-              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
             </div>
 
           <% elsif question.question_type_id == 2 %>
@@ -128,9 +67,95 @@
           <% end %>
         </div>
       <% end %>
-      <div style="display:flex; justify-content:flex-end;">
-        <%= form.submit class:"btn btn-success mt-3"%>
-      </div>
 
+      <div style="display:flex; justify-content:flex-end;">
+        <%= form.submit "Create", class:"btn btn-success mt-3" %>
+      </div>
     <% end %>
   </div>
+<!-- Editing the existing entry -->
+<%else%>
+    <div class="container-md py-4 px-5 mb-3" style="background-color: rgb(127 172 218 / 16%); border-radius: 10px;">
+    <%= form_with(model: @response, url: update_app_profile_response_form_path(id: @user.id, res_id: @response.id), method: :post) do |form| %>
+      <div class="tab-container">
+        <% Tab.all.each_with_index do |tab, index| %>
+          <% if tab.id == @user.tab_no %>
+            <div class="tab-title active">
+              <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id) %>
+            </div>
+          <% elsif tab.id == @user.nav_tab_no %>
+            <div class="tab-title present">
+              <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id) %>
+            </div>
+          <% elsif tab.id < @user.tab_no && tab.id != @user.nav_tab_no%>
+            <div class="tab-title light">
+              <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id), method: :post%>
+            </div>
+          <% else %>
+            <div class="tab-title dimmed">
+              <%= tab.title %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      <br>
+
+      <h5 class='text-center fw-bold'><%=@tab.title%></h5>
+
+      <!-- The Questions are called-->
+      <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
+      <!-- The Responses specific to the users are called-->
+        <% @response.answers.all.each do |answer|%>
+        <!-- The Already existing answers are called-->
+        <% if answer.question_id == question.id%>
+        <div style="margin-bottom: 20px;">
+          <% if question.question_type_id == 1 %>
+            <label class="form-label"><%= question.title %></label>
+            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: answer.content %>
+
+          <% elsif question.question_type_id == 4 %>
+            <label class="form-label"><%= question.title %></label>
+            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: answer.content %>
+
+          <% elsif question.question_type_id == 5 %>
+            <label class="form-label"><%= question.title %></label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
+              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: answer.content %>
+            </div>
+
+          <% elsif question.question_type_id == 2 %>
+           <label class="form-label"><%= question.title %></label>
+          <% question.options.each do |option| %>
+            <label>
+              <%= form.radio_button :content, option.title,
+                                    name: "response[answers_attributes][#{question.id}][content]",
+                                    value: option.title,
+                                    checked: (option.title == answer.content) %>
+              <%= option.title %>
+            </label>
+          <% end %>
+
+          <% elsif question.question_type_id == 3 %>
+            <label class="form-label"><%= question.title %></label>
+            <% question.options.each do |option| %>
+              <label>
+                <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil, value: answer.content %>
+                <%= option.title %>
+                <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
+                  <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title, value: answer.content %>
+                <% end %>
+              </label>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %> <!-- End of Answer call-->
+    <% end %> <!-- End of Response call-->
+    <% end %> <!-- End of Question call-->
+
+      <div style="display:flex; justify-content:flex-end;">
+      <%= form.submit "Update", class:"btn btn-success mt-3" %>
+      </div>
+    <% end %>
+  </div>
+<%end%>

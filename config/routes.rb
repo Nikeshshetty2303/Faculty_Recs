@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   get 'submit_form', on: :member
   post 'create_response', on: :member
   post 'update_response', on: :member
+  post 'update_app_profile_response', on: :member
   post 'submit_form', on: :member
   get 'checkout', on: :member
   patch 'payment', on: :member
@@ -63,6 +64,7 @@ end
    get 'home/app_profile'
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
    get 'home/edit_app_profile'
+   post 'home/app_profile'
 
    resources :credit_questions do
     collection do

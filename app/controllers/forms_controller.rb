@@ -17,6 +17,7 @@ def create_response
   @questions = Question.where(tab_id: @user.tab_no)
   present_tab_no = @user.tab_no
   @user.tab_no = present_tab_no +1
+  @user.nav_tab_no = @user.tab_no
   @user.save
   answers_attributes = params.dig(:response, :answers_attributes)
   @response.user_id = current_user.id
@@ -35,9 +36,11 @@ def create_response
 
   if @response.save
     if @user.tab_no > Tab.count
+      @user.nav_tab_no = 1
+      @user.save
       redirect_to home_index_path(id: @user.id), notice: 'Form submitted successfully.'
     else
-      redirect_to home_app_profile_path(id: @user.id), notice: 'Form submitted successfully.'
+      redirect_to home_app_profile_path(id: @user.id, res_id: @response.id, nav_tab_no: @user.nav_tab_no), notice: 'Form submitted successfully.'
     end
   else
     # If there are validation errors, re-render the form with errors.
@@ -46,6 +49,39 @@ def create_response
   end
 end
 
+def update_app_profile_response
+  @user = User.find(current_user.id)
+  @response = Response.find(params[:res_id])
+  @questions = Question.where(tab_id: @user.nav_tab_no)
+  present_tab_no = @user.nav_tab_no
+  @user.nav_tab_no = present_tab_no +1
+  @user.save
+  answers_attributes = params.dig(:response, :answers_attributes)
+  if answers_attributes.present?
+    answers_attributes.each do |question_id, answer_data|
+      question = @questions.find_by(id: question_id)
+      next unless question
+      content = answer_data[:content]
+      if question.question_type_id == 3
+        # If content is an array, store it as is, otherwise convert it to an array
+        content = content.is_a?(Array) ? content : [content].compact
+      end
+      @response.answers.where(question: question).update(content: content)
+    end
+  end
+
+  if @response.save
+    if @user.tab_no > Tab.count
+      redirect_to home_index_path(id: @user.id), notice: 'Form submitted successfully.'
+    else
+      redirect_to home_app_profile_path(id: @user.id, res_id: @response.id, nav_tab_no: @user.nav_tab_no), notice: 'Form submitted successfully.'
+    end
+  else
+    # If there are validation errors, re-render the form with errors.
+    @questions = @form.questions.includes(:options)  # Ensure questions are preloaded with options to avoid N+1 query.
+    render 'forms/show'  # Assuming you have a show template to render the form.
+  end
+end
 
 def update_response
   @form = Form.find(params[:form_id])
