@@ -168,7 +168,6 @@ ActiveRecord::Schema.define(version: 2024_04_18_050645) do
     t.string "title"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "tab_no", default: 0
   end
 
   create_table "upload_questions", force: :cascade do |t|

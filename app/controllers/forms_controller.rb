@@ -72,6 +72,8 @@ def update_app_profile_response
 
   if @response.save
     if @user.tab_no > Tab.count
+      @user.nav_tab_no = 1
+      @user.save
       redirect_to home_index_path(id: @user.id), notice: 'Form submitted successfully.'
     else
       redirect_to home_app_profile_path(id: @user.id, res_id: @response.id, nav_tab_no: @user.nav_tab_no), notice: 'Form submitted successfully.'
