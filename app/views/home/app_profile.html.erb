@@ -102,26 +102,31 @@
 
       <h5 class='text-center fw-bold'><%=@tab.title%></h5>
 
+      <% map = {} %>
       <!-- The Questions are called-->
       <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
       <!-- The Responses specific to the users are called-->
         <% @response.answers.all.each do |answer|%>
         <!-- The Already existing answers are called-->
         <% if answer.question_id == question.id%>
+
+          <% map[question.id] = answer.content %>
+        <% end %> <!-- End of Answer call-->
+        <% end %> <!-- End of Response call-->
         <div style="margin-bottom: 20px;">
           <% if question.question_type_id == 1 %>
             <label class="form-label"><%= question.title %></label>
-            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: answer.content %>
+            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
 
           <% elsif question.question_type_id == 4 %>
             <label class="form-label"><%= question.title %></label>
-            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: answer.content %>
+            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id]  %>
 
           <% elsif question.question_type_id == 5 %>
             <label class="form-label"><%= question.title %></label>
             <div class="input-group mb-3">
               <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
-              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: answer.content %>
+              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
             </div>
 
           <% elsif question.question_type_id == 2 %>
@@ -131,7 +136,7 @@
               <%= form.radio_button :content, option.title,
                                     name: "response[answers_attributes][#{question.id}][content]",
                                     value: option.title,
-                                    checked: (option.title == answer.content) %>
+                                    checked: (option.title == map[question.id]) %>
               <%= option.title %>
             </label>
           <% end %>
@@ -140,18 +145,13 @@
             <label class="form-label"><%= question.title %></label>
             <% question.options.each do |option| %>
               <label>
-                <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil, value: answer.content %>
+              <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: map[question.id].include?(option.title), value: option.title }, option.title, nil %>
                 <%= option.title %>
-                <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
-                  <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title, value: answer.content %>
-                <% end %>
               </label>
             <% end %>
           <% end %>
         </div>
-      <% end %> <!-- End of Answer call-->
-    <% end %> <!-- End of Response call-->
-    <% end %> <!-- End of Question call-->
+      <% end %> <!-- End of Question call-->
 
       <div style="display:flex; justify-content:flex-end;">
       <%= form.submit "Update", class:"btn btn-success mt-3" %>
