@@ -14,11 +14,11 @@
         <h2 style="text-decoration:underline; text-align:center;">Job Description</h2>
         <div style="display:-webkit-box">
             <div style="width:60%">
-                <p>Application ID : <b>RE<%= @response.form.id %>/<%= @response.id %> </b></p>
+                <p>Application ID : <b><%= "#{response.form.role}#{response.form.dept}#{1000+response.id}" %> </b></p>
                 <p>Role : <b><%= @response.form.role %></b></p>
             </div>
             <div style="width:40%">
-                <p>Salary Offered : <b><%= @response.form.salary %> LPA</b></p>
+                <p>Pay Level : <b><%= @response.form.salary %> LPA</b></p>
                 <p>Recruiting Department : <b><%= @response.form.dept %></b></p>
             </div>
         </div>

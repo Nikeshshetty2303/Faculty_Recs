@@ -109,7 +109,6 @@
         <% @response.answers.all.each do |answer|%>
         <!-- The Already existing answers are called-->
         <% if answer.question_id == question.id%>
-
           <% map[question.id] = answer.content %>
         <% end %> <!-- End of Answer call-->
         <% end %> <!-- End of Response call-->
@@ -145,7 +144,7 @@
             <label class="form-label"><%= question.title %></label>
             <% question.options.each do |option| %>
               <label>
-              <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: map[question.id].include?(option.title), value: option.title }, option.title, nil %>
+              <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: map[question.id].present? ? map[question.id].include?(option.title) : false, value: option.title }, option.title, nil %>
                 <%= option.title %>
               </label>
             <% end %>

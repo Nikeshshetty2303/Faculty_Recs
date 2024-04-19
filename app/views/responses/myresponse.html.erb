@@ -10,7 +10,7 @@
     <% @responses.each do |response| %>
       <div class="card mb-3">
         <div class="card-body">
-          <h5 class="card-title"><%= "#{response.form.name}_#{response.id}" %></h5>
+          <h5 class="card-title"><%= "#{response.form.role}#{response.form.dept}#{1000+response.id}" %></h5>
 
           <div class="validation-status mt-2">
             <!-- <% if response.validation.nil? %>
