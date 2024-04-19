@@ -66,7 +66,20 @@ def update_app_profile_response
         # If content is an array, store it as is, otherwise convert it to an array
         content = content.is_a?(Array) ? content : [content].compact
       end
-      @response.answers.where(question: question).update(content: content)
+
+      puts "The value of #{content}"
+      puts "The value of answers #{@response.answers}"
+
+
+
+
+      if @response.answers.find_by(question: question)
+        @response.answers.where(question: question).update(content: content)
+      else
+        @response.answers.build(question: question, content: content)
+      end
+
+
     end
   end
 
