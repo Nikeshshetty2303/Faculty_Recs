@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_18_050645) do
+ActiveRecord::Schema.define(version: 2024_04_22_184645) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -160,6 +160,8 @@ ActiveRecord::Schema.define(version: 2024_04_18_050645) do
     t.boolean "validation"
     t.boolean "payment_status"
     t.integer "amount"
+    t.boolean "profile_response"
+    t.integer "app_no"
     t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
   end
@@ -168,6 +170,7 @@ ActiveRecord::Schema.define(version: 2024_04_18_050645) do
     t.string "title"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "tab_no", default: 0
   end
 
   create_table "upload_questions", force: :cascade do |t|
@@ -195,6 +198,7 @@ ActiveRecord::Schema.define(version: 2024_04_18_050645) do
     t.boolean "adminrole"
     t.integer "tab_no", default: 1
     t.integer "nav_tab_no", default: 1
+    t.string "validator"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

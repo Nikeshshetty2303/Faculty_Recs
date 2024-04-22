@@ -7,10 +7,19 @@
   </div>
 
   <div class="responses mt-4">
-    <% @responses.each do |response| %>
+    <% @responses.where(profile_response: nil).each do |response| %>
       <div class="card mb-3">
         <div class="card-body">
-          <h5 class="card-title"><%= "#{response.form.role}#{response.form.dept}#{1000+response.id}" %></h5>
+
+          <% present_response_id = response.id %>
+          <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
+          <% count_below_responses = below_responses.count %>
+
+          <% role = response.form.role %>
+          <% dept = response.form.dept %>
+
+
+          <h5 class="card-title"><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></h5>
 
           <div class="validation-status mt-2">
             <!-- <% if response.validation.nil? %>

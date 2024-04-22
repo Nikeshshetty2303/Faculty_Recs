@@ -7,56 +7,36 @@
         <th scope="col">Application</th>
         <th scope="col">Credit Score</th>
         <th scope="col">Validate Credit Response</th>
-        <%# <th scope="col">Validation Status</th> %>
         <th scope="col">Eligibility</th>
       </tr>
     </thead>
     <tbody>
-      <% @response.each do |response| %>
-        <tr>
-          <% @user = User.find_by(id: response.user_id) %>
-          <td><%= "#{response.form.role}#{response.form.dept}#{1000+response.id}" %></td>
+      <% Response.all.each do |response| %>
+        <% if response.form.present? && response.form.dept == @user.validator %>
+          <tr>
+            <% present_response_id = response.id %>
+          <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
+          <% count_below_responses = below_responses.count %>
 
-          <td><%= response.credit_score %></td>
-          <td><%= link_to "Validate Credit Response", validate_response_path(id: response.id), class: 'btn btn-warning btn-sm' %></td>
-          <!--
-          <td>
-          <% if response.validation == true%>
-            <%="✅"%>
-          <%else%>
-            <%="❌"%>
-          <%end%>
-          </td>
-          -->
-          <td>
-          <% if (response.validation ==true) %>
-            <% if response.credit_score >= response.form.credit_req%>
-              <%="Eligible"%>
-            <% elsif %>
-              <%="Not Eligible"%>
-            <%end%>
-          <%else%>
-            <%="Validation pending"%>
-          <%end%>
-          </td>
-          <!--
-            <%= form_with(model: response) do |f| %>
-              <% if response.validation? %>
-                <%="✅"%>
+          <% role = response.form.role %>
+          <% dept = response.form.dept %>
+
+            <td><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
+            <td><%= response.credit_score %></td>
+            <td><%= link_to "Validate Credit Response", validate_response_path(id: response.id), class: 'btn btn-warning btn-sm' %></td>
+            <td>
+              <% if response.validation == true %>
+                <% if response.credit_score >= response.form.credit_req %>
+                  <%= "Eligible" %>
+                <% else %>
+                  <%= "Not Eligible" %>
+                <% end %>
               <% else %>
-                <%="❌"%>
+                <%= "Validation pending" %>
               <% end %>
-              <% new_validation = response.validation ? false : true %>
-              <%= f.hidden_field :validation, value: new_validation %>
-            <% end %>
-
-          </td>
-
-          <td>
-            <%= submit_tag "Update", class: 'btn btn-success btn-sm' %>
-          </td>
-           -->
-        </tr>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
     </tbody>
   </table>

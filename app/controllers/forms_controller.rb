@@ -10,9 +10,10 @@ class FormsController < ApplicationController
 def create_response
   @user = User.find(current_user.id)
   if @user.tab_no !=1
-    @response = @user.responses.last
+    @response = @user.responses.where(profile_response: true).last
   else
     @response = Response.new
+    @response.profile_response = true
   end
   @questions = Question.where(tab_id: @user.tab_no)
   present_tab_no = @user.tab_no
@@ -126,7 +127,11 @@ def update_response
         content = [content].reject(&:empty?)
       end
 
-      @response.answers.build(question: question, content: content)
+      if @response.answers.find_by(question: question)
+        @response.answers.where(question: question).update(content: content)
+      else
+        @response.answers.build(question: question, content: content)
+      end
     end
   end
 

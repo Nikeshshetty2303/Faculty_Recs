@@ -9,6 +9,45 @@
         <div class="alert alert-success" role="alert">
             This is the response for the form:
         </div>
+        <% @app_response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
+        <% if answer.question.question_type_id == 6 %>
+                <div class="mb-3">
+                    <label class="form-label"><%= answer.question.title %></label>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <% answer.question.options.each do |option| %>
+                                    <th><%= option.title %></th>
+                                <% end %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% content = eval(answer.content) %>
+                            <% content.each_slice(answer.question.options.size) do |chunk| %>
+                                <tr>
+                                    <% chunk.each do |element| %>
+                                        <td><%= element.gsub(/[\[\]\"]/,"") %></td>
+                                    <% end %>
+                                </tr>
+                            <% end %>
+                        </tbody>
+                    </table>
+                </div>
+
+            <% elsif answer.question.question_type_id == 3 %>
+                <div class="mb-3">
+                    <label class="form-label"><%= answer.question.title %></label>
+                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
+                    <input readonly class="form-control" value="<%= content %>">
+                </div>
+            <% else %>
+                <div class="mb-3">
+                    <label class="form-label"><%= answer.question.title %></label>
+                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ").first %>
+                    <input readonly class="form-control" value="<%= content %>">
+                </div>
+            <% end %>
+        <% end %>
 
         <% @response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
             <% if answer.question.question_type_id == 6 %>
@@ -33,6 +72,13 @@
                             <% end %>
                         </tbody>
                     </table>
+                </div>
+
+            <% elsif answer.question.question_type_id == 3 %>
+                <div class="mb-3">
+                    <label class="form-label"><%= answer.question.title %></label>
+                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
+                    <input readonly class="form-control" value="<%= content %>">
                 </div>
             <% else %>
                 <div class="mb-3">
