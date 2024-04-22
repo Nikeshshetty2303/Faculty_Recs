@@ -1,3 +1,39 @@
+<style>
+.option-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.option-table th, .option-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.option-table th {
+  background-color: #f2f2f2;
+}
+
+.form-control {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn1 {
+  margin-top: 10px;
+  margin-left: 90%;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn1:hover {
+  background-color: #0056b3;
+}
+</style>
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 <%= stylesheet_link_tag 'forms' %>
 
@@ -62,6 +98,29 @@
                       </label>
                     </div>
                   <% end %>
+                  <% elsif question.question_type_id == 6 %>
+  <label class="form-label"><%= question.title %></label>
+  <div id="text_fields_<%= question.id %>">
+    <table class="option-table" id="option_table_<%= question.id %>">
+      <thead>
+        <tr>
+          <% question.options.each do |option| %>
+            <th><%= option.title %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <% question.options.each do |_option| %>
+            <td>
+              <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', placeholder: "Enter your details" %>
+            </td>
+          <% end %>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <button type="button" class="btn btn-primary btn1" onclick="addTableRow('<%= question.id %>')">+</button>
                 <% end %>
               </div>
             <% end %>
@@ -76,7 +135,7 @@
           <% @form.questions.order(:position).each do |question| %>
             <div class="child my-2" style="background-color:#cfe2ff; border-radius:10px">
               <%# <%= link_to"Edit", edit_question_path(question), remote: true %>
-              <%= render 'questions/form', form: question, class:'form-control' %>
+              <%= render 'questions/form', formal: question, class:'form-control' %>
               <div class="child-option">
                 <% question.options.each do |option|%>
                   <div class="child-option">

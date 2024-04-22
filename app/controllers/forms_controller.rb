@@ -103,7 +103,6 @@ def update_response
   @response = Response.find(params[:id])
   @questions = @form.questions
   answers_attributes = params.dig(:response, :answers_attributes)
-
   if answers_attributes.present?
     answers_attributes.each do |question_id, answer_data|
       question = @questions.find_by(id: question_id)
@@ -116,6 +115,15 @@ def update_response
         content = content.reject(&:empty?) if content.is_a?(Array)
         content = content.present? ? content : nil
         puts"The vallue is #{content[1]}"
+      end
+
+      if question.question_type_id == 6
+        puts "#{content}"
+        # Ensure content is always an array
+        content = Array(content).reject(&:empty?)
+      else
+        # For other question types, ensure content is stored as an array with a single element
+        content = [content].reject(&:empty?)
       end
 
       @response.answers.build(question: question, content: content)

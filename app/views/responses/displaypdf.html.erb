@@ -1,7 +1,12 @@
+<style>
+    @page {
+        margin-bottom: 500px;
+    }
+</style>
 <div style="border:2px dashed gray">
     <div style="display:-webkit-box; margin:10px 0; border-bottom: 2px dashed gray; margin-bottom:10px">
         <div style="margin:10px 45px 10px 30px">
-        <%= image_tag wicked_pdf_asset_base64("NITK_Emblem.png"), style:'height:60px; width:60px;' %>
+            <%= image_tag wicked_pdf_asset_base64("NITK_Emblem.png"), style:'height:60px; width:60px;' %>
         </div>
         <div>
             <h1 style='padding:0; margin:0; text-align:center; font-weight:500; font-size:40px'>Teaching Staff Recruitment Portal NITK</h1>
@@ -9,7 +14,7 @@
         </div>
     </div>
 
-        <!--Job Info-->
+    <!--Job Info-->
     <div style="padding:15px; margin-top:12px">
         <h2 style="text-decoration:underline; text-align:center;">Job Description</h2>
         <div style="display:-webkit-box">
@@ -24,18 +29,52 @@
         </div>
     </div>
 
-    <!--Application Details Info-->
-    <div style="padding:15px; margin-top:12px">
-        <h2 style="text-decoration:underline; text-align:center;">Application Details</h2>
-        <i style="">NOTE: Information populated here is from the data that you have entered while filling the application</i>
-        <div style="display:-webkit-box; margin-top:12px">
-            <div>
-                <% @response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
-                    <p><%= answer.question.title %> : <b><%= answer.content %></b></p>
-                <% end %>
-            </div>
-        </div>
+ <!--Application Details Info-->
+<div style="padding:15px; margin-top:12px">
+    <h2 style="text-decoration:underline; text-align:center;">Application Details</h2>
+    <i style="">NOTE: Information populated here is from the data that you have entered while filling the application</i>
+    <!-- Assuming you are using Wicked PDF -->
+<%= wicked_pdf_stylesheet_link_tag "bootstrap.min.css" %>
+<div class="container-sm p-2">
+
+    <div class="response-container p-4" style="background-color: rgba(127, 172, 218, 0.16); border-radius: 6px;">
+
+        <% @response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
+            <% if answer.question.question_type_id == 6 %>
+                <div class="mb-3">
+                    <label class="form-label"><%= answer.question.title %></label>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <% answer.question.options.each do |option| %>
+                                    <th><%= option.title %></th>
+                                <% end %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% content = eval(answer.content) %>
+                            <% content.each_slice(answer.question.options.size) do |chunk| %>
+                                <tr>
+                                    <% chunk.each do |element| %>
+                                        <td><%= element.gsub(/[\[\]\"]/,"") %></td>
+                                    <% end %>
+                                </tr>
+                            <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            <% else %>
+                <div class="mb-3">
+                    <label class="form-label"><%= answer.question.title %></label>
+                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ").first %>
+                    <input readonly class="form-control" value="<%= content %>">
+                </div>
+            <% end %>
+        <% end %>
     </div>
+</div>
+</div>
+
     <div style="padding:15px">
     </div>
 </div>

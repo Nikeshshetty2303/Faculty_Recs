@@ -1,10 +1,10 @@
-<%= form_with(model: form, local: true) do |form| %>
+<%= form_with(model: formal, local: true) do |form| %>
   <div style="display:flex; justify-content:space-around">
     <!--title and fiels-->
     <div style='width:95%'>
       <div class="child1 mb-2">
         <%= form.label :title, style: "display: block", class:'form-label' %>
-        <%= form.object.position %><%= form.text_field :title, class:'form-control' %>
+        <% form.object.position %><%= form.text_field :title, class:'form-control' %>
       </div>
 
       <!--actions on question-->
@@ -13,8 +13,9 @@
         <!--type-->
         <div class="child2 px-2">
           <%= form.label :question_type_id, "Type of Question", style: "display: block", id: "question_type_id_#{form.object.id}", class:'form-label' %>
-          <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }), { prompt: "Select a Question Type" }, id: "question_type_select_#{form.object.id}", class:'form-select' %>
+          <%= form.select :question_type_id, options_for_select(QuestionType.all.map { |type| [type.title, type.id] }, form.object.question_type_id), { prompt: "Select a Question Type" }, id: "question_type_select_#{form.object.id}", class:'form-select' %>
         </div>
+
         <!--options-->
         <div id="option-fields_<%= form.object.id %>" style="display: none;">
           <div id="options-container_<%= form.object.id %>">
@@ -67,6 +68,14 @@
 
    // Rest of your JavaScript code...
   } );
-
+  function addTableRow(questionId) {
+    var table = document.getElementById('option_table_' + questionId);
+    var newRow = table.insertRow(-1); // Insert new row at the end of the table
+    var optionsCount = table.rows[0].cells.length; // Number of options
+    for (var i = 0; i < optionsCount; i++) {
+      var newCell = newRow.insertCell(i);
+      newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
+    }
+  }
 </script>
 <% end %>

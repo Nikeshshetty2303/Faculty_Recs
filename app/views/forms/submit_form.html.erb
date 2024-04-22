@@ -1,3 +1,39 @@
+<style>
+.option-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.option-table th, .option-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.option-table th {
+  background-color: #f2f2f2;
+}
+
+.form-control {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  margin-top: 10px;
+  margin-left: 95%;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+</style>
 <div class="container-md">
   <div style="">
     <%= link_to "Back to home", home_index_path(userid: current_user.id), class:"btn btn-info mt-3" %>
@@ -35,6 +71,30 @@
               <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
             </div>
 
+<% elsif question.question_type_id == 6 %>
+  <label class="form-label"><%= question.title %></label>
+  <div id="text_fields_<%= question.id %>">
+    <table class="option-table" id="option_table_<%= question.id %>">
+      <thead>
+        <tr>
+          <% question.options.each do |option| %>
+            <th><%= option.title %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <% question.options.each do |_option| %>
+            <td>
+              <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', placeholder: "Enter your details" %>
+            </td>
+          <% end %>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
+
           <% elsif question.question_type_id == 2 %>
             <label class="form-label"><%= question.title %></label>
             <% question.options.each do |option| %>
@@ -66,3 +126,15 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  function addTableRow(questionId) {
+    var table = document.getElementById('option_table_' + questionId);
+    var newRow = table.insertRow(-1); // Insert new row at the end of the table
+    var optionsCount = table.rows[0].cells.length; // Number of options
+    for (var i = 0; i < optionsCount; i++) {
+      var newCell = newRow.insertCell(i);
+      newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
+    }
+  }
+</script>
