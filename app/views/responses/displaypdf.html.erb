@@ -19,7 +19,14 @@
         <h2 style="text-decoration:underline; text-align:center;">Job Description</h2>
         <div style="display:-webkit-box">
             <div style="width:60%">
-                <p>Application ID : <b><%= "#{response.form.role}#{response.form.dept}#{1000+response.id - Response.where(profile_response: true).count}" %> </b></p>
+            <% present_response_id = response.id %>
+            <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
+            <% count_below_responses = below_responses.count %>
+
+            <% role = response.form.role %>
+            <% dept = response.form.dept %>
+            
+                <p>Application ID : <b><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %> </b></p>
                 <p>Role : <b><%= @response.form.role %></b></p>
             </div>
             <div style="width:40%">
@@ -78,7 +85,7 @@
                 </div>
             <% end %>
         <% end %>
-        
+
         <% @response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
             <% if answer.question.question_type_id == 6 %>
                 <div class="mb-3">
