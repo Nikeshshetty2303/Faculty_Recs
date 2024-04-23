@@ -1,4 +1,5 @@
 <%= stylesheet_link_tag "credits" %>
+<%= render 'partials/navbar' %>
 <div class="container p-4">
     <div class="text-center">
         <%= link_to "Back to my response", myresponse_response_path(id: @user.id), class: "btn btn-info mt-3" %>
