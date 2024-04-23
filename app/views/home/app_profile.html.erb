@@ -38,7 +38,7 @@
             <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
           <% elsif question.question_type_id == 5 %>
-            <label class="form-label"><%= question.title %></label
+            <label class="form-label"><%= question.title %></label>
             <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
           <% elsif question.question_type_id == 2 %>
