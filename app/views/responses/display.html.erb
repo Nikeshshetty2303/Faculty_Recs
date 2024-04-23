@@ -1,3 +1,5 @@
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+
 <div class="container-sm p-2">
     <div class="text-center">
         <%= link_to "Back to My Response", myresponse_response_path(id: @user.id), class:"btn btn-info mt-3" %>
@@ -22,6 +24,7 @@
                             </tr>
                         </thead>
                         <tbody>
+
                             <% content = eval(answer.content) %>
                             <% content.each_slice(answer.question.options.size) do |chunk| %>
                                 <tr>
