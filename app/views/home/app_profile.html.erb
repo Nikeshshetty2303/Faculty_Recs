@@ -38,11 +38,8 @@
             <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
           <% elsif question.question_type_id == 5 %>
-            <label class="form-label"><%= question.title %></label>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
-              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
-            </div>
+            <label class="form-label"><%= question.title %></label
+            <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
           <% elsif question.question_type_id == 2 %>
             <label class="form-label"><%= question.title %></label>
@@ -146,9 +143,8 @@
             <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id]  %>
 
           <% elsif question.question_type_id == 5 %>
-            <label class="form-label"><%= question.title %></label>
+          <label class="form-label"><%= question.title %></label>
             <div class="input-group mb-3">
-              <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
               <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
             </div>
 
