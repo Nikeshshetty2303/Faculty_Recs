@@ -58,6 +58,13 @@
     display: flex;
 }
 
+.section-title {
+    font-size: medium;
+}
+
+.question-title {
+    font-size: smaller;
+}
 /* Breakpoint at 800px */
 @media screen and (max-width:870px) {
     /* Add your CSS rules for the breakpoint here */
