@@ -63,6 +63,7 @@
             <% end %>
 
             <% elsif question.question_type_id == 6 %>
+            <hr class="horizontal-line">
             <label class="form-label"><%= question.title %></label>
             <div id="text_fields_<%= question.id %>">
               <table class="option-table" id="option_table_<%= question.id %>">
@@ -173,7 +174,7 @@
             <% end %>
 
             <% elsif question.question_type_id == 6 %>
-
+            <hr class="horizontal-line">
             <label class="form-label"><%= question.title %></label>
             <div id="text_fields_<%= question.id %>">
               <table class="option-table" id="option_table_<%= question.id %>">
