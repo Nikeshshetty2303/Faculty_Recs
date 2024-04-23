@@ -87,14 +87,13 @@
             </div>
             <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
             <% elsif question.question_type_id == 7 %>
+             <hr class="horizontal-line">
             <label class="form-label"><%= question.title %></label>
           <% end %>
         </div>
       <% end %>
 
-
       <div style="display:flex; justify-content:flex-end;">
-      <hr class="horizontal-line">
         <%= form.submit "Create", class:"btn btn-success mt-3" %>
       </div>
     <% end %>
