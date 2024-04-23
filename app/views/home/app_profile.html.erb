@@ -193,7 +193,7 @@
                   <tr>
                     <% chunk.each do |element| %>
                       <td>
-                        <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}" %>
+                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}" %>
                       </td>
                     <% end %>
                     </tr>
@@ -202,7 +202,7 @@
                 <tr>
                     <% question.options.each do |_option| %>
                       <td>
-                        <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
                       </td>
                     <% end %>
                   </tr>
