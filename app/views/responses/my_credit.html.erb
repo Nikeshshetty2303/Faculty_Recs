@@ -1,3 +1,5 @@
+<%= stylesheet_link_tag "credits" %>
+<%= render 'partials/navbar' %>
 <div class="container p-4">
     <div class="text-center">
         <%= link_to "Back to my response", myresponse_response_path(id: @user.id), class: "btn btn-info mt-3" %>
@@ -15,7 +17,7 @@
         <% @section.each do |section| %>
             <div class="section-container mt-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3><%= section.title %></h3>
+                    <div class="section-title"><%= section.title %></div>
                     <% file_view =0 %>
                     <% @response.credit_answers.sort_by { |answer| answer.credit_question_id }.each do |answer| %>
                         <%if file_view == 0%>
@@ -31,7 +33,7 @@
 
                 <% section.credit_questions.each do |question| %>
                     <div class="question-container mt-3">
-                        <label class="form-label"><%= question.title %></label>
+                        <label class="question-title"> <%= question.title %> </label>
 
                         <% @response.credit_answers.sort_by { |answer| answer.credit_question_id }.each do |answer| %>
                             <% if question.id == answer.credit_question_id %>

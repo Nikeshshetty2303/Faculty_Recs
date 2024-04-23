@@ -20,14 +20,14 @@
       <% @section.each do |section| %>
 
         <div class="my-3" style="background-color:#cfe2ff; border-radius:8px; padding:1em">
-          <h2><%= section.title %></h2>
+          <div class="section-title"><%= section.title %></div>
           <div class="mb-1">
             <!-- Iterate over questions -->
             <%@count =0%>
             <% @questions.where(credit_section_id: section.id).each do |question| %>
             <% if question.isheader == true %>
 
-            <p> <%= question.title %> </p>
+            <label class="question-title"> <%= question.title %> </label>
             <div style="display:flex;">
               <% @questions.where(header_id: question.id).each do |sub_question|  %>
               <div style="display:flex;">

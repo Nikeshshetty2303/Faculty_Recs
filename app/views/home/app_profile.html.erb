@@ -26,7 +26,7 @@
 
 
       <h5 class='text-center fw-bold'><%=@tab.title%></h5>
-
+      <br>
       <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
         <div style="margin-bottom: 20px;">
           <% if question.question_type_id == 1 %>
@@ -39,10 +39,7 @@
 
           <% elsif question.question_type_id == 5 %>
             <label class="form-label"><%= question.title %></label>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
-              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
-            </div>
+            <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
           <% elsif question.question_type_id == 2 %>
             <label class="form-label"><%= question.title %></label>
@@ -64,6 +61,34 @@
                 <% end %>
               </label>
             <% end %>
+
+            <% elsif question.question_type_id == 6 %>
+            <hr class="horizontal-line">
+            <label class="form-label"><%= question.title %></label>
+            <div id="text_fields_<%= question.id %>">
+              <table class="option-table" id="option_table_<%= question.id %>">
+                <thead>
+                  <tr>
+                    <% question.options.each do |option| %>
+                      <th><%= option.title %></th>
+                    <% end %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <% question.options.each do |_option| %>
+                      <td>
+                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                      </td>
+                    <% end %>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
+            <% elsif question.question_type_id == 7 %>
+             <hr class="horizontal-line">
+            <label class="form-label"><%= question.title %></label>
           <% end %>
         </div>
       <% end %>
@@ -101,7 +126,7 @@
       <br>
 
       <h5 class='text-center fw-bold'><%=@tab.title%></h5>
-
+      <br>
       <% map = {} %>
       <!-- The Questions are called-->
       <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
@@ -122,9 +147,8 @@
             <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id]  %>
 
           <% elsif question.question_type_id == 5 %>
-            <label class="form-label"><%= question.title %></label>
+          <label class="form-label"><%= question.title %></label>
             <div class="input-group mb-3">
-              <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
               <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
             </div>
 
@@ -148,6 +172,49 @@
                 <%= option.title %>
               </label>
             <% end %>
+
+            <% elsif question.question_type_id == 6 %>
+            <hr class="horizontal-line">
+            <label class="form-label"><%= question.title %></label>
+            <div id="text_fields_<%= question.id %>">
+              <table class="option-table" id="option_table_<%= question.id %>">
+                <thead>
+                  <tr>
+                    <% question.options.each do |option| %>
+                      <th><%= option.title %></th>
+                    <% end %>
+                  </tr>
+                </thead>
+                <tbody>
+                <%if map[question.id] != nil%>
+                <% content = eval(map[question.id]) %>
+
+                 <% content.each_slice(question.options.size) do |chunk| %>
+                  <tr>
+                    <% chunk.each do |element| %>
+                      <td>
+                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}" %>
+                      </td>
+                    <% end %>
+                    </tr>
+                <% end %>
+                <%else%>
+                <tr>
+                    <% question.options.each do |_option| %>
+                      <td>
+                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                      </td>
+                    <% end %>
+                  </tr>
+                  <%end%>
+
+                </tbody>
+              </table>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
+            <% elsif question.question_type_id == 7 %>
+            <hr class="horizontal-line">
+            <label class="form-label"><%= question.title %></label>
           <% end %>
         </div>
       <% end %> <!-- End of Question call-->
@@ -158,3 +225,15 @@
     <% end %>
   </div>
 <%end%>
+
+<script>
+  function addTableRow(questionId) {
+    var table = document.getElementById('option_table_' + questionId);
+    var newRow = table.insertRow(-1); // Insert new row at the end of the table
+    var optionsCount = table.rows[0].cells.length; // Number of options
+    for (var i = 0; i < optionsCount; i++) {
+      var newCell = newRow.insertCell(i);
+      newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
+    }
+  }
+</script>
