@@ -4,13 +4,14 @@ Rails.application.routes.draw do
   resources :upload_questions
   resources :upload_sections
   resources :file_uploads
-  resources :credit_answers
   resources :credit_questions
   resources :credit_sections
   devise_for :users
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   resources :answers
-  resources :responses
+  resources :responses do
+    post 'add_remark', on: :member
+  end
   resources :options
   resources :question_types
   resources :questions
@@ -25,6 +26,10 @@ Rails.application.routes.draw do
   post 'submit_form', on: :member
   get 'checkout', on: :member
   patch 'payment', on: :member
+  end
+
+  resources :credit_answers do
+    post 'update_response', on: :member
   end
 
    # resources :questions, only: %i[edit update]

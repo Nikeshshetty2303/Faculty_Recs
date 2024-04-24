@@ -115,17 +115,15 @@ def update_response
 
         content = content.reject(&:empty?) if content.is_a?(Array)
         content = content.present? ? content : nil
-        puts"The vallue is #{content[1]}"
       end
 
-      if question.question_type_id == 6
-        puts "#{content}"
-        # Ensure content is always an array
-        content = Array(content).reject(&:empty?)
-      else
-        # For other question types, ensure content is stored as an array with a single element
-        content = [content].reject(&:empty?)
-      end
+      # if question.question_type_id == 6
+      #   # Ensure content is always an array
+      #   content = Array(content).reject(&:empty?)
+      # else
+      #   # For other question types, ensure content is stored as an array with a single element
+      #   content = [content].reject(&:empty?)
+      # end
 
       if @response.answers.find_by(question: question)
         @response.answers.where(question: question).update(content: content)
@@ -136,7 +134,7 @@ def update_response
   end
 
   if @response.save
-    redirect_to checkout_form_path(id: @response.id, form_id: @form.id), notice: 'Form submitted successfully.'
+    redirect_to display_response_path(id: @response.id, userid: current_user.id), notice: 'Form submitted successfully.'
   else
     # If there are validation errors, re-render the form with errors.
     @questions = @form.questions.includes(:options)
@@ -147,7 +145,9 @@ end
 
   def checkout
     @response = Response.find(params[:id])
-    @form = Form.find(params[:form_id])
+    form_id = @response.form_id
+    @form = Form.find(form_id)
+    @user = User.find(params[:userid])
   end
 
 

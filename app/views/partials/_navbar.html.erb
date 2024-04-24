@@ -45,7 +45,7 @@
 
                     <div class="nav-item">
                         <%if @user.tab_no != 1%>
-                        <%= link_to 'Application Profile', home_app_profile_path(id: @user.id, res_id: @user.responses.last.id, nav_tab_no: @user.nav_tab_no), class:"nav-link" %>
+                        <%= link_to 'Application Profile', home_app_profile_path(id: @user.id, res_id: @user.responses.where(profile_response: true)[0].id, nav_tab_no: @user.nav_tab_no), class:"nav-link" %>
                         <%else%>
                         <%= link_to 'Application Profile', home_app_profile_path(id: @user.id), class:"nav-link" %>
                         <%end%>
