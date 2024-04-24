@@ -51,6 +51,10 @@
     </div>
   </div>
 
+  <div class="alert alert-success" role="alert">
+            These are the questions and fields specific to the above mentioned post.
+        </div>
+
   <div class="container-md py-4 px-5 mb-3" style="background-color:rgb(127 172 218 / 16%); border-radius:10px;">
     <%= form_with(model: @response, url: update_response_form_path(form_id: @form.id, id: @response.id), method: :post) do |form| %>
 

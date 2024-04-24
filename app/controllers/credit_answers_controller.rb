@@ -99,12 +99,12 @@ class CreditAnswersController < ApplicationController
     answer_params_array.each do |answer_param|
       permitted_params = answer_param[1].permit(:answer, :credit_question_id,:response_id, :is_upload,:credit_section_id, :file_upload)
       answer = CreditAnswer.where(id: answer_param.first)[0]
-      answer.answer = permitted_params[:answer]
+      answer.file_upload = permitted_params[:file_upload]
 
       if answer.answer == nil
         answer.answer =0
       end
-
+      
       if answer.is_upload
         permitted_file = answer_param.permit(:file_upload)
         answer.file_upload = permitted_file[:file_upload]

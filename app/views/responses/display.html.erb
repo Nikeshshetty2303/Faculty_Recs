@@ -85,7 +85,7 @@
             <label class="form-label"><%= question.title %></label>
             <% question.options.each do |option| %>
               <label>
-              <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: Answer.where(question_id: question.id, response_id: @response.id)[0].content.present? ? Answer.where(question_id: question.id, response_id: @response.id)[0].content.include?(option.title) : false, value: option.title }, option.title, nil %>
+              <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: Answer.where(question_id: question.id, response_id: @response.id)[0].present? ? Answer.where(question_id: question.id, response_id: @response.id)[0].content.include?(option.title) : false, value: option.title }, option.title, nil %>
                 <%= option.title %>
               </label>
             <% end %>
