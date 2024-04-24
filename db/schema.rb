@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_22_184645) do
+ActiveRecord::Schema.define(version: 2024_04_24_134611) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -162,6 +162,7 @@ ActiveRecord::Schema.define(version: 2024_04_22_184645) do
     t.integer "amount"
     t.boolean "profile_response"
     t.integer "app_no"
+    t.string "remark"
     t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
   end

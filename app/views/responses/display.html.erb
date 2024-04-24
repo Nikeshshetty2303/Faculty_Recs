@@ -12,85 +12,105 @@
         <div class="alert alert-success" role="alert">
             This is the response for the form:
         </div>
-        <% @app_response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
-        <% if answer.question.question_type_id == 6 %>
-                <div class="mb-3">
-                    <label class="form-label"><%= answer.question.title %></label>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <% answer.question.options.each do |option| %>
-                                    <th><%= option.title %></th>
-                                <% end %>
-                            </tr>
-                        </thead>
-                        <tbody>
+         <%= form_with(model: @response, url: update_response_form_path(form_id: @form.id, id: @response.id), method: :post) do |form| %>
 
-                            <% content = eval(answer.content) %>
-                            <% content.each_slice(answer.question.options.size) do |chunk| %>
-                                <tr>
-                                    <% chunk.each do |element| %>
-                                        <td><%= element.gsub(/[\[\]\"]/,"") %></td>
-                                    <% end %>
-                                </tr>
-                            <% end %>
-                        </tbody>
-                    </table>
-                </div>
+      <% @questions.sort_by(&:position).each do |question| %>
+        <div style="margin-bottom: 20px;">
+          <% if question.question_type_id == 1 %>
+            <label class="form-label"><%= question.title %></label>
+            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', value: Answer.where(question_id: question.id, response_id: @response.id)[0].content %>
 
-            <% elsif answer.question.question_type_id == 3 %>
-                <div class="mb-3">
-                    <label class="form-label"><%= answer.question.title %></label>
-                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
-                    <input readonly class="form-control" value="<%= content %>">
-                </div>
-            <% else %>
-                <div class="mb-3">
-                    <label class="form-label"><%= answer.question.title %></label>
-                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ").first %>
-                    <input readonly class="form-control" value="<%= content %>">
-                </div>
+          <% elsif question.question_type_id == 4 %>
+            <label class="form-label"><%= question.title %></label>
+            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', value: Answer.where(question_id: question.id, response_id: @response.id)[0].content %>
+
+          <% elsif question.question_type_id == 5 %>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
+              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', value: Answer.where(question_id: question.id, response_id: @response.id)[0].content %>
+            </div>
+
+            <% elsif question.question_type_id == 6 %>
+            <hr class="horizontal-line">
+            <label class="form-label"><%= question.title %></label>
+            <div id="text_fields_<%= question.id %>">
+              <table class="option-table" id="option_table_<%= question.id %>">
+                <thead>
+                  <tr>
+                    <% question.options.each do |option| %>
+                      <th><%= option.title %></th>
+                    <% end %>
+                  </tr>
+                </thead>
+                <tbody>
+                <%if Answer.where(question_id: question.id, response_id: @response.id)[0].content !=nil%>
+                <% content = eval(Answer.where(question_id: question.id, response_id: @response.id)[0].content) %>
+
+                 <% content.each_slice(question.options.size) do |chunk| %>
+                  <tr>
+                    <% chunk.each do |element| %>
+                      <td>
+                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}" %>
+                      </td>
+                    <% end %>
+                    </tr>
+                <% end %>
+                <%else%>
+                <tr>
+                    <% question.options.each do |_option| %>
+                      <td>
+                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                      </td>
+                    <% end %>
+                  </tr>
+                  <%end%>
+
+                </tbody>
+              </table>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
+
+          <% elsif question.question_type_id == 2 %>
+            <label class="form-label"><%= question.title %></label>
+            <% question.options.each do |option| %>
+               <%= form.radio_button :content, option.title,
+                                    name: "response[answers_attributes][#{question.id}][content]",
+                                    value: option.title,
+                                    checked: (option.title == Answer.where(question_id: question.id, response_id: @response.id)) %>
+                <%= option.title %>
+              </label>
             <% end %>
-        <% end %>
 
-        <% @response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
-            <% if answer.question.question_type_id == 6 %>
-                <div class="mb-3">
-                    <label class="form-label"><%= answer.question.title %></label>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <% answer.question.options.each do |option| %>
-                                    <th><%= option.title %></th>
-                                <% end %>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% content = eval(answer.content) %>
-                            <% content.each_slice(answer.question.options.size) do |chunk| %>
-                                <tr>
-                                    <% chunk.each do |element| %>
-                                        <td><%= element.gsub(/[\[\]\"]/,"") %></td>
-                                    <% end %>
-                                </tr>
-                            <% end %>
-                        </tbody>
-                    </table>
-                </div>
-
-            <% elsif answer.question.question_type_id == 3 %>
-                <div class="mb-3">
-                    <label class="form-label"><%= answer.question.title %></label>
-                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
-                    <input readonly class="form-control" value="<%= content %>">
-                </div>
-            <% else %>
-                <div class="mb-3">
-                    <label class="form-label"><%= answer.question.title %></label>
-                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ").first %>
-                    <input readonly class="form-control" value="<%= content %>">
-                </div>
+          <% elsif question.question_type_id == 3 %>
+            <label class="form-label"><%= question.title %></label>
+            <% question.options.each do |option| %>
+              <label>
+              <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: Answer.where(question_id: question.id, response_id: @response.id)[0].content.present? ? Answer.where(question_id: question.id, response_id: @response.id)[0].content.include?(option.title) : false, value: option.title }, option.title, nil %>
+                <%= option.title %>
+              </label>
             <% end %>
-        <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <%= form.submit "Update Response", class:"btn btn-success mt-3"%>
+      </div>
+
+    <% end %>
     </div>
 </div>
+
+
+
+<script>
+  function addTableRow(questionId) {
+    var table = document.getElementById('option_table_' + questionId);
+    var newRow = table.insertRow(-1); // Insert new row at the end of the table
+    var optionsCount = table.rows[0].cells.length; // Number of options
+    for (var i = 0; i < optionsCount; i++) {
+      var newCell = newRow.insertCell(i);
+      newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
+    }
+  }
+</script>

@@ -22,11 +22,17 @@ class ResponsesController < ApplicationController
     @response = Response.find(params[:id])
     @user = User.find(current_user.id)
     @section = CreditSection.all
+    @questions = CreditQuestion.all
+    form_id = @response.form_id
+    @form = Form.find(form_id)
   end
 
   def display
     @response = Response.find(params[:id])
     @user = User.find(current_user.id)
+    form_id = @response.form_id
+    @form = Form.find(form_id)
+    @questions = Question.where(form_id: form_id)
     @app_response = Response.where(user_id: current_user.id, profile_response: true).last
   end
 
@@ -52,6 +58,15 @@ class ResponsesController < ApplicationController
     send_data @answer.file_upload.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
   end
 
+  def add_remark
+    @response = Response.find(params[:res_id])
+    @response.update(response_params)
+    if @response.update(response_params)
+      redirect_to validate_response_path(id: @response.id), notice: 'Form submitted successfully.'
+    else
+      render 'forms/show'
+    end
+  end
 
   # GET /responses/1 or /responses/1.json
   def show
@@ -86,11 +101,6 @@ class ResponsesController < ApplicationController
     @user = @response.user
     respond_to do |format|
       if @response.update(response_params)
-        # if @response.validation == true
-        #   CreditValidateMailer.with(userid: @user.id).success.deliver_later
-        # else
-        #   CreditValidateMailer.with(userid: @user.id).failure.deliver_later
-        # end
         format.html { redirect_to validate_response_path(@response), notice: "Response was successfully updated." }
         format.json { render :show, status: :ok, location: @response }
       else
@@ -118,6 +128,6 @@ class ResponsesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def response_params
-      params.require(:response).permit(:title, :validation,:new_count)
+      params.require(:response).permit(:title, :validation,:new_count, :remark)
     end
 end

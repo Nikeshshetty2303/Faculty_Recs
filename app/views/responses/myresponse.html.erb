@@ -38,7 +38,12 @@
           <div class="btn-group" role="group" aria-label="Response actions">
             <%= link_to "Credit Response", my_credit_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-md' %>
             <%= link_to "Form Response", display_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-secondary btn-md' %>
-            <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-success btn-md' %>
+            <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-md' %>
+            <%if response.payment_status == true%>
+              <%= link_to "Fee Paid", "#", class: 'btn btn-dark btn-md' %>
+            <%else%>
+              <%= link_to "Fee Payment", checkout_form_path(id: response.id,userid: @user.id), class: 'btn btn-outline-warning btn-md' %>
+            <%end%>
           </div>
         </div>
       </div>
