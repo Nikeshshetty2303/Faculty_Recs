@@ -80,6 +80,8 @@
                   <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
                 <% elsif question.question_type_id == 5 %>
                   <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+                <% elsif question.question_type_id == 8 %>
+                  <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
                 <% elsif question.question_type_id == 2 %>
                     <% question.options.each do |option| %>
                       <div style='margin:5px'>

@@ -26,6 +26,11 @@
             <label class="form-label"><%= question.title %></label>
             <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', value: Answer.where(question_id: question.id, response_id: @response.id)[0].content %>
 
+          <% elsif question.question_type_id == 8 %>
+            <label class="form-label"><%= question.title %></label>
+            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', value: Answer.where(question_id: question.id, response_id: @response.id)[0].content %>
+
+
           <% elsif question.question_type_id == 5 %>
             <div class="input-group mb-3">
               <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
@@ -112,6 +117,10 @@
           <% elsif question.question_type_id == 4 %>
             <label class="form-label"><%= question.title %></label>
             <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control'%>
+
+          <% elsif question.question_type_id == 8 %>
+            <label class="form-label"><%= question.title %></label>
+            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
 
           <% elsif question.question_type_id == 5 %>
             <div class="input-group mb-3">
