@@ -7,6 +7,7 @@
         <th scope="col">Application</th>
         <th scope="col">Credit Score</th>
         <th scope="col">Validate Credit Response</th>
+        <th scope="col">Credit Requirement </th>
         <th scope="col">Eligibility</th>
       </tr>
     </thead>
@@ -27,12 +28,19 @@
             <td>
               <% if response.validation == true %>
                 <% if response.credit_score >= response.form.credit_req %>
-                  <%= "Eligible" %>
+                  <%= "Fulfilled" %>
                 <% else %>
-                  <%= "Not Eligible" %>
+                  <%= "Not Fulfilled" %>
                 <% end %>
               <% else %>
-                <%= "Validation pending" %>
+                <%= "Validation Pending" %>
+              <% end %>
+            </td>
+            <td>
+              <% if response.eligibility == true %>
+                  <%= "Eligible" %>
+              <% else %>
+                  <%= "Not Eligible" %>
               <% end %>
             </td>
           </tr>

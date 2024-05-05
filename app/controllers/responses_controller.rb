@@ -68,6 +68,16 @@ class ResponsesController < ApplicationController
     end
   end
 
+  def update_eligibility
+    @response = Response.find(params[:res_id])
+    @response.update(response_params)
+    if @response.update(response_params)
+      redirect_to validate_response_path(id: @response.id), notice: 'Form submitted successfully.'
+    else
+      render 'forms/show'
+    end
+  end
+
   # GET /responses/1 or /responses/1.json
   def show
   end
@@ -128,6 +138,6 @@ class ResponsesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def response_params
-      params.require(:response).permit(:title, :validation,:new_count, :remark)
+      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility)
     end
 end

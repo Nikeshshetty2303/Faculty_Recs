@@ -57,13 +57,29 @@
     </tbody>
   </table>
 
+
 <!-- The Remarks and Eligibility Section -->
 <%= form_with(model: @responses, url: add_remark_response_path(res_id: @responses.id),method: :post) do |f| %>
   <div class="form-group">
     <%= f.label :remark, "Remarks", class: "form-label", for:"remark" %>
     <%= f.text_area :remark, class: "form-control", id: "remark" %>
     <%= f.submit "Add", class: "btn btn-outline-primary", for:"remark" %>
-  </div>
+    </div>
 <% end %>
 
+<br>
+
+<%= form_with(model: @responses, url: update_eligibility_response_path(res_id: @responses.id), method: :post) do |f| %>
+  <div class="form-group">
+    <%= f.label :eligibility, "Eligibility", class: "form-label" %>
+     <% if @responses.eligibility == true%>
+      <em><%= "(The Applicant is Eligible)" %></em>
+    <% else %>
+      <em><%= "(The Applicant is Not Eligible)" %></em>
+    <% end %>
+    <br>
+    <%= f.hidden_field :eligibility, value: !@responses.eligibility %>
+    <%= f.submit "Update", class: "btn btn-outline-primary", for: "eligibility" %>
+  </div>
+<% end %>
 </div>
