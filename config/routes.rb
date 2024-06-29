@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :answers
   resources :responses do
     post 'add_remark', on: :member
+    post 'update_eligibility', on: :member
   end
   resources :options
   resources :question_types

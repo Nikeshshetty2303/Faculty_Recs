@@ -71,9 +71,6 @@ def update_app_profile_response
       puts "The value of #{content}"
       puts "The value of answers #{@response.answers}"
 
-
-
-
       if @response.answers.find_by(question: question)
         @response.answers.where(question: question).update(content: content)
       else

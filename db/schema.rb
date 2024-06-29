@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_24_134611) do
+ActiveRecord::Schema.define(version: 2024_05_03_163354) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(version: 2024_04_24_134611) do
     t.boolean "profile_response"
     t.integer "app_no"
     t.string "remark"
+    t.boolean "eligibility", default: false
     t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
   end

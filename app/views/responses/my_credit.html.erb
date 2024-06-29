@@ -20,7 +20,7 @@
   <div>
     <%= form_for :answers, url: update_response_credit_answer_path(res_id: @response.id) do |form| %>
       <% @section.each do |section| %>
-
+        <% file_view =0 %>
         <div class="my-3" style="background-color:#cfe2ff; border-radius:8px; padding:1em">
           <div class="section-title"><%= section.title %></div>
           <div class="mb-1">
@@ -51,6 +51,16 @@
             <% elsif question.header_id == nil %>
             <%@count = @count +1%>
               <div class="mb-3">
+                <% @response.credit_answers.sort_by { |answer| answer.credit_question_id }.each do |answer| %>
+                    <%if file_view == 0%>
+                        <% if section.id == answer.credit_section_id && answer.file_upload.attached? %>
+                            <div class="ml-3">
+                                <%= link_to "View", view_pdf_response_path(ansid: answer, id: @response.id), class: "btn btn-warning btn-sm" %>
+                            </div>
+                            <% file_view = 1 %>
+                        <% end %>
+                    <%end%>
+                <% end %>
 
                 <%= form.fields_for "answers[]", CreditAnswer.where(credit_question_id: question.id, response_id: @response.id)[0] do |answer_fields| %>
                   <%if @count == 1%>

@@ -100,7 +100,8 @@ class CreditAnswersController < ApplicationController
       permitted_params = answer_param[1].permit(:answer, :credit_question_id,:response_id, :is_upload,:credit_section_id, :file_upload)
       answer = CreditAnswer.where(id: answer_param.first)[0]
       answer.answer = permitted_params[:answer]
-      
+      answer.file_upload = permitted_params[:file_upload]
+
       if answer.answer == nil
         answer.answer =0
       end
@@ -123,8 +124,11 @@ class CreditAnswersController < ApplicationController
 
       answer.response_id = response.id
       answer.credit = credit_per_answer
-      answer.verified_count = answer.answer
-      answer.verified_credit = credit_per_answer
+      if response.validation != true
+        answer.verified_count = answer.answer
+        answer.verified_credit = credit_per_answer
+      end
+
       @answers << answer
     end
 
