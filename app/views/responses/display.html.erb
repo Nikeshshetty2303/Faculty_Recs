@@ -47,31 +47,37 @@
                     <% question.options.each do |option| %>
                       <th><%= option.title %></th>
                     <% end %>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                <%if Answer.where(question_id: question.id, response_id: @response.id)[0].content !=nil%>
-                <% content = eval(Answer.where(question_id: question.id, response_id: @response.id)[0].content) %>
+                  <% if Answer.where(question_id: question.id, response_id: @response.id)[0].content != nil %>
+                    <% content = eval(Answer.where(question_id: question.id, response_id: @response.id)[0].content) %>
 
-                 <% content.each_slice(question.options.size) do |chunk| %>
-                  <tr>
-                    <% chunk.each do |element| %>
-                      <td>
-                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}" %>
-                      </td>
+                    <% content.each_slice(question.options.size) do |chunk| %>
+                      <tr>
+                        <% chunk.each do |element| %>
+                          <td>
+                            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}" %>
+                          </td>
+                        <% end %>
+                        <td>
+                          <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
+                        </td>
+                      </tr>
                     <% end %>
+                  <% else %>
+                    <tr>
+                      <% question.options.each do |_option| %>
+                        <td>
+                          <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                        </td>
+                      <% end %>
+                      <td>
+                        <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
+                      </td>
                     </tr>
-                <% end %>
-                <%else%>
-                <tr>
-                    <% question.options.each do |_option| %>
-                      <td>
-                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
-                      </td>
-                    <% end %>
-                  </tr>
-                  <%end%>
-
+                  <% end %>
                 </tbody>
               </table>
             </div>
@@ -80,10 +86,8 @@
           <% elsif question.question_type_id == 2 %>
             <label class="form-label"><%= question.title %></label>
             <% question.options.each do |option| %>
-               <%= form.radio_button :content, option.title,
-                                    name: "response[answers_attributes][#{question.id}][content]",
-                                    value: option.title,
-                                    checked: (option.title == Answer.where(question_id: question.id, response_id: @response.id)) %>
+              <label>
+                <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", value: option.title, checked: (option.title == Answer.where(question_id: question.id, response_id: @response.id)) %>
                 <%= option.title %>
               </label>
             <% end %>
@@ -92,110 +96,118 @@
             <label class="form-label"><%= question.title %></label>
             <% question.options.each do |option| %>
               <label>
-              <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: Answer.where(question_id: question.id, response_id: @response.id)[0].present? ? Answer.where(question_id: question.id, response_id: @response.id)[0].content.include?(option.title) : false, value: option.title }, option.title, nil %>
+                <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: Answer.where(question_id: question.id, response_id: @response.id)[0].present? ? Answer.where(question_id: question.id, response_id: @response.id)[0].content.include?(option.title) : false, value: option.title }, option.title, nil %>
                 <%= option.title %>
               </label>
             <% end %>
           <% end %>
-        </div>
-      <% end %>
+          </div>
+          <% end %>
 
-      <div style="display:flex; justify-content:flex-end;">
-        <%= form.submit "Update Response", class:"btn btn-success mt-3"%>
-      </div>
+          <div style="display:flex; justify-content:flex-end;">
+            <%= form.submit "Update Response", class:"btn btn-success mt-3"%>
+          </div>
 
-    <% end %>
-    <%else%>
-    <%= form_with(model: @response, url: update_response_form_path(form_id: @form.id, id: @response.id), method: :post) do |form| %>
+          <% end %>
+          <%else%>
+          <%= form_with(model: @response, url: update_response_form_path(form_id: @form.id, id: @response.id), method: :post) do |form| %>
 
-      <% @questions.sort_by(&:position).each do |question| %>
-        <div style="margin-bottom: 20px;">
-          <% if question.question_type_id == 1 %>
-            <label class="form-label"><%= question.title %></label>
-            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+            <% @questions.sort_by(&:position).each do |question| %>
+              <div style="margin-bottom: 20px;">
+                <% if question.question_type_id == 1 %>
+                  <label class="form-label"><%= question.title %></label>
+                  <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
 
-          <% elsif question.question_type_id == 4 %>
-            <label class="form-label"><%= question.title %></label>
-            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control'%>
+                <% elsif question.question_type_id == 4 %>
+                  <label class="form-label"><%= question.title %></label>
+                  <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control'%>
 
-          <% elsif question.question_type_id == 8 %>
-            <label class="form-label"><%= question.title %></label>
-            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+                <% elsif question.question_type_id == 8 %>
+                  <label class="form-label"><%= question.title %></label>
+                  <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
 
-          <% elsif question.question_type_id == 5 %>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
-              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
-            </div>
+                <% elsif question.question_type_id == 5 %>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
+                    <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+                  </div>
 
-                      <% elsif question.question_type_id == 2 %>
-            <label class="form-label"><%= question.title %></label>
-            <% question.options.each do |option| %>
-              <label>
-                <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]" %>
-                <%= option.title %>
-              </label>
-            <% end %>
+                <% elsif question.question_type_id == 2 %>
+                  <label class="form-label"><%= question.title %></label>
+                  <% question.options.each do |option| %>
+                    <label>
+                      <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]" %>
+                      <%= option.title %>
+                    </label>
+                  <% end %>
 
-          <% elsif question.question_type_id == 3 %>
-            <label class="form-label"><%= question.title %></label>
-            <% question.options.each do |option| %>
-              <label>
-                <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil %>
-                <%= option.title %>
-                <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
-                  <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title %>
+                <% elsif question.question_type_id == 3 %>
+                  <label class="form-label"><%= question.title %></label>
+                  <% question.options.each do |option| %>
+                    <label>
+                      <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil %>
+                      <%= option.title %>
+                      <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
+                        <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title %>
+                      <% end %>
+                    </label>
+                  <% end %>
+
+                <% elsif question.question_type_id == 6 %>
+                  <hr class="horizontal-line">
+                  <label class="form-label"><%= question.title %></label>
+                  <div id="text_fields_<%= question.id %>">
+                    <table class="option-table" id="option_table_<%= question.id %>">
+                      <thead>
+                        <tr>
+                          <% question.options.each do |option| %>
+                            <th><%= option.title %></th>
+                          <% end %>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <% question.options.each do |_option| %>
+                            <td>
+                              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                            </td>
+                          <% end %>
+                          <td>
+                            <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
                 <% end %>
-              </label>
+              </div>
             <% end %>
 
-            <% elsif question.question_type_id == 6 %>
-            <hr class="horizontal-line">
-            <label class="form-label"><%= question.title %></label>
-            <div id="text_fields_<%= question.id %>">
-              <table class="option-table" id="option_table_<%= question.id %>">
-                <thead>
-                  <tr>
-                    <% question.options.each do |option| %>
-                      <th><%= option.title %></th>
-                    <% end %>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <% question.options.each do |_option| %>
-                      <td>
-                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
-                      </td>
-                    <% end %>
-                  </tr>
-                </tbody>
-              </table>
+            <div style="display:flex; justify-content:flex-end;">
+              <%= form.submit "Create Response", class:"btn btn-success mt-3" %>
             </div>
-            <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
           <% end %>
-        </div>
-      <% end %>
+          <% end %>
+          </div>
+          </div>
 
-      <div style="display:flex; justify-content:flex-end;">
-        <%= form.submit "Create Response", class:"btn btn-success mt-3" %>
-      </div>
-    <% end %>
-    <% end %>
-    </div>
-</div>
+          <script>
+            function addTableRow(questionId) {
+              var table = document.getElementById('option_table_' + questionId);
+              var newRow = table.insertRow(-1); // Insert new row at the end of the table
+              var optionsCount = table.rows[0].cells.length - 1; // Number of options excluding the Action column
+              for (var i = 0; i < optionsCount; i++) {
+                var newCell = newRow.insertCell(i);
+                newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
+              }
+              var deleteCell = newRow.insertCell(optionsCount);
+              deleteCell.innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>';
+            }
 
-
-
-<script>
-  function addTableRow(questionId) {
-    var table = document.getElementById('option_table_' + questionId);
-    var newRow = table.insertRow(-1); // Insert new row at the end of the table
-    var optionsCount = table.rows[0].cells.length; // Number of options
-    for (var i = 0; i < optionsCount; i++) {
-      var newCell = newRow.insertCell(i);
-      newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
-    }
-  }
-</script>
-
+            function deleteTableRow(button) {
+              var row = button.parentNode.parentNode;
+              row.parentNode.removeChild(row);
+            }
+          </script>

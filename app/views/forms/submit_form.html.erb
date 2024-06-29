@@ -79,70 +79,81 @@
               <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
             </div>
 
-<% elsif question.question_type_id == 6 %>
-  <label class="form-label"><%= question.title %></label>
-  <div id="text_fields_<%= question.id %>">
-    <table class="option-table" id="option_table_<%= question.id %>">
-      <thead>
-        <tr>
+        <% elsif question.question_type_id == 6 %>
+          <label class="form-label"><%= question.title %></label>
+          <div id="text_fields_<%= question.id %>">
+            <table class="option-table" id="option_table_<%= question.id %>">
+              <thead>
+                <tr>
+                  <% question.options.each do |option| %>
+                    <th><%= option.title %></th>
+                  <% end %>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <% question.options.each do |_option| %>
+                    <td>
+                      <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', placeholder: "Enter your details" %>
+                    </td>
+                  <% end %>
+                  <td>
+                    <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
+
+        <% elsif question.question_type_id == 2 %>
+          <label class="form-label"><%= question.title %></label>
           <% question.options.each do |option| %>
-            <th><%= option.title %></th>
+            <label>
+              <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]" %>
+              <%= option.title %>
+            </label>
           <% end %>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <% question.options.each do |_option| %>
-            <td>
-              <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', placeholder: "Enter your details" %>
-            </td>
-          <% end %>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
 
-          <% elsif question.question_type_id == 2 %>
-            <label class="form-label"><%= question.title %></label>
-            <% question.options.each do |option| %>
-              <label>
-                <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]" %>
-                <%= option.title %>
-              </label>
-            <% end %>
-
-          <% elsif question.question_type_id == 3 %>
-            <label class="form-label"><%= question.title %></label>
-            <% question.options.each do |option| %>
-              <label>
-                <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil %>
-                <%= option.title %>
-                <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
-                  <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title %>
-                <% end %>
-              </label>
-            <% end %>
+        <% elsif question.question_type_id == 3 %>
+          <label class="form-label"><%= question.title %></label>
+          <% question.options.each do |option| %>
+            <label>
+              <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil %>
+              <%= option.title %>
+              <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
+                <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title %>
+              <% end %>
+            </label>
           <% end %>
+        <% end %>
         </div>
-      <% end %>
+        <% end %>
 
-      <div style="display:flex; justify-content:flex-end;">
-        <%= form.submit class:"btn btn-success mt-3"%>
-      </div>
+        <div style="display:flex; justify-content:flex-end;">
+          <%= form.submit class:"btn btn-success mt-3"%>
+        </div>
 
-    <% end %>
-  </div>
-</div>
+        <% end %>
+        </div>
+        </div>
 
-<script>
-  function addTableRow(questionId) {
-    var table = document.getElementById('option_table_' + questionId);
-    var newRow = table.insertRow(-1); // Insert new row at the end of the table
-    var optionsCount = table.rows[0].cells.length; // Number of options
-    for (var i = 0; i < optionsCount; i++) {
-      var newCell = newRow.insertCell(i);
-      newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
-    }
-  }
-</script>
+        <script>
+          function addTableRow(questionId) {
+            var table = document.getElementById('option_table_' + questionId);
+            var newRow = table.insertRow(-1); // Insert new row at the end of the table
+            var optionsCount = table.rows[0].cells.length - 1; // Number of options excluding the Action column
+            for (var i = 0; i < optionsCount; i++) {
+              var newCell = newRow.insertCell(i);
+              newCell.innerHTML = '<textarea name="response[answers_attributes][' + questionId + '][content][]" class="form-control" placeholder="Enter your details"></textarea>';
+            }
+            var deleteCell = newRow.insertCell(optionsCount);
+            deleteCell.innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>';
+          }
+
+          function deleteTableRow(button) {
+            var row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+          }
+        </script>
