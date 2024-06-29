@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   post 'submit_form', on: :member
   get 'checkout', on: :member
   patch 'payment', on: :member
+  get 'view_pdf',on: :member
   end
 
   resources :credit_answers do

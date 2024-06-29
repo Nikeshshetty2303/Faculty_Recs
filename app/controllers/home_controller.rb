@@ -17,7 +17,6 @@ class HomeController < ApplicationController
       @user.save
     end
     @questions = Question.all
-
   end
 
   def edit_app_profile

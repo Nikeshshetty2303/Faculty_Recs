@@ -43,7 +43,7 @@
 
           <% elsif question.question_type_id == 9 %>
             <label class="form-label"><%= question.title %></label>
-            <%= form.file_field :content,  class: 'form-control' %>
+            <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]",class: 'form-control' %>
 
           <% elsif question.question_type_id == 5 %>
             <label class="form-label"><%= question.title %></label>
@@ -80,13 +80,18 @@
                     <% question.options.each do |option| %>
                       <th><%= option.title %></th>
                     <% end %>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <% question.options.each do |_option| %>
                       <td>
-                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                        <% if _option.title =~ /DD-MM-YYYY/%>
+                            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                          <%else%>
+                            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                        <%end%>
                       </td>
                     <% end %>
                   </tr>
@@ -136,13 +141,18 @@
       <h5 class='text-center fw-bold'><%=@tab.title%></h5>
       <br>
       <% map = {} %>
+      <% field_map = {}%>
       <!-- The Questions are called-->
       <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
       <!-- The Responses specific to the users are called-->
         <% @response.answers.all.each do |answer|%>
         <!-- The Already existing answers are called-->
         <% if answer.question_id == question.id%>
+          <%if question.question_type_id == 9%>
+            <%field_map[question.id] = answer%>
+          <%end%>
           <% map[question.id] = answer.content %>
+
         <% end %> <!-- End of Answer call-->
         <% end %> <!-- End of Response call-->
         <div style="margin-bottom: 20px;">
@@ -157,6 +167,16 @@
           <% elsif question.question_type_id == 8 %>
             <label class="form-label"><%= question.title %></label>
             <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id]  %>
+
+          <% elsif question.question_type_id == 9 %>
+            <label class="form-label"><%= question.title %></label>
+            <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]",class: 'form-control' %>
+
+          <% if question.question_type_id == 9 && field_map[question.id] != nil && field_map[question.id].file.attached? %>
+            <div class="ml-3">
+                <%= link_to "View", view_pdf_form_path(ansid: field_map[question.id].id,id: field_map[question.id].response_id), class: "btn btn-warning btn-sm" %>
+            </div>
+          <% end %>
 
           <% elsif question.question_type_id == 5 %>
           <label class="form-label"><%= question.title %></label>
@@ -186,78 +206,88 @@
             <% end %>
 
             <% elsif question.question_type_id == 6 %>
-  <hr class="horizontal-line">
-  <label class="form-label"><%= question.title %></label>
-  <div id="text_fields_<%= question.id %>">
-    <table class="option-table" id="option_table_<%= question.id %>">
-      <thead>
-        <tr>
-          <% question.options.each do |option| %>
-            <th><%= option.title %></th>
-          <% end %>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if map[question.id] != nil %>
-          <% content = eval(map[question.id]) %>
-          <% content.each_slice(question.options.size) do |chunk| %>
-            <tr>
-              <% chunk.each do |element| %>
-                <td>
-                  <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}" %>
-                </td>
-              <% end %>
-              <td>
-                <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)"> Delete</button>
-              </td>
-            </tr>
-          <% end %>
-        <% else %>
-          <tr>
-            <% question.options.each do |_option| %>
-              <td>
-                <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
-              </td>
+              <hr class="horizontal-line">
+              <label class="form-label"><%= question.title %></label>
+              <div id="text_fields_<%= question.id %>">
+                <table class="option-table" id="option_table_<%= question.id %>">
+                  <thead>
+                    <tr>
+                      <% question.options.each do |option| %>
+                        <th><%= option.title %></th>
+                      <% end %>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if map[question.id] != nil %>
+                      <% content = eval(map[question.id]) %>
+                      <% content.each_slice(question.options.size) do |chunk| %>
+                        <tr>
+                          <% chunk.each do |element| %>
+                            <td>
+                              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}" %>
+                            </td>
+                          <% end %>
+                          <td>
+                            <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)"> Delete</button>
+                          </td>
+                        </tr>
+                      <% end %>
+                    <% else %>
+                      <tr>
+                        <% question.options.each do |_option| %>
+                        <td>
+                          <% if _option.title =~ /DD-MM-YYYY/%>
+                            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                          <%else%>
+                            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                          <%end%>
+                        <% end %>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
+            <% elsif question.question_type_id == 7 %>
+              <hr class="horizontal-line">
+              <label class="form-label"><%= question.title %></label>
             <% end %>
-            <td>
-              <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-  <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
-<% elsif question.question_type_id == 7 %>
-  <hr class="horizontal-line">
-  <label class="form-label"><%= question.title %></label>
-<% end %>
-</div>
-<% end %> <!-- End of Question call-->
+            </div>
+            <% end %> <!-- End of Question call-->
 
-<div style="display:flex; justify-content:flex-end;">
-  <%= form.submit "Update", class:"btn btn-success mt-3" %>
-</div>
-<% end %>
-</div>
-<% end %>
+            <div style="display:flex; justify-content:flex-end;">
+              <%= form.submit "Update", class:"btn btn-success mt-3" %>
+            </div>
+            <% end %>
+            </div>
+            <% end %>
 
-<script>
-  function addTableRow(questionId) {
-    var table = document.getElementById('option_table_' + questionId);
-    var newRow = table.insertRow(-1); // Insert new row at the end of the table
-    var optionsCount = table.rows[0].cells.length - 1; // Number of options excluding the Action column
-    for (var i = 0; i < optionsCount; i++) {
-      var newCell = newRow.insertCell(i);
-      newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
-    }
-    var deleteCell = newRow.insertCell(optionsCount);
-    deleteCell.innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>';
-  }
+            <script>
+              function addTableRow(questionId) {
+                var table = document.getElementById('option_table_' + questionId);
+                var newRow = table.insertRow(-1); // Insert new row at the end of the table
+                var optionsCount = table.rows[0].cells.length - 1; // Number of options excluding the Action column
+                for (var i = 0; i < optionsCount; i++) {
+                  var optionTitle = table.rows[0].cells[i].innerText.trim();
+                  var newCell = newRow.insertCell(i);
 
-  function deleteTableRow(button) {
-    var row = button.parentNode.parentNode;
-    row.parentNode.removeChild(row);
-  }
-</script>
+                  if (optionTitle.includes('DD-MM-YYYY')) {
+                    newCell.innerHTML = '<input type="date" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
+                  } else {
+                    newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
+                  }
+                }
+                var deleteCell = newRow.insertCell(optionsCount);
+                deleteCell.innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>';
+              }
+
+              function deleteTableRow(button) {
+                var row = button.parentNode.parentNode;
+                row.parentNode.removeChild(row);
+              }
+            </script>
