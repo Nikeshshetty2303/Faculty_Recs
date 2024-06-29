@@ -123,7 +123,7 @@ class CreditAnswersController < ApplicationController
       end
 
       answer.response_id = response.id
-      answer.credit = credit_per_answer
+      answer.credit = credit_per_answer.round(2)
       if response.validation != true
         answer.verified_count = answer.answer
         answer.verified_credit = credit_per_answer

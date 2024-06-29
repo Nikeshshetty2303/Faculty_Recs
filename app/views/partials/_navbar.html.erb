@@ -41,6 +41,9 @@
                     <div class="nav-item">
                         <%= link_to 'Admin Portal', forms_path(userid: @user.id), class:"nav-link" %>
                     </div>
+                    <div class="nav-item">
+                        <%= link_to 'Admin Portal', admin_dashboard_all_responses_path(userid: @user.id), class:"nav-link" %>
+                    </div>
                     <% end %>
 
                     <div class="nav-item">

@@ -41,6 +41,10 @@
             <label class="form-label"><%= question.title %></label>
             <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
+          <% elsif question.question_type_id == 9 %>
+            <label class="form-label"><%= question.title %></label>
+            <%= form.file_field :content,  class: 'form-control' %>
+
           <% elsif question.question_type_id == 5 %>
             <label class="form-label"><%= question.title %></label>
             <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
@@ -182,66 +186,78 @@
             <% end %>
 
             <% elsif question.question_type_id == 6 %>
-            <hr class="horizontal-line">
-            <label class="form-label"><%= question.title %></label>
-            <div id="text_fields_<%= question.id %>">
-              <table class="option-table" id="option_table_<%= question.id %>">
-                <thead>
-                  <tr>
-                    <% question.options.each do |option| %>
-                      <th><%= option.title %></th>
-                    <% end %>
-                  </tr>
-                </thead>
-                <tbody>
-                <%if map[question.id] != nil%>
-                <% content = eval(map[question.id]) %>
-
-                 <% content.each_slice(question.options.size) do |chunk| %>
-                  <tr>
-                    <% chunk.each do |element| %>
-                      <td>
-                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}" %>
-                      </td>
-                    <% end %>
-                    </tr>
-                <% end %>
-                <%else%>
-                <tr>
-                    <% question.options.each do |_option| %>
-                      <td>
-                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
-                      </td>
-                    <% end %>
-                  </tr>
-                  <%end%>
-
-                </tbody>
-              </table>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
-            <% elsif question.question_type_id == 7 %>
-            <hr class="horizontal-line">
-            <label class="form-label"><%= question.title %></label>
+  <hr class="horizontal-line">
+  <label class="form-label"><%= question.title %></label>
+  <div id="text_fields_<%= question.id %>">
+    <table class="option-table" id="option_table_<%= question.id %>">
+      <thead>
+        <tr>
+          <% question.options.each do |option| %>
+            <th><%= option.title %></th>
           <% end %>
-        </div>
-      <% end %> <!-- End of Question call-->
-
-      <div style="display:flex; justify-content:flex-end;">
-      <%= form.submit "Update", class:"btn btn-success mt-3" %>
-      </div>
-    <% end %>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if map[question.id] != nil %>
+          <% content = eval(map[question.id]) %>
+          <% content.each_slice(question.options.size) do |chunk| %>
+            <tr>
+              <% chunk.each do |element| %>
+                <td>
+                  <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}" %>
+                </td>
+              <% end %>
+              <td>
+                <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)"> Delete</button>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <% question.options.each do |_option| %>
+              <td>
+                <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+              </td>
+            <% end %>
+            <td>
+              <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
-<%end%>
+  <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
+<% elsif question.question_type_id == 7 %>
+  <hr class="horizontal-line">
+  <label class="form-label"><%= question.title %></label>
+<% end %>
+</div>
+<% end %> <!-- End of Question call-->
+
+<div style="display:flex; justify-content:flex-end;">
+  <%= form.submit "Update", class:"btn btn-success mt-3" %>
+</div>
+<% end %>
+</div>
+<% end %>
 
 <script>
   function addTableRow(questionId) {
     var table = document.getElementById('option_table_' + questionId);
     var newRow = table.insertRow(-1); // Insert new row at the end of the table
-    var optionsCount = table.rows[0].cells.length; // Number of options
+    var optionsCount = table.rows[0].cells.length - 1; // Number of options excluding the Action column
     for (var i = 0; i < optionsCount; i++) {
       var newCell = newRow.insertCell(i);
       newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control">';
     }
+    var deleteCell = newRow.insertCell(optionsCount);
+    deleteCell.innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>';
+  }
+
+  function deleteTableRow(button) {
+    var row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
   }
 </script>
