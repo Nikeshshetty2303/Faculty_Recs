@@ -7,6 +7,11 @@ class FormsController < ApplicationController
     @questions = @form.questions
   end
 
+  def view_pdf
+    @answer = Answer.find(params[:ansid])
+    send_data @answer.file.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+  end
+
 def create_response
   @user = User.find(current_user.id)
   if @user.tab_no !=1
@@ -31,7 +36,13 @@ def create_response
         # If content is an array, store it as is, otherwise convert it to an array
         content = content.is_a?(Array) ? content : [content].compact
       end
-      @response.answers.build(question: question, content: content)
+
+      if question.question_type_id == 9
+        if answer_data[:file].present?
+          file = answer_data[:file]
+        end
+      end
+      @response.answers.build(question: question, content: content, file: file)
     end
   end
 
@@ -68,13 +79,16 @@ def update_app_profile_response
         content = content.is_a?(Array) ? content : [content].compact
       end
 
-      puts "The value of #{content}"
-      puts "The value of answers #{@response.answers}"
+      if question.question_type_id == 9
+        if answer_data[:file].present?
+          file = answer_data[:file]
+        end
+      end
 
       if @response.answers.find_by(question: question)
-        @response.answers.where(question: question).update(content: content)
+        @response.answers.where(question: question).update(content: content, file: file)
       else
-        @response.answers.build(question: question, content: content)
+        @response.answers.build(question: question, content: content, file: file)
       end
 
 
@@ -246,7 +260,7 @@ end
   end
 
   def response_params
-  params.require(:response).permit(answers_attributes: [:id, :question_id, :content])
+  params.require(:response).permit(answers_attributes: [:id, :question_id, :content, :file])
   end
 
 end

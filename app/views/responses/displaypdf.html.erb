@@ -25,7 +25,7 @@
 
             <% role = response.form.role %>
             <% dept = response.form.dept %>
-            
+
                 <p>Application ID : <b><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %> </b></p>
                 <p>Role : <b><%= @response.form.role %></b></p>
             </div>
@@ -77,7 +77,7 @@
                     <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
                     <input readonly class="form-control" value="<%= content %>">
                 </div>
-            <% else %>
+            <% elsif answer.question.question_type_id != 9 %>
                 <div class="mb-3">
                     <label class="form-label"><%= answer.question.title %></label>
                     <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ").first %>
@@ -116,7 +116,7 @@
                 <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
                 <input readonly class="form-control" value="<%= content %>">
             </div>
-            <% else %>
+            <% elsif answer.question.question_type_id != 9 %>
                 <div class="mb-3">
                     <label class="form-label"><%= answer.question.title %></label>
                     <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ").first %>
