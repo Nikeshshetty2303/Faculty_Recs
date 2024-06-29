@@ -89,7 +89,7 @@
                         <% if _option.title =~ /DD-MM-YYYY/%>
                             <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
                           <%else%>
-                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
+                            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
                         <%end%>
                       </td>
                     <% end %>
@@ -235,12 +235,14 @@
                     <% else %>
                       <tr>
                         <% question.options.each do |_option| %>
+                        <td>
                           <% if _option.title =~ /DD-MM-YYYY/%>
                             <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
                           <%else%>
                             <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
-                        <%end%>
+                          <%end%>
                         <% end %>
+                        </td>
                         <td>
                           <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
                         </td>
