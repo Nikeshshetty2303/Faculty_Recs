@@ -61,8 +61,18 @@
     .sidebar {
         display: none;
     }
-    
+
     .main_content {
         width: 100%
     }
 }
+
+.custom-tab-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Optionally, you can add more styling to make it look better */
+  .custom-tab-link:hover {
+    color: #0056b3; /* Change to your preferred color */
+  }
