@@ -1,10 +1,11 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
 <div class="container mt-4">
-    <%= link_to "Back", :back, class: "btn btn-info mt-3" %>
+
   <div class="text-center">
     <h1 class="fw-bold mt-3">Your Responses</h1>
   </div>
+  <%= link_to "Go Back", :back, class: "btn btn-light mt-3" %>
 
   <div class="responses mt-4">
     <% @responses.where(profile_response: nil).each do |response| %>

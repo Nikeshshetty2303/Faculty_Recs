@@ -80,4 +80,6 @@ end
     end
   end
 
+  get '*path', to: 'home#index', via: :all
+  
 end
