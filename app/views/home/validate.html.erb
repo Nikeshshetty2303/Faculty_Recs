@@ -1,10 +1,11 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
 <div class="container">
+  <%= link_to "Go Back", :back, class: "btn btn-light mt-3" %>
   <table class="table table-bordered table-striped">
     <thead class="thead-dark">
       <tr>
-        <th scope="col">Application</th>
+        <th scope="col">Application ID</th>
         <th scope="col">Credit Score</th>
         <th scope="col">Validate Credit Response</th>
         <th scope="col">Credit Requirement </th>
