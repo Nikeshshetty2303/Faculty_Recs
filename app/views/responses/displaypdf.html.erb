@@ -1,83 +1,8 @@
-<style>
-    @page {
-        margin-bottom: 500px;
-    }
-    .header {
-        display: flex;
-        align-items: center;
-        margin: 10px 0;
-        border-bottom: 2px dashed gray;
-        padding-bottom: 10px;
-    }
-    .header img {
-        margin: 10px 45px 10px 30px;
-    }
-    .header h1 {
-        padding: 0;
-        margin: 0;
-        text-align: center;
-        font-weight: 500;
-        font-size: 40px;
-    }
-    .header p {
-        padding: 0;
-        margin: 0;
-        font-size: 18px;
-        text-align: center;
-    }
-    .section {
-        padding: 15px;
-        margin-top: 12px;
-    }
-    .section h2 {
-        text-decoration: underline;
-        text-align: center;
-    }
-    .section .info {
-        display: flex;
-        justify-content: space-between;
-    }
-    .section .info p {
-        margin: 0;
-    }
-    .note {
-        font-style: italic;
-        margin-bottom: 10px;
-    }
-    .response-container {
-        background-color: rgba(127, 172, 218, 0.16);
-        border-radius: 6px;
-        padding: 20px;
-    }
-    .response-container .mb-3 {
-        margin-bottom: 20px;
-    }
-    .response-container label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 5px;
-    }
-    .response-container table {
-        width: 100%;
-        margin-bottom: 10px;
-        border-collapse: collapse;
-    }
-    .response-container table th,
-    .response-container table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-    }
-    .response-container input.form-control {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
-    }
-</style>
+<%= wicked_pdf_stylesheet_link_tag 'pdf_styles' %>
 
-<div style="border: 2px dashed gray">
+<div class="bordered-container">
     <div class="header">
-        <%= image_tag wicked_pdf_asset_base64("NITK_Emblem.png"), style: 'height:60px; width:60px;' %>
+        <%= image_tag wicked_pdf_asset_base64("NITK_Emblem.png"), class: 'logo' %>
         <div>
             <h1>Teaching Staff Recruitment Portal NITK</h1>
             <p>National Institute of Technology Karnataka, Surathkal</p>
@@ -142,10 +67,10 @@
                             <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
                             <input readonly class="form-control" value="<%= content %>">
                         </div>
-                    <% elsif answer.question.question_type_id != 9 %>
+                    <% elsif answer.question.question_type_id != 9%>
                         <div class="mb-3">
                             <label><%= answer.question.title %></label>
-                            <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ").first %>
+                            <% content = answer.content %>
                             <input readonly class="form-control" value="<%= content %>">
                         </div>
                     <% end %>
@@ -184,7 +109,7 @@
                     <% elsif answer.question.question_type_id != 9 %>
                         <div class="mb-3">
                             <label><%= answer.question.title %></label>
-                            <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ").first %>
+                            <% content = answer.content %>
                             <input readonly class="form-control" value="<%= content %>">
                         </div>
                     <% end %>
@@ -193,5 +118,5 @@
         </div>
     </div>
 
-    <div style="padding: 15px"></div>
+    <div class="spacer"></div>
 </div>

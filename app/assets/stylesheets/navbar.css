@@ -1,0 +1,118 @@
+/* Navbar styles */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 1rem;
+
+  }
+
+  .navbar-brand {
+    padding: 0;
+    margin-right: auto;
+  }
+
+  .navbar-logo {
+    width: 70px;
+    height: auto;
+    max-height: 70px;
+  }
+
+  .navbar-nav {
+    align-items: center;
+  }
+
+  .nav-link {
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 0.5rem 1rem;
+  }
+
+  .nav-link:hover {
+    color: #007bff;
+  }
+
+  .btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+  }
+
+  .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  /* Modal styles */
+  .modal-title {
+    font-weight: bold;
+  }
+
+  .announcement-item {
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+    padding: 0.75rem;
+  }
+
+  .announcement-item:hover {
+    background-color: #f8f9fa;
+  }
+
+  .announcement-item p {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+  }
+
+  .announcement-item h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0;
+  }
+
+  .announcement-item a {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  .announcement-item a:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 991px) {
+    .navbar-nav {
+      margin-top: 1rem;
+      align-items: flex-start;
+    }
+
+    .navbar-nav .nav-item {
+      margin-bottom: 0.5rem;
+    }
+
+    .navbar-nav:last-child {
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .btn-outline-primary,
+    .btn-danger {
+      width: 48%;
+    }
+  }
+
+  @media (max-width: 575px) {
+    .navbar-brand {
+      margin-right: 0;
+    }
+
+    .navbar-logo {
+      width: 30px;
+      max-height: 30px;
+    }
+
+    .modal-dialog {
+      margin: 0.5rem;
+    }
+  }

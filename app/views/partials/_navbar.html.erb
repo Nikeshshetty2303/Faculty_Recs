@@ -1,104 +1,81 @@
-<%= stylesheet_link_tag "new_nav" %>
-<%= stylesheet_link_tag "new_navResp" %>
+<%= stylesheet_link_tag 'navbar' %>
 
-<div class="background font_PT_sans">
-
-    <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#hello_1"
-                aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a href="/">
-                <div class="logo-div"><%= image_tag "NITK_Emblem.png", id:'collapse_logo' %></div>
-            </a>
-            <div class="d-lg-flex col-lg-3 justify-content-lg-end" id="collapse_login">
-            <button type="button" class="btn btn-outline-dark mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Updates
-            </button>
-            </div>
-            <div class="collapse navbar-collapse d-lg-flex mt-1" id="hello_1">
-
-                <a href='/'>
-                    <div class="logo-div"><%= image_tag "NITK_Emblem.png", id:'non_collapse_logo' %></div>
-                </a>
-                <div class="navbar-nav col-lg-6 justify-content-lg-center" id="nav_grid_2">
-                    <div class="nav-item">
-                        <%= link_to 'Home', home_index_path(userid: @user.id), class:"nav-link" %>
-                    </div>
-
-                    <div class="nav-item">
-                        <%= link_to 'My Applications', myresponse_response_path(id: @user.id), class:"nav-link" %>
-                    </div>
-
-                    <div class="nav-item">
-                        <%if @user.validator != nil%>
-                        <%= link_to 'Validate Credit', home_validate_path(id: @user.id), class:"nav-link" %>
-                        <%end%>
-                    </div>
-
-                    <% if @user.role == 'admin' %>
-                    <div class="nav-item">
-                        <%= link_to 'Form Creation', forms_path(userid: @user.id), class:"nav-link" %>
-                    </div>
-                    <div class="nav-item">
-                        <%= link_to 'Admin View', admin_dashboard_all_responses_path(userid: @user.id), class:"nav-link" %>
-                    </div>
-                    <% end %>
-
-                    <div class="nav-item">
-                        <%if @user.tab_no != 1%>
-                        <%= link_to 'Application Profile', home_app_profile_path(id: @user.id, res_id: @user.responses.where(profile_response: true)[0].id, nav_tab_no: @user.nav_tab_no), class:"nav-link" %>
-                        <%else%>
-                        <%= link_to 'Application Profile', home_app_profile_path(id: @user.id), class:"nav-link" %>
-                        <%end%>
-                    </div>
-
-
-                    <div class="nav-item">
-                        <%= link_to 'Edit Account', edit_user_registration_path, class:"nav-link" %>
-                    </div>
-                        <button class="btn btn-danger" id='log_out_mb'><%= link_to 'LogOut',destroy_user_session_path,method: :delete, class:"dropdown-item profile-dropdown", id:"log-out" %></button>
-                    </div>
-                    <div class="d-lg-flex col-lg-3 justify-content-lg-end" id="non_collapse_login">
-                    <button type="button" class="btn btn-outline-dark mx-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Updates
-                    </button>
-                        <button class="btn btn-danger"><%= link_to 'LogOut',destroy_user_session_path,method: :delete, class:"dropdown-item profile-dropdown", id:"log-out" %></button>
-                    </div>
-            </div>
-        </div>
-    </nav>
-
-
-
-<!-- MODAL -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-5 text-center">Notifications</h1>
-        </div>
-        <div class="modal-body">
-        <ul class="list-group list-group-flush">
-        <li class="list-group-item" style="
-            border-radius: 10px;
-            margin:5px auto
-            display:block">
-            <div class='announcement_element'>
-                <p class='fs-sm text-secondary'>Date</p>
-                <div class='d-flex'>
-                    <%= render 'partials/announcementIcon' %>
-                    <a class='news_link' href="#"><h6 class='fw-bold'>Announcement element heading</h6></a>
-                </div>
-            </div>
+<nav class="navbar navbar-expand-lg bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <%= image_tag "NITK_Emblem.png", alt: "NITK Logo", class: "navbar-logo" %>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <%= link_to 'Home', home_index_path(userid: @user.id), class: "nav-link" %>
         </li>
-    </ul>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">All Notifications</button>
-        </div>
-        </div>
+        <li class="nav-item">
+          <%= link_to 'My Applications', myresponse_response_path(id: @user.id), class: "nav-link" %>
+        </li>
+        <% if @user.validator.present? %>
+          <li class="nav-item">
+            <%= link_to 'Validate Credit', home_validate_path(id: @user.id), class: "nav-link" %>
+          </li>
+        <% end %>
+        <% if @user.role == 'admin' %>
+          <li class="nav-item">
+            <%= link_to 'Form Creation', forms_path(userid: @user.id), class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to 'Admin View', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link" %>
+          </li>
+        <% end %>
+        <li class="nav-item">
+          <% if @user.tab_no != 1 %>
+            <%= link_to 'Application Profile', home_app_profile_path(id: @user.id, res_id: @user.responses.where(profile_response: true)[0].id, nav_tab_no: @user.nav_tab_no), class: "nav-link" %>
+          <% else %>
+            <%= link_to 'Application Profile', home_app_profile_path(id: @user.id), class: "nav-link" %>
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Edit Account', edit_user_registration_path, class: "nav-link" %>
+        </li>
+      </ul>
+      <div class="navbar-nav">
+        <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#updatesModal">
+          Updates
+        </button>
+        <%= button_to 'Log Out', destroy_user_session_path, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: 'Are you sure you want to log out?' } } %>
+      </div>
     </div>
+  </div>
+</nav>
+
+<!-- Updates Modal -->
+<div class="modal fade" id="updatesModal" tabindex="-1" aria-labelledby="updatesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updatesModalLabel">Notifications</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item announcement-item">
+            <p class="text-muted mb-1">Date</p>
+            <div class="d-flex align-items-center">
+              <%= render 'partials/announcementIcon' %>
+              <h6 class="mb-0 ms-2">
+                <a href="#" class="text-decoration-none">Announcement element heading</a>
+              </h6>
+            </div>
+          </li>
+          <!-- Add more announcement items as needed -->
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">All Notifications</button>
+      </div>
+    </div>
+  </div>
 </div>

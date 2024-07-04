@@ -1,0 +1,166 @@
+/* home.css */
+body {
+    color: #333;
+    background-color: #f4f4f4;
+  }
+
+
+  .form-container {
+    background-color: rgba(127, 172, 218, 0.16);
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .responsive-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  .tab-title {
+    padding: 10px 15px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .tab-title a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .tab-title.present {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  .tab-title.active {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  .tab-title.light {
+    background-color: #f8f9fa;
+    color: #007bff;
+  }
+
+  .tab-title.dimmed {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+  }
+
+  .form-title {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .question-container {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  .radio-group, .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .radio-label, .checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .radio-input, input[type="checkbox"] {
+    margin-right: 5px;
+  }
+
+  .horizontal-line {
+    border: 0;
+    border-top: 1px solid #ced4da;
+    margin: 20px 0;
+  }
+
+  .dynamic-table-container {
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  .option-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .option-table th, .option-table td {
+    border: 1px solid #ced4da;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .option-table th {
+    background-color: #f8f9fa;
+    font-weight: 500;
+  }
+
+  .btn-sm {
+    padding: 4px 8px;
+    font-size: 15px;
+  }
+  .add-row-btn {
+    font-size: 15px;
+  }
+
+  .file-actions {
+    margin-top: 5px;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+
+    .form-container {
+      padding: 20px;
+    }
+
+    .tab-title {
+      flex: 1 0 auto;
+      text-align: center;
+    }
+
+    .option-table {
+      font-size: 14px;
+    }
+  }

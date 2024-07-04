@@ -1,0 +1,22 @@
+.table-responsive {
+    overflow-x: auto;
+  }
+
+  .table th, .table td {
+    white-space: nowrap;
+  }
+
+  .badge {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .table th, .table td {
+      font-size: 0.9rem;
+    }
+
+    .btn-sm {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.4rem;
+    }
+  }
