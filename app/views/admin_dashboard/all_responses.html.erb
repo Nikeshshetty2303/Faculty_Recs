@@ -1,24 +1,79 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
-<div class="container">
-  <table class="table table-bordered table-striped">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col"></th>
-        <th scope="col">Count</th>
-        <th scope="col">Credit</th>
-        <th scope="col">Uploads</th>
-        <th scope="col">Verified Count</th>
-        <th scope="col">Verified Credit</th>
-        <th scope="col">Update</th>
-      </tr>
-    </thead>
-    <tbody>
-              <td>
+<%= stylesheet_link_tag 'allresponses' %>
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <label for="departmentFilter" class="form-label">Filter by Department:</label>
+      <select class="form-select" id="departmentFilter">
+        <option value="">All Departments</option>
+        <% Department.all.each do |department| %>
+          <option value="<%= department.title %>"><%= department.title %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="col-md-6 d-flex align-items-end">
+      <span id="departmentCount" class="badge bg-secondary">Number of Responses: <span id="rowCount">0</span></span>
+    </div>
+  </div>
 
-              </td>
-
-          </tr>
-    </tbody>
-  </table>
-
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Application ID</th>
+          <th scope="col">Verified Credits</th>
+          <th scope="col">Application view</th>
+          <th scope="col">Created At</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Response.all.each do |response| %>
+          <% if response.form.present? %>
+            <tr class="response-row">
+              <% present_response_id = response.id %>
+              <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
+              <% count_below_responses = below_responses.count %>
+              <% role = response.form.role %>
+              <% dept = response.form.dept %>
+              <td class="application-id"><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
+              <td><%= response.credit_score %></td>
+              <td><%= link_to "View Response", print_response_path(id: response.id, userid: response.user.id, format: :pdf), class: 'btn btn-outline-primary btn-sm' %></td>
+              <td><%= response.created_at.strftime('%B %d, %Y %H:%M') %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let departmentFilter = document.getElementById('departmentFilter');
+    let rowCountSpan = document.getElementById('rowCount');
+
+    function updateRowCount() {
+      let selectedDepartment = departmentFilter.value.toLowerCase();
+      let rows = document.querySelectorAll('.response-row');
+      let count = 0;
+
+      rows.forEach(function (row) {
+        let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
+
+        if (selectedDepartment === '' || applicationId.includes(selectedDepartment)) {
+          row.style.display = '';
+          count++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      rowCountSpan.textContent = count;
+    }
+
+    departmentFilter.addEventListener('change', updateRowCount);
+
+    // Initial count update on page load
+    updateRowCount();
+  });
+</script>

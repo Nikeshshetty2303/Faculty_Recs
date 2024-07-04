@@ -1,50 +1,36 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
-
+ <%= stylesheet_link_tag 'myresponses' %>
 <div class="container mt-4">
-
   <div class="text-center">
-    <h1 class="fw-bold mt-3">Your Responses</h1>
+    <h1 class="fw-bold mt-3 mb-4">Your Responses</h1>
   </div>
-  <%= link_to "Go Back", :back, class: "btn btn-light mt-3" %>
+  <%= link_to "Go Back", :back, class: "btn btn-light mb-4" %>
 
-  <div class="responses mt-4">
+  <div class="responses">
     <% @responses.where(profile_response: nil).each do |response| %>
-      <div class="card mb-3">
+      <div class="card mb-4">
         <div class="card-body">
-
           <% present_response_id = response.id %>
           <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
           <% count_below_responses = below_responses.count %>
-
           <% role = response.form.role %>
           <% dept = response.form.dept %>
 
-
           <h5 class="card-title"><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></h5>
-
-          <div class="validation-status mt-2">
-            <!-- <% if response.validation.nil? %>
-              <span class="text-primary">Validation in progress 🚀</span>
-            <% elsif response.validation == true %>
-              <span class="text-success">Successful validation ✅</span>
-            <% elsif response.validation == false %>
-              <span class="text-danger">Validation unsuccessful ❌</span>
-            <% end %> -->
-          </div>
 
           <p class="mt-3">
             <strong>Credits Obtained:</strong> <%= response.credit_score %>
           </p>
 
-          <div class="btn-group" role="group" aria-label="Response actions">
-            <%= link_to "Credit Response", my_credit_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-md' %>
-            <%= link_to "Form Response", display_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-secondary btn-md' %>
-            <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-md' %>
-            <%if response.payment_status == true%>
-              <%= link_to "Fee Paid", "#", class: 'btn btn-dark btn-md' %>
-            <%else%>
-              <%= link_to "Fee Payment", checkout_form_path(id: response.id,userid: @user.id), class: 'btn btn-outline-warning btn-md' %>
-            <%end%>
+          <div class="btn-group btn-group-responsive" role="group" aria-label="Response actions">
+            <%= link_to "Credit Response", my_credit_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-sm' %>
+            <%= link_to "Form Response", display_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-secondary btn-sm' %>
+            <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
+            <% if response.payment_status == true %>
+              <%= link_to "Fee Paid", "#", class: 'btn btn-dark btn-sm' %>
+            <% else %>
+              <%= link_to "Fee Payment", checkout_form_path(id: response.id, userid: @user.id), class: 'btn btn-outline-warning btn-sm' %>
+            <% end %>
           </div>
         </div>
       </div>

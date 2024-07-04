@@ -1,300 +1,259 @@
-<%= stylesheet_link_tag 'home' %>
+<%= stylesheet_link_tag 'appprofile' %>
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
-<!-- Creating a new entry -->
-<%if @user.nav_tab_no == @user.tab_no%>
-<div class="container-md py-4 px-5 mb-3" style="background-color: rgb(127 172 218 / 16%); border-radius: 10px;">
-    <%= form_with(model: @response, url: create_response_form_path(id: @user.id), method: :post) do |form| %>
-    <div class="tab-container">
+<div class="container">
+  <!-- Creating a new entry -->
+  <% if @user.nav_tab_no == @user.tab_no %>
+    <div class="form-container">
+      <%= form_with(model: @response, url: create_response_form_path(id: @user.id), method: :post, class: 'responsive-form') do |form| %>
+        <div class="tab-container">
           <% Tab.all.each_with_index do |tab, index| %>
-          <% if tab.id == @user.tab_no %>
-          <div class="tab-title present">
-            <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, res_id: @response.id, nav_tab_no: tab.id) %>
-          </div>
-          <% elsif tab.id < @user.tab_no %>
-          <div class="tab-title light">
-            <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id)%>
-          </div>
-          <% else %>
-          <div class="tab-title dimmed">
-            <%= tab.title %>
-          </div>
-          <% end %>
-          <% end %>
-    </div>
-    <br>
-
-    <h5 class='text-center fw-bold' style='font-family: Verdana, Geneva, sans-serif; font-weight: bold;'>
-      <%=@tab.title%>
-    </h5>
-  <br>
-  <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
-      <div style="margin-bottom: 20px;" class="question-container" data-role="<%= question.role %>" <%= 'style="display: none;"' if question.role == 'O' %>>
-        <% if question.question_type_id == 1 %>
-        <label class="form-label"><%= question.title %></label>
-        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
-
-        <% elsif question.question_type_id == 4 %>
-        <label class="form-label"><%= question.title %></label>
-        <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
-
-        <% elsif question.question_type_id == 8 %>
-        <label class="form-label"><%= question.title %></label>
-        <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
-
-        <% elsif question.question_type_id == 9 %>
-        <label class="form-label"><%= question.title %></label>
-        <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]",class: 'form-control' %>
-
-        <% elsif question.question_type_id == 5 %>
-        <label class="form-label"><%= question.title %></label>
-        <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
-
-        <% elsif question.question_type_id == 2 %>
-        <label class="form-label"><%= question.title %></label>
-        <% question.options.each do |option| %>
-          <label>
-            <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]",  class: 'radio-input', data: { question_id: question.id, role: question.role } %>
-            <%= option.title %>
-          </label>
-        <% end %>
-
-        <% elsif question.question_type_id == 3 %>
-        <label class="form-label"><%= question.title %></label>
-        <% question.options.each do |option| %>
-          <label>
-            <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil %>
-            <%= option.title %>
-            <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
-              <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title %>
+            <% if tab.id == @user.tab_no %>
+              <div class="tab-title present">
+                <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, res_id: @response.id, nav_tab_no: tab.id) %>
+              </div>
+            <% elsif tab.id < @user.tab_no %>
+              <div class="tab-title light">
+                <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id)%>
+              </div>
+            <% else %>
+              <div class="tab-title dimmed">
+                <%= tab.title %>
+              </div>
             <% end %>
-          </label>
-        <% end %>
-        <% elsif question.question_type_id == 6 %>
-          <hr class="horizontal-line">
-          <label class="form-label"><%= question.title %></label>
-          <div id="text_fields_<%= question.id %>">
-            <table class="option-table" id="option_table_<%= question.id %>">
-              <thead>
-                <tr>
-                  <% question.options.each do |option| %>
-                    <th><%= option.title %></th>
-                  <% end %>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <% question.options.each do |option| %>
-                    <td>
-                      <% if option.title =~ /DD-MM-YYYY/ %>
-                        <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role } %>
-                      <% else %>
-                        <%if option.role == "R"%>
-                            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role }, readonly: true %>
-                        <%else%>
-                            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role } %>
-                        <%end%>
-                      <% end %>
-                    </td>
-                  <% end %>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
-        <% elsif question.question_type_id == 7 %>
-          <hr class="horizontal-line">
-          <label class="form-label"><%= question.title %></label>
-        <% end %>
-        </div>
-  <%end%>
-
-  <div style="display:flex; justify-content:flex-end;">
-  <%= form.submit "Create", class:"btn btn-success mt-3" %>
-  </div>
-  <% end %>
-  </div>
-  <!-- Editing the existing entry -->
-  <%else%>
-  <div class="container-md py-4 px-5 mb-3" style="background-color: rgb(127 172 218 / 16%); border-radius: 10px;">
-    <%= form_with(model: @response, url: update_app_profile_response_form_path(id: @user.id, res_id: @response.id), method: :post) do |form| %>
-      <div class="tab-container">
-        <% Tab.all.each_with_index do |tab, index| %>
-          <% if tab.id == @user.tab_no %>
-            <div class="tab-title active">
-              <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id) %>
-            </div>
-          <% elsif tab.id == @user.nav_tab_no %>
-            <div class="tab-title present">
-              <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id) %>
-            </div>
-          <% elsif tab.id < @user.tab_no && tab.id != @user.nav_tab_no%>
-            <div class="tab-title light">
-              <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id), method: :post%>
-            </div>
-          <% else %>
-            <div class="tab-title dimmed">
-              <%= tab.title %>
-            </div>
           <% end %>
-        <% end %>
-      </div>
-    <br>
-
-    <h5 class='text-center fw-bold' style='font-family: Verdana, Geneva, sans-serif; font-weight: bold;'>
-      <%=@tab.title%>
-    </h5>
-
-
-
-    <br>
-    <% map = {} %>
-    <% field_map = {}%>
-    <!-- The Questions are called-->
-    <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
-    <div style="margin-bottom: 20px;" class="question-container" data-role="<%= question.role %>" <%= 'style="display: none;"' if question.role == 'O' %>>
-    <!-- The Responses specific to the users are called-->
-      <% @response.answers.all.each do |answer|%>
-      <!-- The Already existing answers are called-->
-        <% if answer.question_id == question.id%>
-          <%if question.question_type_id == 9%>
-            <%field_map[question.id] = answer%>
-          <%end%>
-          <% map[question.id] = answer.content %>
-          <% end %> <!-- End of Answer call-->
-      <% end %> <!-- End of Response call-->
-
-    <div style="margin-bottom: 20px;">
-      <% if question.question_type_id == 1 %>
-        <label class="form-label" ><%= question.title %></label>
-        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
-
-      <% elsif question.question_type_id == 4 %>
-        <label class="form-label"><%= question.title %></label>
-        <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id]  %>
-
-      <% elsif question.question_type_id == 8 %>
-        <label class="form-label"><%= question.title %></label>
-        <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id]  %>
-
-      <% elsif question.question_type_id == 9 %>
-        <label class="form-label"><%= question.title %></label>
-        <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]",class: 'form-control' %>
-
-      <% if question.question_type_id == 9 && field_map[question.id] != nil && field_map[question.id].file.attached? %>
-        <div class="ml-3">
-            <%= link_to "View", view_pdf_form_path(ansid: field_map[question.id].id,id: field_map[question.id].response_id), class: "btn btn-warning btn-sm" %>
-        </div>
-      <% end %>
-
-      <% elsif question.question_type_id == 5 %>
-        <label class="form-label"><%= question.title %></label>
-        <div class="input-group mb-3">
-          <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
         </div>
 
-      <% elsif question.question_type_id == 2 %>
-        <label class="form-label"><%= question.title %></label>
-        <% question.options.each do |option| %>
-        <label>
-          <%= form.radio_button :content, option.title,
-                                name: "response[answers_attributes][#{question.id}][content]",
-                                value: option.title,
-                                class: 'radio-input',
-                                data: { question_id: question.id, role: question.role},
-                                checked: (option.title == map[question.id]) %>
+        <h2 class="form-title"><%= @tab.title %></h2>
 
-          <%= option.title %>
-        </label>
-        <% end %>
+        <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
+          <div class="question-container" data-role="<%= question.role %>" <%= 'style="display: none;"' if question.role == 'O' %>>
+            <label class="form-label"><%= question.title %></label>
 
-      <% elsif question.question_type_id == 3 %>
-        <label class="form-label"><%= question.title %></label>
-        <% question.options.each do |option| %>
-          <label>
-          <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: map[question.id].present? ? map[question.id].include?(option.title) : false, value: option.title }, option.title, nil %>
-            <%= option.title %>
-          </label>
-        <% end %>
+            <% case question.question_type_id %>
+            <% when 1 %>
+              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
-      <% elsif question.question_type_id == 6 %>
-        <hr class="horizontal-line">
-        <label class="form-label"><%= question.title %></label>
-        <div id="text_fields_<%= question.id %>">
-          <table class="option-table" id="option_table_<%= question.id %>">
-            <thead>
-              <tr>
+            <% when 4 %>
+              <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+
+            <% when 8 %>
+              <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+
+            <% when 9 %>
+              <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control' %>
+
+            <% when 5 %>
+              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+
+            <% when 2 %>
+              <div class="radio-group">
                 <% question.options.each do |option| %>
-                  <th><%= option.title %></th>
+                  <label class="radio-label">
+                    <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", class: 'radio-input', data: { question_id: question.id, role: question.role } %>
+                    <%= option.title %>
+                  </label>
                 <% end %>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if map[question.id] != nil %>
-                <% content = eval(map[question.id]) %>
-                <% content.each_slice(question.options.size) do |chunk| %>
-                  <tr>
-                  <%num =-1%>
-                    <% chunk.each do |element| %>
+              </div>
+
+            <% when 3 %>
+              <div class="checkbox-group">
+                <% question.options.each do |option| %>
+                  <label class="checkbox-label">
+                    <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil %>
+                    <%= option.title %>
+                  </label>
+                <% end %>
+              </div>
+
+            <% when 6 %>
+              <div id="text_fields_<%= question.id %>" class="dynamic-table-container">
+                <table class="option-table" id="option_table_<%= question.id %>">
+                  <thead>
+                    <tr>
+                      <% question.options.each do |option| %>
+                        <th><%= option.title %></th>
+                      <% end %>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <% question.options.each do |option| %>
+                        <td>
+                          <% if option.title =~ /DD-MM-YYYY/ %>
+                            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role } %>
+                          <% else %>
+                            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role }, readonly: (option.role == "R") %>
+                          <% end %>
+                        </td>
+                      <% end %>
                       <td>
-                        <%num = num +1%>
-                          <% if question.options[num].title =~ /DD-MM-YYYY/%>
-                            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}",  data: { role: question.options[num].role } %>
-                          <%else%>
-                            <%if question.options[num].role == "R"%>
-                              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}", data: { role: question.options[num].role }, readonly: true  %>
-                            <%else%>
-                              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: "#{ element.gsub(/[\[\]\"]/,"")}", data: { role: question.options[num].role }%>
-                              <%end%>
-                        <%end%>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteTableRow(this)">Delete</button>
                       </td>
-                    <% end %>
-                    <td>
-                      <button type="button" class="btn btn-outline-danger btn-sm custom-hover-danger" onclick="deleteTableRow(this)">Delete</button>
-                    </td>
-                  </tr>
-                <% end %>
-              <% else %>
-                <tr>
-                  <% question.options.each do |_option| %>
-                  <td>
-                    <% if _option.title =~ /DD-MM-YYYY/%>
-                      <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: _option.role } %>
-                    <%else%>
-                      <%if _option.role == "R"%>
-                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', readonly: true, data: { role: _option.role } %>
-                      <%else%>
-                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: _option.role }%>
-                      <%end%>
-                    <%end%>
-                  <% end %>
-                  </td>
-                  <td>
-                    <button type="button" class="btn btn-outline-danger btn-sm custom-hover-danger" onclick="deleteTableRow(this)">Delete</button>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" class="btn btn-primary add-row-btn" onclick="addTableRow('<%= question.id %>')">Add Row</button>
+
+            <% when 7 %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="form-actions">
+          <%= form.submit "Create", class: "btn btn-success" %>
         </div>
-        <button type="button" class="btn btn-primary " onclick="addTableRow('<%= question.id %>')">+</button>
-      <% elsif question.question_type_id == 7 %>
-        <hr class="horizontal-line">
-        <label class="form-label"><%= question.title %></label>
       <% end %>
     </div>
-    </div>
-    <% end %> <!-- End of Question call-->
 
+  <!-- Editing the existing entry -->
+  <% else %>
+    <div class="form-container">
+      <%= form_with(model: @response, url: update_app_profile_response_form_path(id: @user.id, res_id: @response.id), method: :post, class: 'responsive-form') do |form| %>
+        <div class="tab-container">
+          <% Tab.all.each_with_index do |tab, index| %>
+            <% if tab.id == @user.tab_no %>
+              <div class="tab-title active">
+                <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id) %>
+              </div>
+            <% elsif tab.id == @user.nav_tab_no %>
+              <div class="tab-title present">
+                <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id) %>
+              </div>
+            <% elsif tab.id < @user.tab_no && tab.id != @user.nav_tab_no %>
+              <div class="tab-title light">
+                <%= link_to "#{tab.title}", home_app_profile_path(id: @user.id, nav_tab_no: tab.id, res_id: @response.id), method: :post %>
+              </div>
+            <% else %>
+              <div class="tab-title dimmed">
+                <%= tab.title %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
 
-    <div style="display:flex; justify-content:flex-end;">
-      <%= form.submit "Update", class:"btn btn-success mt-3" %>
-    </div>
-    <% end %>
+        <h2 class="form-title"><%= @tab.title %></h2>
+
+        <% map = {} %>
+        <% field_map = {} %>
+
+        <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
+          <div class="question-container" data-role="<%= question.role %>" <%= 'style="display: none;"' if question.role == 'O' %>>
+            <% @response.answers.all.each do |answer| %>
+              <% if answer.question_id == question.id %>
+                <% field_map[question.id] = answer if question.question_type_id == 9 %>
+                <% map[question.id] = answer.content %>
+              <% end %>
+            <% end %>
+
+            <label class="form-label"><%= question.title %></label>
+
+            <% case question.question_type_id %>
+            <% when 1 %>
+              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
+
+            <% when 4 %>
+              <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
+
+            <% when 8 %>
+              <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
+
+            <% when 9 %>
+              <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control' %>
+              <% if question.question_type_id == 9 && field_map[question.id] != nil && field_map[question.id].file.attached? %>
+                <div class="file-actions">
+                  <%= link_to "View", view_pdf_form_path(ansid: field_map[question.id].id, id: field_map[question.id].response_id), class: "btn btn-warning btn-sm" %>
+                </div>
+              <% end %>
+
+            <% when 5 %>
+              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
+
+            <% when 2 %>
+              <div class="radio-group">
+                <% question.options.each do |option| %>
+                  <label class="radio-label">
+                    <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", value: option.title, class: 'radio-input', data: { question_id: question.id, role: question.role }, checked: (option.title == map[question.id]) %>
+                    <%= option.title %>
+                  </label>
+                <% end %>
+              </div>
+
+            <% when 3 %>
+              <div class="checkbox-group">
+                <% question.options.each do |option| %>
+                  <label class="checkbox-label">
+                    <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: map[question.id].present? ? map[question.id].include?(option.title) : false, value: option.title }, option.title, nil %>
+                    <%= option.title %>
+                  </label>
+                <% end %>
+              </div>
+
+            <% when 6 %>
+              <div id="text_fields_<%= question.id %>" class="dynamic-table-container">
+                <table class="option-table" id="option_table_<%= question.id %>">
+                  <thead>
+                    <tr>
+                      <% question.options.each do |option| %>
+                        <th><%= option.title %></th>
+                      <% end %>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if map[question.id] != nil %>
+                      <% content = eval(map[question.id]) %>
+                      <% content.each_slice(question.options.size) do |chunk| %>
+                        <tr>
+                          <% chunk.each_with_index do |element, index| %>
+                            <td>
+                              <% if question.options[index].title =~ /DD-MM-YYYY/ %>
+                                <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: element.gsub(/[\[\]\"]/,""), data: { role: question.options[index].role } %>
+                              <% else %>
+                                <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', value: element.gsub(/[\[\]\"]/,""), data: { role: question.options[index].role }, readonly: (question.options[index].role == "R") %>
+                              <% end %>
+                            </td>
+                          <% end %>
+                          <td>
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteTableRow(this)">Delete</button>
+                          </td>
+                        </tr>
+                      <% end %>
+                    <% else %>
+                      <tr>
+                        <% question.options.each do |option| %>
+                          <td>
+                            <% if option.title =~ /DD-MM-YYYY/ %>
+                              <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role } %>
+                            <% else %>
+                              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role }, readonly: (option.role == "R") %>
+                            <% end %>
+                          </td>
+                        <% end %>
+                        <td>
+                          <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteTableRow(this)">Delete</button>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" class="btn btn-primary add-row-btn" onclick="addTableRow('<%= question.id %>')">Add Row</button>
+
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="form-actions">
+          <%= form.submit "Update", class: "btn btn-success" %>
+        </div>
+      <% end %>
     </div>
   <% end %>
+</div>
+
 
 
 <%# Javascript begins %>

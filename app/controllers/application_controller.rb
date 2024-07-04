@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
-  rescue_from StandardError, with: :handle_error
-  rescue_from ActionController::RoutingError, with: :handle_routing_error
+  # rescue_from StandardError, with: :handle_error
+  # rescue_from ActionController::RoutingError, with: :handle_routing_error
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to main_app.root_path, alert: "You are not authorized to access this page."

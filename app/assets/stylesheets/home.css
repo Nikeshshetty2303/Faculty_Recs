@@ -184,6 +184,13 @@ p {
         display: block;
     }
 
+    .card_div {
+        width:95%;
+    }
+    .card_div img {
+        margin-right:1em;
+    }
+
 }
 
 /* media query mobile screen*/
@@ -193,3 +200,13 @@ p {
         width: 98%;
     }
 }
+
+.card_div {
+    width:75%;
+    margin:auto;
+}
+.info {
+    display:flex;
+    flex-wrap: wrap;
+}
+
