@@ -25,7 +25,7 @@
 
             <td><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
             <td><%= response.credit_score %></td>
-            <td><%= link_to "Validate Credit Response", validate_response_path(id: response.id), class: 'btn btn-warning btn-sm' %></td>
+            <td><%= link_to "Validate Credit Response", validate_response_path(id: response.id), class: 'btn btn-outline-primary btn-sm' %></td>
             <td>
               <% if response.validation == true %>
                 <% if response.credit_score >= response.form.credit_req %>

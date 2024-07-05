@@ -40,18 +40,18 @@ body {
   }
 
   .tab-title.present {
-    background-color: #007bff;
+    background-color: #007bffc8;
     color: #fff;
   }
 
   .tab-title.active {
-    background-color: #28a745;
+    background-color: #28a746cb;
     color: #fff;
   }
 
   .tab-title.light {
     background-color: #f8f9fa;
-    color: #007bff;
+    color: #007bffc8;
   }
 
   .tab-title.dimmed {
@@ -131,6 +131,10 @@ body {
   .btn-sm {
     padding: 4px 8px;
     font-size: 15px;
+  }
+
+  .btn-warning  {
+    background-color: #e3d94899;
   }
   .add-row-btn {
     font-size: 15px;
