@@ -1,159 +1,120 @@
-<style>
-.option-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.option-table th, .option-table td {
-  padding: 8px;
-  border: 1px solid #ddd;
-}
-
-.option-table th {
-  background-color: #f2f2f2;
-}
-
-.form-control {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.btn-primary {
-  margin-top: 10px;
-  margin-left: 95%;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-</style>
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%= stylesheet_link_tag "submit_form" %>
 <div class="container-md">
-  <div style="">
-    <%= link_to "Back to home", home_index_path(userid: current_user.id), class:"btn btn-info mt-3" %>
+
+  <h1 class="text-center fw-bold mt-4 mb-4"><%= @form.name %></h1>
+
+  <div class="row mb-3">
+    <div class="col-md-6 mb-3 mb-md-0">
+      <div class="alert alert-info h-75" role="alert">
+        <b>Role</b>: <%= @form.role %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="alert alert-success h-75" role="alert">
+        <b>Department</b>: <%= @form.dept %>
+      </div>
+    </div>
   </div>
 
-  <h1 class="text-center fw-bold"><%= @form.name %></h1>
 
-  <div class="container-md" style="display:flex; justify-content:space-between ">
-    <div class="alert alert-info" style="width:49%" role="alert">
-      <b>Role</b>: <%= @form.role %>
-    </div>
-
-    <div class="alert alert-success" style="width:50%" role="alert">
-      <b>Department</b>: <%= @form.dept %>
-    </div>
-  </div>
-
-  <div class="alert alert-success" role="alert">
-            These are the questions and fields specific to the above mentioned post.
-        </div>
-
-  <div class="container-md py-4 px-5 mb-3" style="background-color:rgb(127 172 218 / 16%); border-radius:10px;">
-    <%= form_with(model: @response, url: update_response_form_path(form_id: @form.id, id: @response.id), method: :post) do |form| %>
-
+  <div class="form-container py-4 px-4 px-md-5 mb-3">
+    <%= form_with(model: @response, url: update_response_form_path(form_id: @form.id, id: @response.id), method: :post, class: "needs-validation", novalidate: true) do |form| %>
       <% @questions.sort_by(&:position).each do |question| %>
-        <div style="margin-bottom: 20px;">
-          <% if question.question_type_id == 1 %>
-            <label class="form-label"><%= question.title %></label>
-            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+        <div class="mb-4">
+          <label class="form-label fw-bold"><%= question.title %></label>
 
-          <% elsif question.question_type_id == 4 %>
-            <label class="form-label"><%= question.title %></label>
-            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+          <% case question.question_type_id %>
+          <% when 1 %>
+            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
-          <% elsif question.question_type_id == 8 %>
-            <label class="form-label"><%= question.title %></label>
-            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+          <% when 4 %>
+            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
-          <% elsif question.question_type_id == 5 %>
-            <label class="form-label"><%= question.title %></label>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
-              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
+          <% when 8 %>
+            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+
+          <% when 5 %>
+            <div class="input-group">
+              <span class="input-group-text"><%= question.title %></span>
+              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
             </div>
 
-        <% elsif question.question_type_id == 6 %>
-          <label class="form-label"><%= question.title %></label>
-          <div id="text_fields_<%= question.id %>">
-            <table class="option-table" id="option_table_<%= question.id %>">
-              <thead>
-                <tr>
-                  <% question.options.each do |option| %>
-                    <th><%= option.title %></th>
-                  <% end %>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <% question.options.each do |_option| %>
+          <% when 6 %>
+            <div class="table-responsive">
+              <table class="table option-table" id="option_table_<%= question.id %>">
+                <thead>
+                  <tr>
+                    <% question.options.each do |option| %>
+                      <th><%= option.title %></th>
+                    <% end %>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <% question.options.each do |_option| %>
+                      <td>
+                        <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', placeholder: "Enter your details" %>
+                      </td>
+                    <% end %>
                     <td>
-                      <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', placeholder: "Enter your details" %>
+                      <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteTableRow(this)">Delete</button>
                     </td>
-                  <% end %>
-                  <td>
-                    <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addTableRow('<%= question.id %>')">Add Row</button>
 
-        <% elsif question.question_type_id == 2 %>
-          <label class="form-label"><%= question.title %></label>
-          <% question.options.each do |option| %>
-            <label>
-              <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]" %>
-              <%= option.title %>
-            </label>
-          <% end %>
-
-        <% elsif question.question_type_id == 3 %>
-          <label class="form-label"><%= question.title %></label>
-          <% question.options.each do |option| %>
-            <label>
-              <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil %>
-              <%= option.title %>
-              <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
-                <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title %>
+          <% when 2 %>
+            <div class="radio-group">
+              <% question.options.each do |option| %>
+                <div class="form-check">
+                  <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", class: "form-check-input" %>
+                  <%= form.label :content, option.title, class: "form-check-label" %>
+                </div>
               <% end %>
-            </label>
+            </div>
+
+          <% when 3 %>
+            <div class="checkbox-group">
+              <% question.options.each do |option| %>
+                <div class="form-check">
+                  <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", class: "form-check-input" }, option.title, nil %>
+                  <%= form.label :content, option.title, class: "form-check-label" %>
+                  <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
+                    <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
           <% end %>
-        <% end %>
         </div>
-        <% end %>
+      <% end %>
 
-        <div style="display:flex; justify-content:flex-end;">
-          <%= form.submit class:"btn btn-success mt-3"%>
-        </div>
+      <div class="text-end">
+        <%= form.submit "Submit", class: "btn btn-success mt-3" %>
+      </div>
+    <% end %>
+  </div>
+</div>
 
-        <% end %>
-        </div>
-        </div>
+<script>
+  function addTableRow(questionId) {
+    var table = document.getElementById('option_table_' + questionId);
+    var newRow = table.insertRow(-1); // Insert new row at the end of the table
+    var optionsCount = table.rows[0].cells.length - 1; // Number of options excluding the Action column
+    for (var i = 0; i < optionsCount; i++) {
+      var newCell = newRow.insertCell(i);
+      newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control" placeholder="Enter your details">';
+    }
+    var deleteCell = newRow.insertCell(optionsCount);
+    deleteCell.innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>';
+  }
 
-        <script>
-          function addTableRow(questionId) {
-            var table = document.getElementById('option_table_' + questionId);
-            var newRow = table.insertRow(-1); // Insert new row at the end of the table
-            var optionsCount = table.rows[0].cells.length - 1; // Number of options excluding the Action column
-            for (var i = 0; i < optionsCount; i++) {
-              var newCell = newRow.insertCell(i);
-              newCell.innerHTML = '<textarea name="response[answers_attributes][' + questionId + '][content][]" class="form-control" placeholder="Enter your details"></textarea>';
-            }
-            var deleteCell = newRow.insertCell(optionsCount);
-            deleteCell.innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>';
-          }
-
-          function deleteTableRow(button) {
-            var row = button.parentNode.parentNode;
-            row.parentNode.removeChild(row);
-          }
-        </script>
+  function deleteTableRow(button) {
+    var row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+  }
+</script>

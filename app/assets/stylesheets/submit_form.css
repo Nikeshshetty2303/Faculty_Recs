@@ -1,0 +1,97 @@
+body {
+
+    background-color: #f8f9fa;
+  }
+
+  h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-label {
+    font-weight: bold;
+    color: #41464c;
+  }
+
+  .form-control {
+    border-color: #ced4da;
+  }
+
+  .form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  .input-group-text {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+  }
+
+  .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+  }
+
+  .btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+  }
+
+  .btn-success {
+    background-color: #2a8d41;
+    border-color:  #2a8d41;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+  }
+
+  .alert {
+    border-radius: 5px;
+    background-color: #c8e6f4;
+    height: 60%
+
+  }
+
+  .table {
+    margin-bottom: 0;
+  }
+
+  .table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: bold;
+    color: #495057;
+  }
+
+  .radio-group, .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .form-check {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .form-container {
+      padding: 1rem;
+    }
+
+    .table-responsive {
+      margin-bottom: 1rem;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+  }

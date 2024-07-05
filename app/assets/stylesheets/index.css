@@ -2,10 +2,6 @@ body {
     background-color: #f8f9fa;
   }
 
-  .container {
-    max-width: 1200px;
-  }
-
   .job-card {
     transition: all 0.3s ease;
     border: none;

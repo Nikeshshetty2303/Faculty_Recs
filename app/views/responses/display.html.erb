@@ -1,47 +1,39 @@
-<%= stylesheet_link_tag "response" %>
+<%= stylesheet_link_tag "submit_form" %>
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
-<div class="container-sm p-2">
-    <div class="text-center">
-        <%= link_to "Back to My Response", myresponse_response_path(id: @user.id), class:"btn btn-info mt-3" %>
+<div class="container-md">
+
+    <h1 class="text-center fw-bold mt-4 mb-4">View Form Response</h1>
+
+    <div class="alert" role="alert">
+      You can view and update your form response below:
     </div>
-
-    <h1 class="text-center fw-bold mt-3">View Form Response</h1>
-
-
-    <div class="response-container p-4" style="background-color: rgba(127, 172, 218, 0.16); border-radius: 6px;">
-        <div class="alert alert-success" role="alert">
-            This is the response for the form:
-        </div>
+    <div class="form-container py-4 px-4 px-md-5 mb-3">
         <%if Answer.where(response_id: @response.id).present?%>
          <%= form_with(model: @response, url: update_response_form_path(form_id: @form.id, id: @response.id), method: :post) do |form| %>
-
-      <% @questions.sort_by(&:position).each do |question| %>
-        <div style="margin-bottom: 20px;">
-          <% if question.question_type_id == 1 %>
-            <label class="form-label"><%= question.title %></label>
+        <% @questions.sort_by(&:position).each do |question| %>
+        <div class="mb-4">
+          <label class="form-label fw-bold"><%= question.title %></label>
+          <% case question.question_type_id %>
+          <% when 1 %>
             <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', value: Answer.where(question_id: question.id, response_id: @response.id)[0].content %>
 
-          <% elsif question.question_type_id == 4 %>
-            <label class="form-label"><%= question.title %></label>
+          <% when 4 %>
             <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', value: Answer.where(question_id: question.id, response_id: @response.id)[0].content %>
 
-          <% elsif question.question_type_id == 8 %>
-            <label class="form-label"><%= question.title %></label>
+          <% when 8 %>
             <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', value: Answer.where(question_id: question.id, response_id: @response.id)[0].content %>
 
 
-          <% elsif question.question_type_id == 5 %>
-            <div class="input-group mb-3">
-              <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
+          <% when 5 %>
+            <div class="input-group">
+              <span class="input-group-text"><%= question.title %></span>
               <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', value: Answer.where(question_id: question.id, response_id: @response.id)[0].content %>
             </div>
 
-            <% elsif question.question_type_id == 6 %>
-            <hr class="horizontal-line">
-            <label class="form-label"><%= question.title %></label>
-            <div id="text_fields_<%= question.id %>">
-              <table class="option-table" id="option_table_<%= question.id %>">
+           <% when 6 %>
+            <div class="table-responsive">
+              <table class="table option-table" id="option_table_<%= question.id %>">
                 <thead>
                   <tr>
                     <% question.options.each do |option| %>
@@ -62,7 +54,7 @@
                           </td>
                         <% end %>
                         <td>
-                          <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
+                          <button type="button" class="btn btn-danger btn-sm" onclick="deleteTableRow(this)">Delete</button>
                         </td>
                       </tr>
                     <% end %>
@@ -81,31 +73,33 @@
                 </tbody>
               </table>
             </div>
-            <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
+            <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addTableRow('<%= question.id %>')">Add Row</button>
 
-          <% elsif question.question_type_id == 2 %>
-            <label class="form-label"><%= question.title %></label>
+          <% when 2 %>
+            <div class="radio-group">
             <% question.options.each do |option| %>
-              <label>
+              <div class="form-check">
                 <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", value: option.title, checked: (option.title == Answer.where(question_id: question.id, response_id: @response.id)) %>
-                <%= option.title %>
-              </label>
+                <%= form.label :content, option.title, class: "form-check-label" %>
+              </div>
             <% end %>
+            </div>
 
-          <% elsif question.question_type_id == 3 %>
-            <label class="form-label"><%= question.title %></label>
+          <% when 3 %>
+            <div class="checkbox-group">
             <% question.options.each do |option| %>
-              <label>
-                <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: Answer.where(question_id: question.id, response_id: @response.id)[0].present? ? Answer.where(question_id: question.id, response_id: @response.id)[0].content.include?(option.title) : false, value: option.title }, option.title, nil %>
-                <%= option.title %>
-              </label>
+              <div class="form-check">
+                <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: Answer.where(question_id: question.id, response_id: @response.id)[0].present? ? Answer.where(question_id: question.id, response_id: @response.id)[0].content.include?(option.title) : false, value: option.title ,  class: "form-check-input"}, option.title, nil %>
+                <%= form.label :content, option.title, class: "form-check-label" %>
+               </div>
             <% end %>
+            </div>
           <% end %>
           </div>
           <% end %>
 
-          <div style="display:flex; justify-content:flex-end;">
-            <%= form.submit "Update Response", class:"btn btn-success mt-3"%>
+          <div class="text-end">
+            <%= form.submit "Update Response", class: "btn btn-success mt-3" %>
           </div>
 
           <% end %>
