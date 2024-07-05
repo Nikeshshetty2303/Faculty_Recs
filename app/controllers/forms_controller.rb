@@ -5,6 +5,7 @@ class FormsController < ApplicationController
     @form = Form.find(params[:form_id])
     @response = Response.find(params[:id])
     @questions = @form.questions
+    @user = User.find(params[:userid])
   end
 
   def view_pdf

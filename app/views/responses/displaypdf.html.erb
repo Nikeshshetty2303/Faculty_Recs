@@ -1,122 +1,125 @@
-<%= wicked_pdf_stylesheet_link_tag 'pdf_styles' %>
-
-<div class="bordered-container">
-    <div class="header">
-        <%= image_tag wicked_pdf_asset_base64("NITK_Emblem.png"), class: 'logo' %>
-        <div>
-            <h1>Teaching Staff Recruitment Portal NITK</h1>
-            <p>National Institute of Technology Karnataka, Surathkal</p>
-        </div>
-    </div>
-
-    <!-- Job Info -->
-    <div class="section">
-        <h2>Job Description</h2>
-        <div class="info">
-            <div>
-                <% present_response_id = response.id %>
-                <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
-                <% count_below_responses = below_responses.count %>
-                <% role = response.form.role %>
-                <% dept = response.form.dept %>
-
-                <p>Application ID: <b><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></b></p>
-                <p>Role: <b><%= @response.form.role %></b></p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching Staff Recruitment Portal NITK</title>
+    <%= wicked_pdf_stylesheet_link_tag 'pdf_styles' %>
+</head>
+<body>
+    <div class="pdf-container">
+        <header class="pdf-header">
+            <%= image_tag wicked_pdf_asset_base64("NITK_Emblem.png"), class: 'logo' %>
+            <div class="header-text">
+                <h1>Teaching Staff Recruitment Portal NITK</h1>
+                <p>National Institute of Technology Karnataka, Surathkal</p>
             </div>
-            <div>
-                <p>Pay Level: <b><%= @response.form.salary %> LPA</b></p>
-                <p>Recruiting Department: <b><%= @response.form.dept %></b></p>
-            </div>
-        </div>
-    </div>
+        </header>
 
-    <!-- Application Details Info -->
-    <div class="section">
-        <h2>Application Details</h2>
-        <p class="note">NOTE: Information populated here is from the data that you have entered while filling the application</p>
-        <%= wicked_pdf_stylesheet_link_tag "bootstrap.min.css" %>
-        <div class="container-sm p-2">
-            <div class="response-container">
-                <% @app_response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
-                    <% if answer.question.question_type_id == 6 %>
-                        <div class="mb-3">
-                            <label><%= answer.question.title %></label>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <% answer.question.options.each do |option| %>
-                                            <th><%= option.title %></th>
-                                        <% end %>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% content = eval(answer.content) %>
-                                    <% content.each_slice(answer.question.options.size) do |chunk| %>
+        <main>
+            <!-- Job Info -->
+            <section class="job-info">
+                <h2>Job Description</h2>
+                <div class="info-grid">
+                    <% present_response_id = response.id %>
+                    <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
+                    <% count_below_responses = below_responses.count %>
+                    <% role = response.form.role %>
+                    <% dept = response.form.dept %>
+
+                    <p>Application ID: <strong><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></strong></p>
+                    <p>Role: <strong><%= @response.form.role %></strong></p>
+                    <p>Pay Level: <strong><%= @response.form.salary %> LPA</strong></p>
+                    <p>Recruiting Department: <strong><%= @response.form.dept %></strong></p>
+                </div>
+            </section>
+
+            <!-- Application Details Info -->
+            <section class="application-details">
+                <h2>Application Details</h2>
+                <p class="note">NOTE: Information populated here is from the data that you have entered while filling the application</p>
+
+                <div class="response-container">
+                    <% @app_response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
+                        <% if answer.question.question_type_id == 6 %>
+                            <div class="mb-3">
+                                <label><%= answer.question.title %></label>
+                                <table>
+                                    <thead>
                                         <tr>
-                                            <% chunk.each do |element| %>
-                                                <td><%= element.gsub(/[\[\]\"]/,"") %></td>
+                                            <% answer.question.options.each do |option| %>
+                                                <th><%= option.title %></th>
                                             <% end %>
                                         </tr>
-                                    <% end %>
-                                </tbody>
-                            </table>
-                        </div>
-                    <% elsif answer.question.question_type_id == 3 %>
-                        <div class="mb-3">
-                            <label><%= answer.question.title %></label>
-                            <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
-                            <input readonly class="form-control" value="<%= content %>">
-                        </div>
-                    <% elsif answer.question.question_type_id != 9%>
-                        <div class="mb-3">
-                            <label><%= answer.question.title %></label>
-                            <% content = answer.content %>
-                            <input readonly class="form-control" value="<%= content %>">
-                        </div>
-                    <% end %>
-                <% end %>
-
-                <% @response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
-                    <% if answer.question.question_type_id == 6 %>
-                        <div class="mb-3">
-                            <label><%= answer.question.title %></label>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <% answer.question.options.each do |option| %>
-                                            <th><%= option.title %></th>
+                                    </thead>
+                                    <tbody>
+                                        <% content = eval(answer.content) %>
+                                        <% content.each_slice(answer.question.options.size) do |chunk| %>
+                                            <tr>
+                                                <% chunk.each do |element| %>
+                                                    <td><%= element.gsub(/[\[\]\"]/,"") %></td>
+                                                <% end %>
+                                            </tr>
                                         <% end %>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% content = eval(answer.content) %>
-                                    <% content.each_slice(answer.question.options.size) do |chunk| %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <% elsif answer.question.question_type_id == 3 %>
+                            <div class="mb-3">
+                                <label><%= answer.question.title %></label>
+                                <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
+                                <input readonly value="<%= content %>">
+                            </div>
+                        <% elsif answer.question.question_type_id != 9%>
+                            <div class="mb-3">
+                                <label><%= answer.question.title %></label>
+                                <% content = answer.content %>
+                                <input readonly value="<%= content %>">
+                            </div>
+                        <% end %>
+                    <% end %>
+
+                    <% @response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
+                        <% if answer.question.question_type_id == 6 %>
+                            <div class="mb-3">
+                                <label><%= answer.question.title %></label>
+                                <table>
+                                    <thead>
                                         <tr>
-                                            <% chunk.each do |element| %>
-                                                <td><%= element.gsub(/[\[\]\"]/,"") %></td>
+                                            <% answer.question.options.each do |option| %>
+                                                <th><%= option.title %></th>
                                             <% end %>
                                         </tr>
-                                    <% end %>
-                                </tbody>
-                            </table>
-                        </div>
-                    <% elsif answer.question.question_type_id == 3 %>
-                        <div class="mb-3">
-                            <label><%= answer.question.title %></label>
-                            <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
-                            <input readonly class="form-control" value="<%= content %>">
-                        </div>
-                    <% elsif answer.question.question_type_id != 9 %>
-                        <div class="mb-3">
-                            <label><%= answer.question.title %></label>
-                            <% content = answer.content %>
-                            <input readonly class="form-control" value="<%= content %>">
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                        <% content = eval(answer.content) %>
+                                        <% content.each_slice(answer.question.options.size) do |chunk| %>
+                                            <tr>
+                                                <% chunk.each do |element| %>
+                                                    <td><%= element.gsub(/[\[\]\"]/,"") %></td>
+                                                <% end %>
+                                            </tr>
+                                        <% end %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <% elsif answer.question.question_type_id == 3 %>
+                            <div class="mb-3">
+                                <label><%= answer.question.title %></label>
+                                <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
+                                <input readonly value="<%= content %>">
+                            </div>
+                        <% elsif answer.question.question_type_id != 9 %>
+                            <div class="mb-3">
+                                <label><%= answer.question.title %></label>
+                                <% content = answer.content %>
+                                <input readonly value="<%= content %>">
+                            </div>
+                        <% end %>
                     <% end %>
-                <% end %>
-            </div>
-        </div>
+                </div>
+            </section>
+        </main>
     </div>
-
-    <div class="spacer"></div>
-</div>
+</body>
+</html>

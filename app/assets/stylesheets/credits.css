@@ -1,78 +1,96 @@
 @import url("https://fonts.googleapis.com/css2?family=Jost&display=swap");
 
-.font-jost {
-    font-family: "Jost", sans-serif;
-}
+body {
 
-* {
-    margin: 0%;
-    padding: 0%;
+    margin: 0;
+    padding: 0;
 }
 
 #credits_container {
     width: 70%;
-    margin: 0 auto;
-}
-.tick_pic {
-    width: 100%;
-}
-.tick_div {
-    width: 25px;
-    margin-left: 15px
-}
-
-.application {
-    display: flex;
-}
-
-.sidebar {
-    background-color: rgb(248, 249, 250, 1);
-    height: 80vh;
+    margin: 20px auto;
+    background-color: #ffffff;
     border-radius: 10px;
-    margin: 5px;
-    overflow-y: scroll;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 0px;
 }
 
-#active_sidebar {
-    background-color: #0d6efd;
-    color: white !important;
-    border-radius: 10px;
-}
-.option_sidebar{
-    padding: 10px;
-    margin: 0%;
-    display: block;
-    text-decoration: none;
-}
-.option_sidebar_cont {
-    cursor: pointer;
-}
-.option_sidebar_cont:hover {
-    background-color: #619efb56;
-    border-radius: 10px;
-    cursor: pointer;
+h1 {
+    color: #333;
+    margin-bottom: 30px;
 }
 
+h2 {
+    color: #333;
+    margin-bottom: 30px;
+}
+#total_sum {
+    background-color:  rgba(127, 172, 218, 0.16);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
 
-.option_sidebar_cont {
-    display: flex;
+.progress {
+    height: 25px;
+    margin-top: 10px;
+    background-color: rgb(255, 255, 255)
+}
+
+.progress-bar {
+    transition: width 0.3s ease-in-out;
+    background-color: rgba(130, 182, 234, 0.467)
+}
+
+.badge {
+    background-color: rgba(130, 182, 234, 0.467)
+}
+
+.my-3 {
+    background-color: rgba(127, 172, 218, 0.16) !important;
+    border: 0px solid #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 .section-title {
-    font-size: medium;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2b2c2d;
+    margin-bottom: 15px;
 }
 
 .question-title {
-    font-size: smaller;
+    font-size: 1em;
+    font-weight: bold;
+    color: #495057;
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
-/* Breakpoint at 800px */
-@media screen and (max-width:870px) {
-    /* Add your CSS rules for the breakpoint here */
+
+.form-control {
+    border: 1px solid #c1c1c1;
+}
+
+.input-group-text {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    color: #495057;
+}
+
+.btn-success {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.alert {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 870px) {
     #credits_container {
         width: 90%;
-    }
-
-    #side_div {
-        display: none;
     }
 }
