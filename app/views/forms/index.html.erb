@@ -1,80 +1,66 @@
-<%= stylesheet_link_tag 'myApp' %>
+<%= stylesheet_link_tag 'responsive_forms' %>
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
-<div class="container-md mb-3"><%= link_to "Back", :back , class:"btn btn-info mt-3" %></div>
+
 
 <div class='app_page_container'>
+  <h1 class='progress_heading text-center fw-bold'>Forms</h1>
 
-    <h1 class='progress_heading text-center fw-bold'>My Forms</h1>
-
-</div>
-        <div id='the_right'>
-            <div class="card text-center" id='card_height'>
-                <div class="card-header" style="display:flex; justify-content:space-between">
-                    <h6>Active Forms</h6>
-                    <%= link_to "New form", new_form_path(userid: @user.id), class:"btn btn-dark" %>
-                </div>
-                <div class="card-body">
-                    <div>
-                        <% @forms.each do |form| %>
-                            <div style="display:flex; padding:2em; justify-content:space-between;background-color:#cfe2ff; border-radius:10px; margin:5px" class="buttons_action">
-                                <h5 class='fw-bold'><%= form.name %></h5>
-                                <div>
-                                    <%= link_to "See form",form_path(form, userid: @user.id), class:'btn btn-primary' %>
-                                    <%= link_to "See responses",responses_path(id: form.id, userid: @user.id), class:'btn btn-success' %>
-                                </div>
-                            </div>
-                        <% end %>
-                    </div>
-                </div>
-                <div class="card-footer text-body-secondary">
-                    <%= link_to "New form", new_form_path(userid: @user.id), class:"btn btn-dark" %>
-                </div>
+  <div class='forms-container'>
+    <div class="card text-center" id='card_height'>
+      <div class="card-header">
+        <h6>Active Forms</h6>
+        <%= link_to "New form", new_form_path(userid: @user.id), class: "btn btn-dark" %>
+      </div>
+      <div class="card-body">
+        <div class="forms-list">
+          <% @forms.each do |form| %>
+            <div class="form-item">
+              <h5 class='fw-bold'><%= form.name %></h5>
+              <div class="form-actions">
+                <%= link_to "See form", form_path(form, userid: @user.id), class: 'btn btn-primary' %>
+                <%= link_to "See responses", responses_path(id: form.id, userid: @user.id), class: 'btn btn-success' %>
+              </div>
             </div>
+          <% end %>
         </div>
+      </div>
+      <div class="card-footer text-body-secondary">
+        <%= link_to "New form", new_form_path(userid: @user.id), class: "btn btn-dark" %>
+      </div>
+    </div>
+  </div>
 </div>
 
+<script>
+  function truncateParagraphs(elementSelector, maxLength) {
+    const elements = document.querySelectorAll(elementSelector);
 
+    if (elements.length === 0) {
+      console.error(`No elements found with selector '${elementSelector}'.`);
+      return;
+    }
 
+    elements.forEach(element => {
+      const text = element.textContent.trim();
 
+      if (text.length > maxLength) {
+        const truncatedText = text.slice(0, maxLength) + '...';
+        element.textContent = truncatedText;
+      }
+    });
+  }
 
+  // Usage
+  truncateParagraphs('.font_size_15', 75);
+  truncateParagraphs('.news_link', 30);
 
+  // Toggle updates tab in phone view
+  let updates = document.getElementById('updates');
+  let updates_tab = document.getElementById('updates_tab');
 
-
-
-
-
-
-                    <script>//to truncate the text in the announcement section
-                        function truncateParagraphs(elementSelector, maxLength) {
-                            const elements = document.querySelectorAll(elementSelector);
-
-                            if (elements.length === 0) {
-                                console.error(`No elements found with selector '${elementSelector}'.`);
-                                return;
-                            }
-
-                            elements.forEach(element => {
-                                const text = element.textContent.trim();
-
-                                if (text.length > maxLength) {
-                                    const truncatedText = text.slice(0, maxLength) + '...';
-                                    element.textContent = truncatedText;
-                                }
-                            });
-                        }
-
-                        // Usage
-                        truncateParagraphs('.font_size_15', 75); // Truncate text inside elements with class 'font_size_15' to 50 characters
-                        truncateParagraphs('.news_link', 30); // Truncate text inside elements with class 'new_link' to 50 characters
-
-
-                    </script>
-
-                    <script> //to toggle the updates tab in phone view
-                        let updates = document.getElementById('updates');
-                        let updates_tab = document.getElementById('updates_tab');
-
-                        updates.addEventListener('click', function () {
-                            updates_tab.classList.toggle('vis');
-                        })
-                    </script>
+  if (updates && updates_tab) {
+    updates.addEventListener('click', function () {
+      updates_tab.classList.toggle('vis');
+    });
+  }
+</script>

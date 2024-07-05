@@ -40,7 +40,7 @@
                 <p class="note">NOTE: Information populated here is from the data that you have entered while filling the application</p>
 
                 <div class="response-container">
-                    <% @app_response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
+                    <% @app_response.answers.sort_by { |answer| answer.question.position }.each do |answer| %>
                         <% if answer.question.question_type_id == 6 %>
                             <div class="mb-3">
                                 <label><%= answer.question.title %></label>
@@ -79,7 +79,7 @@
                         <% end %>
                     <% end %>
 
-                    <% @response.answers.sort_by { |answer| answer.question_id }.each do |answer| %>
+                    <% @response.answers.sort_by { |answer| answer.question.position  }.each do |answer| %>
                         <% if answer.question.question_type_id == 6 %>
                             <div class="mb-3">
                                 <label><%= answer.question.title %></label>
