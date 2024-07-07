@@ -110,7 +110,7 @@
       newCell.innerHTML = '<input type="text" name="response[answers_attributes][' + questionId + '][content][]" class="form-control" placeholder="Enter your details">';
     }
     var deleteCell = newRow.insertCell(optionsCount);
-    deleteCell.innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>';
+    deleteCell.innerHTML = '<button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteTableRow(this)">Delete</button>';
   }
 
   function deleteTableRow(button) {

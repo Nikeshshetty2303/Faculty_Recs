@@ -41,6 +41,7 @@
   display:flex;
   flex-direction: column;
   width:100%;
+  background-color: rgba(127, 172, 218, 0.16);
 }
 
 
@@ -61,4 +62,46 @@
 .child3{
   display: flex;
   flex-grow: 1;
+}
+
+.option-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.option-table th, .option-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.option-table th {
+  background-color: #f2f2f2;
+}
+
+.form-control {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn1 {
+  margin-top: 10px;
+  margin-left: 90%;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn1:hover {
+  background-color: #0056b3;
+}
+
+.form-preview {
+  background-color: rgba(127, 172, 218, 0.16);
+  padding: 1em;
+  border-radius: 10px;
+  margin:10px 0;
 }
