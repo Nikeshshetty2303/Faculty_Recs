@@ -39,11 +39,11 @@ h2 {
 
 .progress-bar {
     transition: width 0.3s ease-in-out;
-    background-color: rgba(130, 182, 234, 0.467)
+    background-color: rgba(87, 143, 199, 0.467)
 }
 
 .badge {
-    background-color: rgba(130, 182, 234, 0.467)
+    background-color: rgba(87, 143, 199, 0.467)
 }
 
 .my-3 {
@@ -84,10 +84,83 @@ h2 {
     font-size: 16px;
 }
 
+.btn-light-blue {
+    background-color: #e6f3ff;
+    border-color: #b3d9ff;
+    color: #0056b3;
+  }
+
+.btn-light-blue:hover {
+    background-color: #b3d9ff;
+    border-color: #80bfff;
+    color: #003d80;
+  }
+
+
 .alert {
+
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+  .file-upload-wrapper {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 10+px;
+  }
+
+  .file-upload-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .file-upload-field {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .file-link {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border-radius: 4px;
+    padding: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .remove-file-option {
+    display: flex;
+    align-items: center;
+  }
+
+  .remove-file-checkbox {
+    margin-right: 5px;
+  }
+
+  .remove-file-label {
+    font-size: 0.9em;
+    color: #6c757d;
+  }
+
+  @media (max-width: 768px) {
+    .file-upload-container {
+      flex-direction: column;
+    }
+
+    .file-upload-field,
+    .file-link {
+      width: 100%;
+    }
+
+    .file-link {
+      margin-top: 10px;
+    }
+  }
 
 @media screen and (max-width: 870px) {
     #credits_container {

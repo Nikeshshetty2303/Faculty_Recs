@@ -8,7 +8,7 @@
 <div id="credits_container" class="font-jost my-3 mb-5">
   <!-- Total sum display -->
   <div id="total_sum" class="mt-3 font-jost fw-bold">
-      <div class="mb-2">Credit Score : <span class="badge text-bg-success" id="total_value">0</span> credits</div>
+      <div class="mb-2">Credit Score : <span class="badge text" id="total_value">0</span> credits</div>
     <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
       <div class="progress-bar" id="progres_bar" style="width: 0%">0%</div>
     </div>
@@ -45,47 +45,55 @@
               <% end %>
             </div>
 
-            <% elsif question.header_id == nil %>
-            <%@count = @count +1%>
-              <div class="mb-3">
-                <% @response.credit_answers.sort_by { |answer| answer.credit_question_id }.each do |answer| %>
-                    <%if file_view == 0%>
-                        <% if section.id == answer.credit_section_id && answer.file_upload.attached? %>
-                            <div class="ml-3">
-                                <%= link_to "View", view_pdf_response_path(ansid: answer, id: @response.id), class: "btn btn-warning btn-sm" %>
+          <% elsif question.header_id == nil %>
+            <% @count = @count + 1 %>
+            <div class="mb-3">
+              <%= form.fields_for "answers[]", CreditAnswer.where(credit_question_id: question.id, response_id: @response.id)[0] do |answer_fields| %>
+                <% if @count == 1 %>
+                    <div class="file-upload-container">
+                      <div class="file-upload-field">
+                        <%= answer_fields.file_field :file_upload, class: "form-control" %>
+                      </div>
+                      <% if file_view == 0 %>
+                        <% @response.credit_answers.sort_by { |answer| answer.credit_question_id }.each do |answer| %>
+                          <% if section.id == answer.credit_section_id && answer.file_upload.attached? %>
+                            <div class="file-link">
+                              <%= link_to answer.file_upload.filename.to_s, view_pdf_response_path(ansid: answer, id: @response.id), class: "btn btn-light-blue btn-sm" %>
+                              <div class="remove-file-option">
+                                <%= check_box_tag "answers[answers][#{answer.id}][remove_file_upload]", "1", false, class: "remove-file-checkbox" %>
+                                <%= label_tag "answers[answers][#{answer.id}][remove_file_upload]", "Remove file", class: "remove-file-label" %>
+                              </div>
                             </div>
                             <% file_view = 1 %>
+                            <% break %>
+                          <% end %>
                         <% end %>
-                    <%end%>
-                <% end %>
-
-                <%= form.fields_for "answers[]", CreditAnswer.where(credit_question_id: question.id, response_id: @response.id)[0] do |answer_fields| %>
-                  <%if @count == 1%>
-                    <%= answer_fields.file_field :file_upload, class: "form-control"%>
-                  <%end%>
-                    <div class="my-4">
-                      <%= answer_fields.label :answer, question.title, class: "form-label" %>
-                      <div class="input-group mb-3">
-                        <%= answer_fields.number_field :answer, class: "form-control numeric-input" ,data: {questionId: question.id,maxCredit: question.max_credit,obtCredit: question.obt_credit }, value: CreditAnswer.where(credit_question_id: question.id, response_id: @response.id)[0].answer %>
-                        <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
-                      </div>
+                      <% end %>
                     </div>
-
-                  <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
-                  <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
                 <% end %>
-              </div>
+                <div class="my-4">
+                  <%= answer_fields.label :answer, question.title, class: "form-label" %>
+                  <div class="input-group mb-3">
+                    <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: question.id, maxCredit: question.max_credit, obtCredit: question.obt_credit }, value: CreditAnswer.where(credit_question_id: question.id, response_id: @response.id)[0].answer %>
+                    <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
+                  </div>
+                </div>
+
+                <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
+                <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value: section.id %>
               <% end %>
+            </div>
+            <% end %>
             <% end %>
           </div>
         </div>
       <% end %>
 
 
-      <div class="alert alert-info" role="alert">
+      <div class="alert" role="alert">
         <div id="error-message" style="color: red;"></div>
       </div>
-      <div  style="display:flex; justify-content:flex-end"><%= form.submit "Update Credit Reponses", class: "btn btn-success ",  id: "submit-button", disabled: true  %></div>
+      <div  style="display:flex; justify-content:flex-end"><%= form.submit "Update Credit Reponses", class: "btn btn-primary ",  id: "submit-button", disabled: true  %></div>
     <% end %>
     <%=@entry%>
   </div>

@@ -1,46 +1,10 @@
-<style>
-.option-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.option-table th, .option-table td {
-  padding: 8px;
-  border: 1px solid #ddd;
-}
-
-.option-table th {
-  background-color: #f2f2f2;
-}
-
-.form-control {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.btn1 {
-  margin-top: 10px;
-  margin-left: 90%;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn1:hover {
-  background-color: #0056b3;
-}
-</style>
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 <%= stylesheet_link_tag 'forms' %>
 
 <div class="contain" style="font-family:Gabarito">
     <div id='top' class="mx-4"style='display:flex; justify-content: space-between'>
-      <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-success" %>
-      <a class='btn btn-primary' href='#add'>Add Question</a>
+      <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-outline-success" %>
+      <a class='btn btn-outline-primary' href='#add'>Add Question</a>
     </div>
   <div class="bodies">
     <div class="left" style="padding:0 1em 1em 1em">
@@ -69,7 +33,7 @@
           </p>
         </div>
 
-        <div style="background-color:#cfe2ff; padding:1em; border-radius:10px; margin:10px 0">
+        <div class="form-preview">
           <%= form_with(model: @response, url: create_response_form_path(id: @form.id), method: :post) do |form| %>
             <% @form.questions.each do |question| %>
               <div class="mb-3">
@@ -122,7 +86,7 @@
       </tbody>
     </table>
   </div>
-  <button type="button" class="btn btn-primary btn1" onclick="addTableRow('<%= question.id %>')">+</button>
+  <button type="button" class="btn btn-outline-primary" onclick="addTableRow('<%= question.id %>')">Add row</button>
                 <% end %>
               </div>
             <% end %>
@@ -135,7 +99,7 @@
       <h1 style="position:sticky; top:0; text-align:center; background-color:white; padding:0.2em; z-index:10">Edit Form</h1>
         <div>
           <% @form.questions.order(:position).each do |question| %>
-            <div class="child my-2" style="background-color:#cfe2ff; border-radius:10px">
+            <div class="child my-2">
               <%# <%= link_to"Edit", edit_question_path(question), remote: true %>
               <%= render 'questions/form', formal: question, class:'form-control' %>
               <div class="child-option">
@@ -158,8 +122,8 @@
     </div>
 </div>
 <div class="m-4"style='display:flex; justify-content: space-between'>
-  <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-success" %>
-  <a class='btn btn-primary' href='#top'>Back to Top</a>
+  <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-outline-success" %>
+  <a class='btn btn-outline-primary' href='#top'>Back to Top</a>
 </div>
   <div class="container-xl" style="border:3px solid red; border-radius: 5px; margin: 2em auto; padding: 2em; display:flex; align-items: center; flex-direction:column">
     <h2 class="text-center text-danger">Danger Zone</h2>
