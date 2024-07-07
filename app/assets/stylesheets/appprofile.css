@@ -150,6 +150,18 @@ body {
     margin-top: 20px;
   }
 
+  .btn-light-blue {
+    background-color: #e6f3ff;
+    border-color: #b3d9ff;
+    color: #0056b3;
+  }
+
+.btn-light-blue:hover {
+    background-color: #b3d9ff;
+    border-color: #80bfff;
+    color: #003d80;
+  }
+
   @media (max-width: 768px) {
     .container {
       padding: 10px;

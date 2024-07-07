@@ -15,68 +15,67 @@
     </div>
     <!-- Questions section -->
     <div>
-      <%= form_for :answers, url: credit_answers_path do |form| %>
-        <% @section.each do |section| %>
-          <div class="my-3" style="background-color:#cfe2ff; border-radius:8px; padding:1em">
-            <div class="section-title"><%= section.title %></div>
-            <div class="mb-1">
-              <!-- Iterate over questions -->
-              <%@count =0%>
-              <% @questions.where(credit_section_id: section.id).each do |question| %>
-                <% if question.isheader == true %>
-                  <label class="question-title"> <%= question.title %> </label>
+  <%= form_for :answers, url: credit_answers_path do |form| %>
+    <% @section.each do |section| %>
+      <div class="my-3" style="background-color:#cfe2ff; border-radius:8px; padding:1em">
+        <div class="section-title"><%= section.title %></div>
+        <div class="mb-1">
+          <% first_question = true %>
+          <% @questions.where(credit_section_id: section.id).each do |question| %>
+            <% if question.isheader == true %>
+              <label class="question-title"> <%= question.title %> </label>
+              <div style="display:flex;">
+                <% @questions.where(header_id: question.id).each do |sub_question| %>
                   <div style="display:flex;">
-                    <% @questions.where(header_id: question.id).each do |sub_question|  %>
-                      <div style="display:flex;">
-                        <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: sub_question.id) do |answer_fields| %>
-                          <%= answer_fields.hidden_field :credit_question_id,  class: "question_id" %>
-                          <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
-                          <div class="my-3 mx-2">
-                            <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
-                            <div class='input-group mb-1'>
-                              <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: sub_question.id, maxCredit: sub_question.max_credit, obtCredit: sub_question.obt_credit } %>
-                              <span id="credit_value_<%= sub_question.id %>" class="input-group-text">0</span>
-                            </div>
-                          </div>
-                        <% end %>
-                      </div>
-                    <% end %>
-                  </div>
-                <% elsif question.header_id == nil %>
-                  <%@count = @count +1%>
-                  <div class="mb-3">
-                    <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: question.id) do |answer_fields| %>
-                      <%if @count == 1%>
-                        <%= answer_fields.file_field :file_upload, class: "form-control"%>
-                      <%end%>
-                      <div class="my-4">
-                        <%= answer_fields.label :answer, question.title, class: "form-label" %>
-                        <div class="input-group mb-3">
-                          <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: question.id, maxCredit: question.max_credit, obtCredit: question.obt_credit } %>
-                          <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
+                    <%= form.fields_for "answers[]", CreditAnswer.new do |answer_fields| %>
+                      <%= answer_fields.hidden_field :credit_question_id, class: "question_id", value: sub_question.id %>
+                      <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value: section.id %>
+                      <div class="my-3 mx-2">
+                        <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
+                        <div class='input-group mb-1'>
+                          <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: sub_question.id, maxCredit: sub_question.max_credit, obtCredit: sub_question.obt_credit } %>
+                          <span id="credit_value_<%= sub_question.id %>" class="input-group-text">0</span>
                         </div>
                       </div>
-                      <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
-                      <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
                     <% end %>
                   </div>
                 <% end %>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-
-        <%= form.hidden_field :entry, value: @form.id %>
-
-        <div class="alert alert" role="alert">
-          <div id="error-message" style="color: red;"></div>
+              </div>
+            <% elsif question.header_id == nil %>
+              <div class="mb-3">
+                <%= form.fields_for "answers[]", CreditAnswer.new, index: question.id do |answer_fields| %>
+                  <% if first_question %>
+                    <%= answer_fields.file_field :file_upload, class: "form-control" %>
+                    <% first_question = false %>
+                  <% end %>
+                  <div class="my-4">
+                    <%= answer_fields.label :answer, question.title, class: "form-label" %>
+                    <div class="input-group mb-3">
+                      <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: question.id, maxCredit: question.max_credit, obtCredit: question.obt_credit } %>
+                      <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
+                    </div>
+                  </div>
+                  <%= answer_fields.hidden_field :credit_question_id, class: "question_id", value: question.id %>
+                  <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value: section.id %>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
         </div>
-        <div style="display:flex; justify-content:flex-end">
-          <%= form.submit "Create Answers", class: "btn btn-success", id: "submit-button", disabled: true %>
-        </div>
-      <% end %>
-      <%=@entry%>
+      </div>
+    <% end %>
+
+    <%= form.hidden_field :entry, value: @form.id %>
+
+    <div class="alert alert" role="alert">
+      <div id="error-message" style="color: red;"></div>
     </div>
+    <div style="display:flex; justify-content:flex-end">
+      <%= form.submit "Create Answers", class: "btn btn-success", id: "submit-button", disabled: true %>
+    </div>
+  <% end %>
+  <%= @entry %>
+</div>
     <!-- End of Questions section -->
   </div>
   <!-- End of credits container div -->

@@ -18,7 +18,6 @@ class CreditAnswersController < ApplicationController
     @user = User.find(params[:userid])
     @section = CreditSection.all
     @questions = CreditQuestion.all
-    @answers = @questions.map { |question| CreditAnswer.new(credit_question_id: question.id) }
   end
 
   # GET /credit_answers/1/edit
@@ -38,7 +37,7 @@ class CreditAnswersController < ApplicationController
     @answers = []
     credit = 0
 
-    answer_params_array.each do |answer_param|
+    answer_params_array.each do |_,answer_param|
       permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id, :is_upload,:credit_section_id, :file_upload)
       answer = CreditAnswer.new(permitted_params)
       if answer.answer == nil
