@@ -1,86 +1,100 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
-<div class="container">
-<%= link_to "Go Back", :back, class: "btn btn-light mt-3" %>
-  <table class="table table-bordered table-striped">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">Question</th>
-        <th scope="col">Count</th>
-        <th scope="col">Credit</th>
-        <th scope="col">Uploads</th>
-        <th scope="col">Verified Count</th>
-        <th scope="col">Verified Credit</th>
-        <th scope="col">Update</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% CreditAnswer.all.each do |answer| %>
-        <% if answer.response_id == @responses.id %>
-          <tr>
-            <% @question = CreditQuestion.find_by(id: answer.credit_question_id) %>
-            <% @response = Response.find_by(id: answer.response_id) %>
-            <td><%= @question.title %></td>
-            <td><%= answer.answer %></td>
-            <td><%= answer.credit %></td>
-            <td>
-              <% if answer.file_upload.present? %>
-                <%= link_to "View", view_pdf_response_path(ansid: answer.id, id: @response.id), class: "btn btn-warning" %>
-              <% else %>
-                No Upload
+
+<div class="container mt-4">
+  <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Question</th>
+          <th scope="col">Count</th>
+          <th scope="col">Credit</th>
+          <th scope="col">Uploads</th>
+          <th scope="col">Verified Count</th>
+          <th scope="col">Verified Credit</th>
+          <th scope="col">Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% CreditAnswer.all.each do |answer| %>
+          <% if answer.response_id == @responses.id %>
+            <tr>
+              <% @question = CreditQuestion.find_by(id: answer.credit_question_id) %>
+              <% @response = Response.find_by(id: answer.response_id) %>
+              <td><%= @question.title %></td>
+              <td><%= answer.answer %></td>
+              <td><%= answer.credit %></td>
+              <td>
+                <% if answer.file_upload.present? %>
+                  <%= link_to "View", view_pdf_response_path(ansid: answer.id, id: @response.id), class: "btn btn-sm btn-outline-primary" %>
+                <% else %>
+                  No Upload
+                <% end %>
+              </td>
+              <%= form_with(model: answer, html: { class: 'form-inline' }) do |f| %>
+                <td><%= f.number_field :verified_count, class: 'form-control form-control', id: "credit_answer_#{answer.id}", value: answer.verified_count, step: 'any' %></td>
+                <td>
+                  <%= f.number_field :verified_credit, class: 'form-control form-control', id: "credit_#{answer.id}", value: answer.verified_credit, readonly: true, step: 'any'  %>
+                </td>
+                <td>
+                  <%= f.submit "Update", class: "btn btn-sm btn-primary" %>
+                </td>
               <% end %>
-            </td>
-            <%= form_with(model: answer) do |f| %>
-              <td><%= f.number_field :verified_count, class: 'form-control', id: "credit_answer_#{answer.id}", value: answer.verified_count, step: 'any' %></td>
-              <td>
-                <%= f.number_field :verified_credit, class: 'form-control', id: "credit_#{answer.id}", value: answer.verified_credit, readonly: true, step: 'any'  %>
-                <script>
-                  document.addEventListener('DOMContentLoaded', function () {
-                    var answerField = document.getElementById("credit_answer_<%= answer.id %>");
-                    var creditField = document.getElementById("credit_<%= answer.id %>");
-                    var maxCredit = <%= @question.max_credit %>;
-                    var obtCredit = <%= @question.obt_credit %>;
-
-                    answerField.addEventListener('input', function () {
-                      var newAnswer = parseFloat(answerField.value);
-                      var newCredit = ((newAnswer * obtCredit) > maxCredit) ? maxCredit : (obtCredit * newAnswer);
-                      creditField.value = newCredit;
-                    });
-                  });
-                </script>
-              </td>
-              <td>
-                <%= f.submit "Update", class: "btn btn-primary" %>
-              </td>
-            <% end %>
-          </tr>
+            </tr>
+          <% end %>
         <% end %>
-      <% end %>
-    </tbody>
-  </table>
-
-
-<!-- The Remarks and Eligibility Section -->
-<%= form_with(model: @responses, url: add_remark_response_path(res_id: @responses.id),method: :post) do |f| %>
-  <div class="form-group">
-    <%= f.label :remark, "Remarks", class: "form-label", for:"remark" %>
-    <%= f.text_area :remark, class: "form-control", id: "remark" %>
-    <%= f.submit "Add", class: "btn btn-outline-primary", for:"remark" %>
-    </div>
-<% end %>
-
-<br>
-
-<%= form_with(model: @responses, url: update_eligibility_response_path(res_id: @responses.id), method: :post) do |f| %>
-  <div class="form-group">
-    <%= f.label :eligibility, "Eligibility", class: "form-label" %>
-     <% if @responses.eligibility == true%>
-      <em><%= "(The Applicant is Eligible)" %></em>
-    <% else %>
-      <em><%= "(The Applicant is Not Eligible)" %></em>
-    <% end %>
-    <br>
-    <%= f.hidden_field :eligibility, value: !@responses.eligibility %>
-    <%= f.submit "Update", class: "btn btn-outline-primary", for: "eligibility" %>
+      </tbody>
+    </table>
   </div>
-<% end %>
+
+  <!-- The Remarks and Eligibility Section -->
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <%= form_with(model: @responses, url: add_remark_response_path(res_id: @responses.id), method: :post, class: 'mb-4') do |f| %>
+        <div class="form-group">
+          <%= f.label :remark, "Remarks", class: "form-label", for: "remark" %>
+          <%= f.text_area :remark, class: "form-control", id: "remark", rows: 3 %>
+          <%= f.submit "Add", class: "btn btn-outline-primary mt-2" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-md-6">
+      <%= form_with(model: @responses, url: update_eligibility_response_path(res_id: @responses.id), method: :post) do |f| %>
+        <div class="form-group">
+          <%= f.label :eligibility, "Eligibility", class: "form-label" %>
+          <% if @responses.eligibility == true %>
+            <em class="text-success">(The Applicant is Eligible)</em>
+          <% else %>
+            <em class="text-danger">(The Applicant is Not Eligible)</em>
+          <% end %>
+          <br>
+          <%= f.hidden_field :eligibility, value: !@responses.eligibility %>
+          <%= f.submit "Update", class: "btn btn-outline-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    <% CreditAnswer.all.each do |answer| %>
+      <% if answer.response_id == @responses.id %>
+        (function() {
+          var answerField = document.getElementById("credit_answer_<%= answer.id %>");
+          var creditField = document.getElementById("credit_<%= answer.id %>");
+          var maxCredit = <%= @question.max_credit %>;
+          var obtCredit = <%= @question.obt_credit %>;
+
+          answerField.addEventListener('input', function () {
+            var newAnswer = parseFloat(answerField.value);
+            var newCredit = ((newAnswer * obtCredit) > maxCredit) ? maxCredit : (obtCredit * newAnswer);
+            creditField.value = newCredit.toFixed(2);
+          });
+        })();
+      <% end %>
+    <% end %>
+  });
+</script>
