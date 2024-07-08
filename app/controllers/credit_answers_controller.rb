@@ -18,6 +18,7 @@ class CreditAnswersController < ApplicationController
     @user = User.find(params[:userid])
     @section = CreditSection.all
     @questions = CreditQuestion.all
+    @answers = @questions.map { |question| CreditAnswer.new(credit_question_id: question.id) }
   end
 
   # GET /credit_answers/1/edit
