@@ -45,10 +45,10 @@ class CreditAnswersController < ApplicationController
         answer.answer =0
       end
 
-      if answer.is_upload
-        permitted_file = answer_param.permit(:file_upload)
-        answer.file_upload = permitted_file[:file_upload]
-      end
+      if permitted_params[:file_upload].present?
+      answer.file_upload.attach(permitted_params[:file_upload])
+    end
+
 
 
       credit_per_answer = 0
