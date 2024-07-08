@@ -27,7 +27,7 @@
               <div style="display:flex;">
                 <% @questions.where(header_id: question.id).each do |sub_question| %>
                   <div style="display:flex;">
-                    <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: sub_question.id) do |answer_fields| %>
+                    <%= form.fields_for "answers[]", CreditAnswer.new(credit_question_id: sub_question.id), index: question.id do |answer_fields| %>
                       <%= answer_fields.hidden_field :credit_question_id, class: "question_id", value: sub_question.id %>
                       <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value: section.id %>
                       <div class="my-3 mx-2">
