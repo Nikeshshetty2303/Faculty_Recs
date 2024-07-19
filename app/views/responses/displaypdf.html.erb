@@ -17,27 +17,60 @@
         </header>
 
         <main>
-            <!-- Job Info -->
-            <section class="job-info">
-                <h2>Job Description</h2>
-                <div class="info-grid">
+            <div class="top-section">
+                <!-- Job Description Section (Left) -->
+                <section class="job-info">
+                    <h2>Job Description</h2>
                     <% present_response_id = response.id %>
                     <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
                     <% count_below_responses = below_responses.count %>
                     <% role = response.form.role %>
                     <% dept = response.form.dept %>
 
-                    <p>Application ID: <strong><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></strong></p>
-                    <p>Role: <strong><%= @response.form.role %></strong></p>
-                    <p>Pay Level: <strong><%= @response.form.salary %> LPA</strong></p>
-                    <p>Recruiting Department: <strong><%= @response.form.dept %></strong></p>
-                </div>
-            </section>
+                    <div class="job-details">
+                        <p>Application ID: <strong><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></strong></p>
+                        <p>Role: <strong><%= @response.form.role %></strong></p>
+                        <p>Pay Level: <strong><%= @response.form.salary %> LPA</strong></p>
+                        <p>Recruiting Department: <strong><%= @response.form.dept %></strong></p>
+                    </div>
+                </section>
+
+                <!-- Profile Section (Right) -->
+                <section class="profile-section">
+                    <h2>Profile and Signature</h2>
+                    <div class="photo-container">
+                        <div class="profile-photo">
+                            <% if @user_photo_base64 %>
+                                <%= image_tag "data:image/#{@user.photo.content_type};base64,#{@user_photo_base64}", class: 'user-photo' %>
+                            <% else %>
+                                <div class="photo-placeholder">
+                                    <span>No photo available</span>
+                                </div>
+                            <% end %>
+                        </div>
+                        <div class="profile-sign">
+                            <% if @user_sign_base64 %>
+                                <%= image_tag "data:image/#{@user.sign.content_type};base64,#{@user_sign_base64}", class: 'user-sign' %>
+                            <% else %>
+                                <div class="sign-placeholder">
+                                    <span>No signature available</span>
+                                </div>
+                            <% end %>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
 
             <!-- Application Details Info -->
             <section class="application-details">
                 <h2>Application Details</h2>
+            <div class="application-header">
+            <div class="header-content">
                 <p class="note">NOTE: Information populated here is from the data that you have entered while filling the application</p>
+
+            </div>
+        </div>
 
                 <div class="response-container">
                     <% Question.where.not(tab_id: nil).order(:position).each do |question| %>

@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
+  before_action :configure_permitted_parameters, if: :devise_controller?
   # rescue_from StandardError, with: :handle_error
   # rescue_from ActionController::RoutingError, with: :handle_routing_error
 
@@ -20,4 +21,9 @@ class ApplicationController < ActionController::Base
       home_index_path
   end
 
+  def configure_permitted_parameters
+    attributes = [:photo, :sign]
+    devise_parameter_sanitizer.permit(:sign_up, keys: attributes)
+    devise_parameter_sanitizer.permit(:account_update, keys: attributes)
+  end
 end

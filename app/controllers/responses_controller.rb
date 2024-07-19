@@ -40,6 +40,18 @@ class ResponsesController < ApplicationController
     @response = Response.find(params[:id])
     @user = User.find(params[:userid])
     @app_response = Response.where(user_id: current_user.id, profile_response: true).last
+    if @user.photo.attached?
+      @user_photo_base64 = Base64.strict_encode64(@user.photo.download)
+    else
+      @user_photo_base64 = nil
+    end
+
+    if @user.photo.attached?
+      @user_sign_base64 = Base64.strict_encode64(@user.sign.download)
+    else
+      @user_sign_base64 = nil
+    end
+
     respond_to do |format|
         format.html
         format.pdf do
@@ -52,6 +64,7 @@ class ResponsesController < ApplicationController
         end
       end
   end
+
 
   def view_pdf
     @answer = CreditAnswer.find(params[:ansid])

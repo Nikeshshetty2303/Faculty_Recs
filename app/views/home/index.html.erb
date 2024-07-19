@@ -9,7 +9,7 @@
       <select class="form-select" id="departmentFilter">
         <option value="">All Departments</option>
         <% Department.all.each do |department| %>
-          <option value="<%= department.title %>"><%= department.title %></option>
+          <option value="<%= department.full_name %>"><%= department.full_name %></option>
         <% end %>
       </select>
     </div>
