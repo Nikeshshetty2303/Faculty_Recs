@@ -1,99 +1,93 @@
-/* importing and defining the fonts */
-@import url('https://fonts.googleapis.com/css2?family=Jost&display=swap');
-.font-jost {
-  font-family: 'Jost', sans-serif;
-}
-
-.sizing{
-  height:30rem;
-}
-
-.colors{
-  background-color: transparent;
-}
-
 .whole {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
 }
 
-/* styling cards */
-.card{
-  display: absolute;
-  position: relative;
-  width:100%;
-  height: auto;
+.card {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 1200px;
 }
 
-#card-img {
-  width: 60%;
+.background {
+  background-image: linear-gradient(rgba(65, 65, 65, 0.362), rgba(94, 94, 94, 0.08)), url('https://bl-i.thgim.com/public/news/w78508/article66656932.ece/alternates/LANDSCAPE_1200/NITK.jpg');
+  background-color: rgba(0, 0, 0, 0.3);
+  filter: saturate(80%);
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 400px;
+  flex: 0 0 60%; /* This sets the width to 40% of the card */
+}
+
+.background h2, .background h3 {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 #card-form {
-  width: 40%;
-  display: flex;
-  align-items: center;
-}
-
-
-#logo_text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 1rem;
+  flex: 1; /* This allows the form to take up the remaining space */
 }
 
 #logo_div {
-  width: 20%;
+  text-align: center;
+  margin-bottom: 1rem;
 }
+
 #logo_div img {
-  width: 100%;
+  max-width: 75px;
+  height: auto;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.2rem  #a8c0da;
+  border-color: #5089c6;
+}
+
+.btn-success {
+  background-color: #378eeb;
+  border-color: #4c8dd2;
+}
+
+.btn-success:hover {
+  background-color: #2865a7;
+  border-color: #2865a7;
 }
 
 .mobile_title {
   display: none;
 }
 
-.background{
-  background: linear-gradient(rgba(65, 65, 65, 0.362), rgba(94, 94, 94, 0.08)) ,url(https://bl-i.thgim.com/public/news/w78508/article66656932.ece/alternates/LANDSCAPE_1200/NITK.jpg);
-  background-position: center;
-  border-radius: 7px;
-  background-size: cover;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: aliceblue;
-  padding: auto;
-}
-.background h3 {
-}
-.background h2 {
-  color: aliceblue;
-}
-
-
-/* MEDIA QUERIES */
-@media screen and (max-width:870px) {
+@media (max-width: 992px) {
   .card {
-    padding: 1em 0;
-    height: auto!important; /*added becuase card height was less and casuing overflow */
-    margin: 4em auto;
+    max-width: 800px;
   }
-  #card-img {
+
+  .background {
+    flex: 0 0 35%; /* Adjust the width to 35% for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .background {
     display: none;
   }
-  #card-form {
-    width: 100%;
-    margin: auto;
-  }
-  #card-form {
-    width: 90%;
-    margin: auto;
-    height: auto;
-  }
   .mobile_title {
-    display: block;
+    display: block !important;
+  }
+  #card-form {
+    padding: 1.5rem;
+    flex: 1;
   }
 }

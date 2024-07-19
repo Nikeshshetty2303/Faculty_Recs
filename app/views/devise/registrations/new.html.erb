@@ -38,6 +38,16 @@
               <%= f.password_field :password_confirmation, autocomplete: "new-password", class:"form-control", id:"password_input", placeholder:'Confirm your password'%>
             </div>
 
+            <div class="field mb-3">
+              <%= f.label :photo,"Upload your Passport size Photograph",for:"photo-input", class:"form-label" %><br />
+             <%= f.file_field :photo, class: 'form-control' , id:"photo-input", accept: 'image/*'%>
+            </div>
+
+            <div class="field mb-3">
+              <%= f.label :sign,"Upload your Signature",for:"photo-input", class:"form-label" %><br />
+             <%= f.file_field :sign, class: 'form-control' , id:"photo-input"%>
+            </div>
+
             <div class="actions">
               <div class="d-grid">
                 <%= f.submit "Sign up", class:"btn btn-success" %>

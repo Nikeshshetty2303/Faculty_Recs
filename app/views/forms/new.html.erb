@@ -1,10 +1,11 @@
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 <div class="container-sm">
   <div style="">
-    <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-info mt-3" %>
+    <%= link_to "Back to forms", forms_path(userid: @user.id), class:"btn btn-outline-primary mt-3" %>
   </div>
   <h1 class="text-center my-2">New form</h1>
-  
+
   <%= render "newform", form: @form %>
-  
+
 </div>
 
