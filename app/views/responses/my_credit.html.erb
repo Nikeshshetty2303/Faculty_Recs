@@ -126,21 +126,21 @@ document.addEventListener('DOMContentLoaded', function() {
       total += credit;
 
       const creditValueElement = document.getElementById(`credit_value_${questionId}`);
-      creditValueElement.textContent = credit;
+      creditValueElement.textContent = credit.toFixed(2);
 
       totalProgress += (credit / <%= @form.credit_req %>) * 100;
     });
 
-    totalValue.innerText = total;
+    totalValue.innerText = total.toFixed(2);
     progressBar.style.width = Math.min(totalProgress.toFixed(2), 100) + "%";
     progressBar.textContent = Math.min(totalProgress.toFixed(2), 100) + "%";
 
 
       if (total < <%= @form.credit_req %> ) {
-      const creditDifference = <%= @form.credit_req %> - total;
+      const creditDifference = (<%= @form.credit_req %> - total).toFixed(2);
       submitButton.disabled = true;
       errorMessage.style.color = "red";
-      errorMessage.textContent = `Your credit score is ${total}. You are ${creditDifference} credits away from the cutoff!`;
+      errorMessage.textContent = `Your credit score is ${total.toFixed(2)}. You are ${creditDifference} credits away from the cutoff!`;
     } else {
       submitButton.disabled = false;
       errorMessage.style.color = "green";
