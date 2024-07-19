@@ -20,12 +20,65 @@ class ResponsesController < ApplicationController
 
   def my_credit
     @response = Response.find(params[:id])
+    if @response.status == "Freezed"
+      redirect_to myresponse_response_path
+    end
     @user = User.find(current_user.id)
     @section = CreditSection.all
     @questions = CreditQuestion.all
     form_id = @response.form_id
     @form = Form.find(form_id)
   end
+
+  def my_credit_freezed
+    @response = Response.find(params[:id])
+    @user = User.find(current_user.id)
+    @section = CreditSection.all
+    @questions = CreditQuestion.all
+    form_id = @response.form_id
+    @form = Form.find(form_id)
+  end
+
+  def update_status
+      @response = Response.find(params[:id])
+      @user = User.find(current_user.id)
+      @app_response = Response.where(user_id: current_user.id, profile_response: true).last
+      if @response.status == "Free"
+        @response.status = "Freezed"
+        # Generate PDF
+        pdf = WickedPdf.new.pdf_from_string(
+          render_to_string(
+            template: 'responses/displaypdf.html.erb',
+            layout: 'layouts/pdf.html.erb',
+            locals: {
+              response: @response,
+              user: @user,
+              app_response: Response.where(user_id: current_user.id, profile_response: true).last
+            }
+          ),
+          margin: { top: 0, bottom: 0, left: 0, right: 0 }
+        )
+
+        # Attach the generated PDF to current_stage
+        @response.current_stage.attach(
+          io: StringIO.new(pdf),
+          filename: "response_#{@response.id}.pdf",
+          content_type: 'application/pdf'
+        )
+
+      elsif @response.status == "Freezed"
+        @response.status = "Free"
+      end
+
+      @response.save
+      redirect_to myresponse_response_path
+  end
+
+  def view_app_pdf
+    @response = Response.find(params[:id])
+    send_data @response.current_stage.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+  end
+
 
   def display
     @response = Response.find(params[:id])
@@ -46,7 +99,7 @@ class ResponsesController < ApplicationController
       @user_photo_base64 = nil
     end
 
-    if @user.photo.attached?
+    if @user.sign.attached?
       @user_sign_base64 = Base64.strict_encode64(@user.sign.download)
     else
       @user_sign_base64 = nil
@@ -151,6 +204,6 @@ class ResponsesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def response_params
-      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility)
+      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility, :current_stage)
     end
 end

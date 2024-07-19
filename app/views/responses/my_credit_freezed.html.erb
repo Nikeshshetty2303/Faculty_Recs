@@ -1,0 +1,59 @@
+<%= stylesheet_link_tag "credits" %>
+<%= render 'partials/navbar' %>
+
+<h2 class="font-jost text-center fw-bold">View Credit Response</h2>
+
+<div id="credits_container" class="font-jost my-3 mb-5">
+  <div id="total_sum" class="mt-3 font-jost fw-bold">
+    <div class="mb-2">Credit Score : <span class="badge text" id="total_value"><%= @total_credits %></span> credits</div>
+    <div class="progress" role="progressbar" aria-label="Credit progress" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-bar" id="progress_bar" style="width: <%= [(@total_credits.to_f / @form.credit_req) * 100, 100].min %>%"><%= [(@total_credits.to_f / @form.credit_req) * 100, 100].min.round(2) %>%</div>
+    </div>
+  </div>
+
+  <div>
+    <% @section.each do |section| %>
+      <div class="my-3" style="background-color:#cfe2ff; border-radius:8px; padding:1em">
+        <div class="section-title"><%= section.title %></div>
+        <div class="mb-1">
+          <% @questions.where(credit_section_id: section.id).each do |question| %>
+            <% if question.isheader == true %>
+              <label class="question-title"><%= question.title %></label>
+              <div style="display:flex;">
+                <% @questions.where(header_id: question.id).each do |sub_question| %>
+                  <div style="display:flex;">
+                    <div class="my-3 mx-2">
+                      <label class="form-label"><%= sub_question.title %></label>
+                      <div class='input-group mb-1'>
+                        <input type="text" class="form-control" value="<%= CreditAnswer.find_by(credit_question_id: sub_question.id, response_id: @response.id)&.answer %>" readonly>
+                        <span class="input-group-text"><%= [sub_question.obt_credit * CreditAnswer.find_by(credit_question_id: sub_question.id, response_id: @response.id)&.answer.to_i, sub_question.max_credit].min %></span>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            <% elsif question.header_id.nil? %>
+              <div class="mb-3">
+                <% answer = CreditAnswer.find_by(credit_question_id: question.id, response_id: @response.id) %>
+                <% if answer&.file_upload&.attached? %>
+                  <div class="file-upload-container">
+                    <div class="file-link">
+                      <%= link_to answer.file_upload.filename.to_s, view_pdf_response_path(ansid: answer, id: @response.id), class: "btn btn-light-blue btn-sm" %>
+                    </div>
+                  </div>
+                <% end %>
+                <div class="my-4">
+                  <label class="form-label"><%= question.title %></label>
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" value="<%= answer&.answer %>" readonly>
+                    <span class="input-group-text"><%= [question.obt_credit * answer&.answer.to_i, question.max_credit].min %></span>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -23,13 +23,15 @@
           </p>
 
           <div class="btn-group btn-group-responsive" role="group" aria-label="Response actions">
-            <%= link_to "Credit Response", my_credit_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-sm' %>
-            <%= link_to "Form Response", display_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-secondary btn-sm' %>
-            <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
-            <% if response.payment_status == true %>
-              <%= link_to "Fee Paid", "#", class: 'btn btn-dark btn-sm' %>
-            <% else %>
-              <%= link_to "Fee Payment", checkout_form_path(id: response.id, userid: @user.id), class: 'btn btn-outline-warning btn-sm' %>
+            <%if response.status == "Freezed"%>
+              <%= link_to "View Credit Response", my_credit_freezed_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-sm' %>
+              <%= link_to "Print Finalized Application", view_app_pdf_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-success btn-sm' %>
+              <%= link_to "Freezed", update_status_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-dark btn-sm' %>
+            <%elsif response.status == "Free"%>
+              <%= link_to "Credit Response", my_credit_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-sm' %>
+              <%= link_to "Form Response", display_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-secondary btn-sm' %>
+              <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
+              <%= link_to "Freeze", update_status_response_path(id:response, userid: @user.id), class: 'btn btn-outline-warning btn-sm' %>
             <% end %>
           </div>
         </div>

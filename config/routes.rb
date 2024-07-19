@@ -52,9 +52,13 @@ Rails.application.routes.draw do
     get 'displaypdf'
     get 'myresponse'
     get 'my_credit'
+    get 'my_credit_freezed'
     get 'view_pdf'
     get 'validate'
     patch 'validate'
+    get 'update_status'
+    patch 'update_status'
+    get 'view_app_pdf'
   end
 end
 
@@ -80,6 +84,6 @@ end
     end
   end
 
-  get '*path', to: 'home#index', via: :all
-  
+  # get '*path', to: 'home#index', via: :all
+
 end
