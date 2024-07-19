@@ -131,7 +131,7 @@ class CreditAnswersController < ApplicationController
     @answers << answer
   end
 
-  response.credit_score = credit
+  response.credit_score = credit.round(2)
   response.user_id = current_user.id
   response.title = current_user.email
   form_id = response.form_id
