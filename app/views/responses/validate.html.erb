@@ -33,7 +33,7 @@
                 <% end %>
               </td>
               <%= form_with(model: answer, html: { class: 'form-inline' }) do |f| %>
-                <td><%= f.number_field :verified_count, class: 'form-control form-control', id: "credit_answer_#{answer.id}", value: answer.verified_count%></td>
+                <td><%= f.text_field :verified_count, class: 'form-control form-control', id: "credit_answer_#{answer.id}", value: answer.verified_count%></td>
                 <td>
                   <%= f.number_field :verified_credit, class: 'form-control form-control', id: "credit_#{answer.id}", value: answer.verified_credit, readonly: true %>
                 </td>
