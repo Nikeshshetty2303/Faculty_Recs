@@ -79,24 +79,30 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    <% CreditAnswer.all.each do |answer| %>
-      <% if answer.response_id == @responses.id %>
-        (function() {
-          var answerField = document.getElementById("credit_answer_<%= answer.id %>");
-          var creditField = document.getElementById("credit_<%= answer.id %>");
-          var maxCredit = <%= @question&.max_credit || 0 %>;
-          var obtCredit = <%= @question&.obt_credit || 0 %>;
+document.addEventListener('DOMContentLoaded', function () {
+  var creditAnswers = <%= raw CreditAnswer.where(response_id: @responses&.id).includes(:credit_question).to_json(only: [:id, :credit_question_id], include: { credit_question: { only: [:max_credit, :obt_credit] } }) %>;
 
-          if (answerField && creditField) {
-            answerField.addEventListener('input', function () {
-              var newAnswer = parseFloat(answerField.value) || 0;
-              var newCredit = Math.min(newAnswer * obtCredit, maxCredit);
-              creditField.value = newCredit.toFixed(2);
-            });
-          }
-        })();
-      <% end %>
-    <% end %>
+  creditAnswers.forEach(function(answer) {
+    (function(answerId) {
+      var answerField = document.getElementById("credit_answer_" + answerId);
+      var creditField = document.getElementById("credit_" + answerId);
+
+      if (!answerField || !creditField) return;
+
+      var maxCredit = answer.credit_question ? (answer.credit_question.max_credit || 0) : 0;
+      var obtCredit = answer.credit_question ? (answer.credit_question.obt_credit || 0) : 0;
+
+      function updateCredit() {
+        var newAnswer = parseFloat(answerField.value) || 0;
+        var newCredit = Math.min(newAnswer * obtCredit, maxCredit);
+        creditField.value = newCredit.toFixed(2);
+      }
+
+      answerField.addEventListener('input', updateCredit);
+
+      // Initial calculation
+      updateCredit();
+    })(answer.id);
   });
+});
 </script>
