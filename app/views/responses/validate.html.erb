@@ -33,9 +33,9 @@
                 <% end %>
               </td>
               <%= form_with(model: answer, html: { class: 'form-inline' }) do |f| %>
-                <td><%= f.number_field :verified_count, class: 'form-control form-control', id: "credit_answer_#{answer.id}", value: answer.verified_count, step: 'any' %></td>
+                <td><%= f.number_field :verified_count, class: 'form-control form-control', id: "credit_answer_#{answer.id}", value: answer.verified_count%></td>
                 <td>
-                  <%= f.number_field :verified_credit, class: 'form-control form-control', id: "credit_#{answer.id}", value: answer.verified_credit, readonly: true, step: 'any'  %>
+                  <%= f.number_field :verified_credit, class: 'form-control form-control', id: "credit_#{answer.id}", value: answer.verified_credit, readonly: true %>
                 </td>
                 <td>
                   <%= f.submit "Update", class: "btn btn-sm btn-primary" %>
@@ -91,7 +91,7 @@
           answerField.addEventListener('input', function () {
             var newAnswer = parseFloat(answerField.value);
             var newCredit = ((newAnswer * obtCredit) > maxCredit) ? maxCredit : (obtCredit * newAnswer);
-            creditField.value = newCredit.toFixed(2);
+            creditField.value = newCredit;
           });
         })();
       <% end %>

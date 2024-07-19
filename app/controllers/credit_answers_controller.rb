@@ -160,7 +160,7 @@ end
         response.credit_answers.each do |answer|
           answer_credit = answer_credit + answer.verified_credit
         end
-        response.credit_score = answer_credit
+        response.credit_score = answer_credit.round(2)
         response.validation = true
         response.save
 
