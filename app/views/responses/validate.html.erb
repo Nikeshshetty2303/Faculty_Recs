@@ -85,14 +85,16 @@
         (function() {
           var answerField = document.getElementById("credit_answer_<%= answer.id %>");
           var creditField = document.getElementById("credit_<%= answer.id %>");
-          var maxCredit = <%= @question.max_credit %>;
-          var obtCredit = <%= @question.obt_credit %>;
+          var maxCredit = <%= @question&.max_credit || 0 %>;
+          var obtCredit = <%= @question&.obt_credit || 0 %>;
 
-          answerField.addEventListener('input', function () {
-            var newAnswer = parseFloat(answerField.value);
-            var newCredit = ((newAnswer * obtCredit) > maxCredit) ? maxCredit : (obtCredit * newAnswer);
-            creditField.value = newCredit;
-          });
+          if (answerField && creditField) {
+            answerField.addEventListener('input', function () {
+              var newAnswer = parseFloat(answerField.value) || 0;
+              var newCredit = Math.min(newAnswer * obtCredit, maxCredit);
+              creditField.value = newCredit.toFixed(2);
+            });
+          }
         })();
       <% end %>
     <% end %>
