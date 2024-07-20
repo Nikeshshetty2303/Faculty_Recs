@@ -27,11 +27,11 @@
         <div class="card-header bg-light">
           <h3 class='card-title my-3 fw-bold'><%= form.name %></h3>
           <div class="info">
-            <div class="dept" style="display: none;"><%= form.dept %></div>
+            <div class="dept" style="display: none;"><%= form.department.full_name %></div>
             <div class="d-flex justify-content-between align-items-center mb-2">
               <div class="d-flex align-items-center">
                 <%= image_tag "building.png", width: 15, height: 15, class: 'me-2' %>
-                <span class="text-muted"><%= form.dept %></span>
+                <span class="text-muted"><%= form.department.full_name %></span>
               </div>
               <div class="d-flex align-items-center">
                 <%= image_tag "payment.png", width: 15, height: 15, class: 'me-2' %>

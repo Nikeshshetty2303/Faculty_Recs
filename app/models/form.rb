@@ -2,6 +2,7 @@ class Form < ApplicationRecord
   has_many :questions, -> { order(position: :asc) }, dependent: :destroy
   has_many :responses, dependent: :destroy
   belongs_to :user
+  belongs_to :department, optional:true
 
   def apply_template(template_form_id)
     template_form = Form.find_by(id: template_form_id)

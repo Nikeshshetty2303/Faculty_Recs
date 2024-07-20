@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_19_143805) do
+ActiveRecord::Schema.define(version: 2024_07_20_051202) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -115,6 +115,8 @@ ActiveRecord::Schema.define(version: 2024_07_19_143805) do
     t.integer "user_id"
     t.float "credit_req"
     t.integer "fee"
+    t.integer "department_id"
+    t.index ["department_id"], name: "index_forms_on_department_id"
     t.index ["user_id"], name: "index_forms_on_user_id"
   end
 

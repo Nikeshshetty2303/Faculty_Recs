@@ -28,8 +28,8 @@
     </div>
 
     <div class="mb-3">
-      <%= f.label :dept, style: "display: block", class:'form-label' %>
-      <%= f.collection_select :dept, Department.all, :title, :full_name, { prompt: "Select Department" }, { class: 'form-select' } %>
+      <%= f.label :department_id, style: "display: block", class: 'form-label' %>
+      <%= f.collection_select :department_id, Department.all, :id, :full_name, { prompt: "Select Department" }, { class: 'form-select' } %>
     </div>
 
     <div class="mb-3">

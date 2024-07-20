@@ -14,7 +14,7 @@
           <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
           <% count_below_responses = below_responses.count %>
           <% role = response.form.role %>
-          <% dept = response.form.dept %>
+          <% dept = response.form.department.title %>
 
           <h5 class="card-title"><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></h5>
 

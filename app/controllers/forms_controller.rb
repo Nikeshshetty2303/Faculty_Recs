@@ -253,7 +253,7 @@ end
   end
 
   def form_params
-    params.require(:form).permit(:name, :role, :salary, :dept, :template_form_id, :user_id, :fee, :credit_req)
+    params.require(:form).permit(:name, :role, :salary, :dept, :template_form_id, :user_id, :fee, :credit_req, :department_id)
   end
 
   def template_form_id
