@@ -1,5 +1,5 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
- <%= stylesheet_link_tag 'myresponses' %>
+<%= stylesheet_link_tag 'myresponses' %>
 <div class="container mt-4">
   <div class="text-center">
     <h1 class="fw-bold mt-3 mb-4">Your Responses</h1>
@@ -26,16 +26,67 @@
             <%if response.status == "Freezed"%>
               <%= link_to "View Credit Response", my_credit_freezed_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-sm' %>
               <%= link_to "Print Finalized Application", view_app_pdf_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-success btn-sm' %>
-              <%= link_to "Freezed", update_status_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-dark btn-sm' %>
+              <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#unfreezeModal<%= response.id %>">
+                Freezed
+              </button>
             <%elsif response.status == "Free"%>
               <%= link_to "Credit Response", my_credit_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-sm' %>
               <%= link_to "Form Response", display_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-secondary btn-sm' %>
               <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
-              <%= link_to "Freeze", update_status_response_path(id:response, userid: @user.id), class: 'btn btn-outline-warning btn-sm' %>
+              <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#freezeModal<%= response.id %>">
+                Freeze
+              </button>
             <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Freeze Modal -->
+      <div class="modal fade" id="freezeModal<%= response.id %>" tabindex="-1" aria-labelledby="freezeModalLabel<%= response.id %>" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="freezeModalLabel<%= response.id %>">Confirm Freeze</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you certain that you want to finalize and freeze this application?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <%= link_to "Freeze", update_status_response_path(id: response.id, userid: @user.id), class: 'btn btn-warning' %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unfreeze Modal -->
+      <div class="modal fade" id="unfreezeModal<%= response.id %>" tabindex="-1" aria-labelledby="unfreezeModalLabel<%= response.id %>" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="unfreezeModalLabel<%= response.id %>">Confirm Unfreeze</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to unfreeze this application?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <%= link_to "Unfreeze", update_status_response_path(id: response.id, userid: @user.id), class: 'btn btn-dark' %>
+            </div>
           </div>
         </div>
       </div>
     <% end %>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+  });
+</script>

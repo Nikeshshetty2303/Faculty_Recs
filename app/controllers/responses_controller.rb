@@ -45,6 +45,19 @@ class ResponsesController < ApplicationController
       @app_response = Response.where(user_id: current_user.id, profile_response: true).last
       if @response.status == "Free"
         @response.status = "Freezed"
+
+        if @user.photo.attached?
+          @user_photo_base64 = Base64.strict_encode64(@user.photo.download)
+        else
+          @user_photo_base64 = nil
+        end
+
+        if @user.sign.attached?
+          @user_sign_base64 = Base64.strict_encode64(@user.sign.download)
+        else
+          @user_sign_base64 = nil
+        end
+        
         # Generate PDF
         pdf = WickedPdf.new.pdf_from_string(
           render_to_string(

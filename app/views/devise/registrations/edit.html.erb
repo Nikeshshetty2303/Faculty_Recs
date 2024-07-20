@@ -1,45 +1,75 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
-<div class="container-md" style="padding:2em;background-color:rgb(127 172 218 / 16%); border-radius:6px">
-  <h1 class="text-center">Edit <%= resource_name.to_s.humanize %></h1>
+<div class="container-md my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body" style="background-color: rgb(127 172 218 / 16%);">
+          <h1 class="card-title text-center mb-4">Edit <%= resource_name.to_s.humanize %></h1>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-    <%= render "devise/shared/error_messages", resource: resource %>
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'needs-validation', novalidate: true }) do |f| %>
+            <%= render "devise/shared/error_messages", resource: resource %>
 
-    <div class="field mb-3">
-      <%= f.label :email , class:"form-label", for:"email"%>
-      <%= f.email_field :email, autofocus: true, autocomplete: "email",  class:"form-control", id:"email" %>
+            <div class="mb-3">
+              <%= f.label :email, class: "form-label", for: "email" %>
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", id: "email", required: true %>
+            </div>
+
+            <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+              <div class="alert alert-info">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= f.label :password, class: "form-label", for: "newpass" %>
+              <%= f.password_field :password, autocomplete: "new-password", id: 'newpass', class: 'form-control' %>
+              <div class="form-text">Leave blank if you don't want to change it. <%= @minimum_password_length ? "#{@minimum_password_length} characters minimum." : "" %></div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :password_confirmation, class: 'form-label', for: 'confpass' %>
+              <%= f.password_field :password_confirmation, autocomplete: "new-password", id: 'confpass', class: 'form-control' %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :current_password, class: 'form-label', for: 'currpass' %>
+              <%= f.password_field :current_password, autocomplete: "current-password", class: 'form-control', id: 'currpass', required: true %>
+              <div class="form-text">We need your current password to confirm your changes.</div>
+            </div>
+
+            <div class="mb-3 row align-items-center">
+              <div class="col-md-8">
+                <%= f.label :photo, "Passport size Photograph", for: "photo-input", class: "form-label" %>
+                <%= f.file_field :photo, class: 'form-control', id: "photo-input", accept: 'image/*' %>
+              </div>
+              <div class="col-md-4">
+                <% if resource.photo.attached? %>
+                  <%= image_tag resource.photo, class: "img-thumbnail", alt: "Current photo" %>
+                <% else %>
+                  <div class="alert alert-secondary">No photo uploaded</div>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="mb-3 row align-items-center">
+              <div class="col-md-8">
+                <%= f.label :sign, "Signature", for: "sign-input", class: "form-label" %>
+                <%= f.file_field :sign, class: 'form-control', id: "sign-input", accept: 'image/*' %>
+              </div>
+              <div class="col-md-4">
+                <% if resource.sign.attached? %>
+                  <%= image_tag resource.sign, class: "img-thumbnail", alt: "Current signature" %>
+                <% else %>
+                  <div class="alert alert-secondary">No signature uploaded</div>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="text-end mt-4">
+              <%= f.submit "Update", class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
-
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-    <% end %>
-
-    <div class="field mb-3">
-      <%= f.label :password, class:"form-label", for:"newpass" %> <i>(leave blank if you don't want to change it)</i>
-      <%= f.password_field :password, autocomplete: "new-password", id:'newpass', class:'form-control' %>
-      <% if @minimum_password_length %>
-        <em><%= @minimum_password_length %> characters minimum</em>
-      <% end %>
-    </div>
-
-    <div class="field mb-3">
-      <%= f.label :password_confirmation, class:'form-label', for:'confpass' %><br />
-      <%= f.password_field :password_confirmation, autocomplete: "new-password", id:'confpass', class:'form-control' %>
-    </div>
-
-    <div class="field mb-3">
-      <%= f.label :current_password, class:'form-label', for:'currpass' %> <i>(we need your current password to confirm your changes)</i>
-      <%= f.password_field :current_password, autocomplete: "current-password", class:'form-control', id:'currpass' %>
-    </div>
-
-    <div class="actions" style='display:flex; justify-content:flex-end'>
-      <%= f.submit "Update", class:'btn btn-primary' %>
-    </div>
-  <% end %>
-
-  <!--<h3>Cancel my account</h3>
-
-  <div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div> -->
-
+  </div>
 </div>
