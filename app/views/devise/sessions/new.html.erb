@@ -1,5 +1,13 @@
 <%= stylesheet_link_tag 'auth' %>
+
 <div class="whole">
+  <% if flash[:notice] %>
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+      <%= flash[:notice] %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
   <div class="card mb-3 sizing" style="max-width: 66rem; height: 70%">
       <h2 class='fw-bold text-center mobile_title'>National Institute of Technology Karnataka</h2>
       <h3 class='text-body-secondary text-center mobile_title'>Faculty Recruitment Portal</h3>
@@ -42,3 +50,33 @@
     </div>
   </div>
 </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const alert = document.querySelector('.alert');
+  if (alert) {
+    // Show the alert
+    alert.style.display = 'block';
+
+    // Automatically hide the alert after 5 seconds
+    setTimeout(function() {
+      alert.classList.remove('show');
+      setTimeout(function() {
+        alert.remove();
+      }, 150);
+    }, 10000);
+
+    // Handle manual dismissal
+    const closeButton = alert.querySelector('.btn-close');
+    if (closeButton) {
+      closeButton.addEventListener('click', function() {
+        alert.classList.remove('show');
+        setTimeout(function() {
+          alert.remove();
+        }, 150);
+      });
+    }
+  }
+});
+</script>

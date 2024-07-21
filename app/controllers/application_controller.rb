@@ -1,6 +1,11 @@
 class ApplicationController < ActionController::Base
+
   before_action :authenticate_user!
+  before_action :delete_unconfirmed_users
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_confirmation_notice, if: :devise_controller?
+
+
   # rescue_from StandardError, with: :handle_error
   # rescue_from ActionController::RoutingError, with: :handle_routing_error
 
@@ -26,4 +31,22 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: attributes)
     devise_parameter_sanitizer.permit(:account_update, keys: attributes)
   end
+
+  def delete_unconfirmed_users
+    User.delete_unconfirmed if rand < 0.1 # Run approximately every 10th request
+  end
+
+  def set_confirmation_notice
+
+    if devise_controller?
+      if params[:action] == 'create' && params[:controller] == 'devise/registrations'
+        flash[:notice] = 'Please confirm your account. Check your email for confirmation instructions.'
+      elsif params[:action] == 'new' && params[:controller] == 'devise/sessions'
+        if !current_user && params[:user].present? && User.find_by(email: params[:user][:email])&.confirmed_at.nil?
+          flash[:notice] = 'Please confirm your account if you haven\'t already. Check your email for confirmation instructions.'
+        end
+      end
+    end
+  end
+
 end
