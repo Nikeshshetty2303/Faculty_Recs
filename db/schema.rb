@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_21_082959) do
+ActiveRecord::Schema.define(version: 2024_07_21_111752) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -150,6 +150,7 @@ ActiveRecord::Schema.define(version: 2024_07_21_082959) do
     t.integer "position"
     t.integer "tab_id"
     t.string "role"
+    t.boolean "mandatory", default: false
     t.index ["form_id"], name: "index_questions_on_form_id"
     t.index ["question_type_id"], name: "index_questions_on_question_type_id"
     t.index ["tab_id"], name: "index_questions_on_tab_id"

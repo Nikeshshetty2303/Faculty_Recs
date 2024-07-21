@@ -32,25 +32,25 @@
 
             <% case question.question_type_id %>
             <% when 1 %>
-              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', required: question.mandatory %>
 
             <% when 4 %>
-              <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+              <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' , required: question.mandatory%>
 
             <% when 8 %>
-              <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+              <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' , required: question.mandatory%>
 
             <% when 9 %>
-              <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control' %>
+              <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control' , required: question.mandatory%>
 
             <% when 5 %>
-              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', required: question.mandatory %>
 
             <% when 2 %>
               <div class="radio-group">
                 <% question.options.each do |option| %>
                   <label class="radio-label">
-                    <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", class: 'radio-input', data: { question_id: question.id, role: question.role } %>
+                    <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", class: 'radio-input', data: { question_id: question.id, role: question.role }, required: question.mandatory %>
                     <%= option.title %>
                   </label>
                 <% end %>
@@ -60,7 +60,7 @@
               <div class="checkbox-group">
                 <% question.options.each do |option| %>
                   <label class="checkbox-label">
-                    <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil %>
+                    <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" , required: question.mandatory}, option.title, nil %>
                     <%= option.title %>
                   </label>
                 <% end %>
@@ -82,9 +82,9 @@
                       <% question.options.each do |option| %>
                         <td>
                           <% if option.title =~ /DD-MM-YYYY/ %>
-                            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role } %>
+                            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role }, required: question.mandatory %>
                           <% else %>
-                            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role }, readonly: (option.role == "R") %>
+                            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control', data: { role: option.role }, readonly: (option.role == "R"), required: question.mandatory %>
                           <% end %>
                         </td>
                       <% end %>
@@ -152,30 +152,30 @@
 
             <% case question.question_type_id %>
             <% when 1 %>
-              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
+              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] , required: question.mandatory%>
 
             <% when 4 %>
-              <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
+              <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] , required: question.mandatory%>
 
             <% when 8 %>
-              <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
+              <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id], required: question.mandatory %>
 
             <% when 9 %>
               <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control' %>
               <% if question.question_type_id == 9 && field_map[question.id] != nil && field_map[question.id].file.attached? %>
                 <div class="file-actions">
-                  <%= link_to field_map[question.id].file.filename.to_s, view_pdf_form_path(ansid: field_map[question.id].id, id: field_map[question.id].response_id), class: "btn btn-light-blue btn-sm" %>
+                  <%= link_to field_map[question.id].file.filename.to_s, view_pdf_form_path(ansid: field_map[question.id].id, id: field_map[question.id].response_id), class: "btn btn-light-blue btn-sm", required: question.mandatory %>
                 </div>
               <% end %>
 
             <% when 5 %>
-              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id] %>
+              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id], required: question.mandatory %>
 
             <% when 2 %>
               <div class="radio-group">
                 <% question.options.each do |option| %>
                   <label class="radio-label">
-                    <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", value: option.title, class: 'radio-input', data: { question_id: question.id, role: question.role }, checked: (option.title == map[question.id]) %>
+                    <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", value: option.title, class: 'radio-input', data: { question_id: question.id, role: question.role }, checked: (option.title == map[question.id]) , required: question.mandatory%>
                     <%= option.title %>
                   </label>
                 <% end %>
@@ -185,7 +185,7 @@
               <div class="checkbox-group">
                 <% question.options.each do |option| %>
                   <label class="checkbox-label">
-                    <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: map[question.id].present? ? map[question.id].include?(option.title) : false, value: option.title }, option.title, nil %>
+                    <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]", checked: map[question.id].present? ? map[question.id].include?(option.title) : false, value: option.title, required: question.mandatory }, option.title, nil%>
                     <%= option.title %>
                   </label>
                 <% end %>
