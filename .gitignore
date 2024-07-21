@@ -39,4 +39,4 @@
 
 /node_modules
 
-config/environments/development.rb
+/config/environments/development.rb
