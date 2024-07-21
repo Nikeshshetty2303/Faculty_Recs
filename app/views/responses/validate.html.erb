@@ -44,9 +44,13 @@
     </table>
   </div>
 
+  <div class="mt-3">
+    <strong>Total Validated Credit Score: </strong>
+    <span id="totalValidatedCredit">0</span>
+  </div>
+
   <button id="updateAllBtn" class="btn btn-primary mt-3">Update All</button>
 
-  <!-- The Remarks and Eligibility Section -->
     <!-- The Remarks and Eligibility Section -->
   <div class="row mt-4">
     <div class="col-md-6">
@@ -75,7 +79,6 @@
       <% end %>
     </div>
   </div>
-
 </div>
 
 <script>
@@ -84,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var verifiedCountInputs = document.querySelectorAll('.verified-count');
   var verifiedCreditInputs = document.querySelectorAll('.verified-credit');
   var updateAllBtn = document.getElementById('updateAllBtn');
+  var totalValidatedCreditSpan = document.getElementById('totalValidatedCredit');
 
   function updateCredit(answerId, newAnswer) {
     var answer = creditAnswers.find(a => a.id === answerId);
@@ -97,14 +101,18 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateAllCredits() {
+    var totalCredit = 0;
     verifiedCountInputs.forEach(input => {
       var answerId = parseInt(input.dataset.answerId);
       var newAnswer = parseFloat(input.value) || 0;
       var creditInput = document.querySelector(`.verified-credit[data-answer-id="${answerId}"]`);
       if (creditInput) {
-        creditInput.value = updateCredit(answerId, newAnswer);
+        var newCredit = updateCredit(answerId, newAnswer);
+        creditInput.value = newCredit;
+        totalCredit += parseFloat(newCredit);
       }
     });
+    totalValidatedCreditSpan.textContent = totalCredit.toFixed(2);
   }
 
   verifiedCountInputs.forEach(input => {
@@ -118,13 +126,19 @@ document.addEventListener('DOMContentLoaded', function () {
       verified_credit: parseFloat(document.querySelector(`.verified-credit[data-answer-id="${input.dataset.answerId}"]`).value) || 0
     }));
 
+    var totalValidatedCredit = parseFloat(totalValidatedCreditSpan.textContent);
+
     fetch('/update_credit_answers', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
       },
-      body: JSON.stringify({ credit_answers: updateData })
+      body: JSON.stringify({
+        credit_answers: updateData,
+        response_id: <%= @responses.id %>,
+        validated_credit_score: totalValidatedCredit
+      })
     })
     .then(response => response.json())
     .then(data => {

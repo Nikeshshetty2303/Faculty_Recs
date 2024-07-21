@@ -217,6 +217,6 @@ class ResponsesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def response_params
-      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility, :current_stage)
+      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility, :current_stage, :validated_credit_score)
     end
 end

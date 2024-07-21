@@ -89,6 +89,8 @@ class CreditAnswersController < ApplicationController
 
   def update_batch
     updates = params[:credit_answers]
+    response_id = params[:response_id]
+    validated_credit_score = params[:validated_credit_score]
 
     ActiveRecord::Base.transaction do
       updates.each do |update|
@@ -98,11 +100,14 @@ class CreditAnswersController < ApplicationController
           verified_credit: update[:verified_credit]
         )
       end
+
+      response = Response.find(response_id)
+      response.update!(validated_credit_score: validated_credit_score)
     end
 
     render json: { success: true }
-  rescue ActiveRecord::RecordInvalid
-    render json: { success: false }, status: :unprocessable_entity
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { success: false, error: e.message }, status: :unprocessable_entity
   end
 
   def update_response

@@ -8,6 +8,7 @@
         <th scope="col">Application ID</th>
         <th scope="col">Credit Score</th>
         <th scope="col">Validate Credit Response</th>
+        <th scope="col">Verified Credit Score</th>
         <th scope="col">Credit Requirement </th>
         <th scope="col">Eligibility</th>
       </tr>
@@ -26,17 +27,15 @@
             <td><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
             <td><%= response.credit_score %></td>
             <td><%= link_to "Validate Credit Response", validate_response_path(id: response.id), class: 'btn btn-outline-primary btn-sm' %></td>
+            <td><%= response.validated_credit_score %></td>
             <td>
-              <% if response.validation == true %>
-                <% if response.credit_score >= response.form.credit_req %>
+                <% if response.validated_credit_score >= response.form.credit_req %>
                   <%= "Fulfilled" %>
                 <% else %>
                   <%= "Not Fulfilled" %>
                 <% end %>
-              <% else %>
-                <%= "Validation Pending" %>
-              <% end %>
             </td>
+
             <td>
               <% if response.eligibility == true %>
                   <%= "Eligible" %>

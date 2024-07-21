@@ -25,16 +25,20 @@
             </div>
 
           <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-            <div class="field mb-3"">
+            <div class="field mb-3">
               <%= f.label :email, for:"email_input", class:"form-label" %><br />
-              <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"form-control", id:"email_input", placeholder:'Enter your email'   %>
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"form-control", id:"email_input", placeholder:'Enter your email' %>
               <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
             </div>
 
             <div class="field mb-3">
               <%= f.label :password, for:"password_input", class:"form-label" %><br />
               <%= f.password_field :password, autocomplete: "current-password", class:"form-control", id:"password_input", placeholder:'Enter your password'%>
+            </div>
+
+            <div class="mb-3 d-flex justify-content-between">
               <%= link_to "Forgot your password?", new_password_path(resource_name), class:"text-end" %>
+              <%= link_to "Didn't receive confirmation?", new_confirmation_path(resource_name) %>
             </div>
 
             <div class="actions">
@@ -50,7 +54,6 @@
     </div>
   </div>
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
