@@ -13,7 +13,6 @@
           <th scope="col">Uploads</th>
           <th scope="col">Verified Count</th>
           <th scope="col">Verified Credit</th>
-          <th scope="col">Update</th>
         </tr>
       </thead>
       <tbody>
@@ -32,15 +31,12 @@
                   No Upload
                 <% end %>
               </td>
-              <%= form_with(model: answer, html: { class: 'form-inline' }) do |f| %>
-                <td><%= f.text_field :verified_count, class: 'form-control form-control', id: "credit_answer_#{answer.id}", value: answer.verified_count%></td>
-                <td>
-                  <%= f.number_field :verified_credit, class: 'form-control form-control', id: "credit_#{answer.id}", value: answer.verified_credit, readonly: true %>
-                </td>
-                <td>
-                  <%= f.submit "Update", class: "btn btn-sm btn-primary" %>
-                </td>
-              <% end %>
+              <td>
+                <input type="number" class="form-control verified-count" data-answer-id="<%= answer.id %>" value="<%= answer.verified_count %>">
+              </td>
+              <td>
+                <input type="number" class="form-control verified-credit" data-answer-id="<%= answer.id %>" value="<%= answer.verified_credit %>" readonly>
+              </td>
             </tr>
           <% end %>
         <% end %>
@@ -48,7 +44,10 @@
     </table>
   </div>
 
+  <button id="updateAllBtn" class="btn btn-primary mt-3">Update All</button>
+
   <!-- The Remarks and Eligibility Section -->
+    <!-- The Remarks and Eligibility Section -->
   <div class="row mt-4">
     <div class="col-md-6">
       <%= form_with(model: @responses, url: add_remark_response_path(res_id: @responses.id), method: :post, class: 'mb-4') do |f| %>
@@ -76,33 +75,72 @@
       <% end %>
     </div>
   </div>
+
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   var creditAnswers = <%= raw CreditAnswer.where(response_id: @responses&.id).includes(:credit_question).to_json(only: [:id, :credit_question_id], include: { credit_question: { only: [:max_credit, :obt_credit] } }) %>;
+  var verifiedCountInputs = document.querySelectorAll('.verified-count');
+  var verifiedCreditInputs = document.querySelectorAll('.verified-credit');
+  var updateAllBtn = document.getElementById('updateAllBtn');
 
-  creditAnswers.forEach(function(answer) {
-    (function(answerId) {
-      var answerField = document.getElementById("credit_answer_" + answerId);
-      var creditField = document.getElementById("credit_" + answerId);
+  function updateCredit(answerId, newAnswer) {
+    var answer = creditAnswers.find(a => a.id === answerId);
+    if (!answer) return;
 
-      if (!answerField || !creditField) return;
+    var maxCredit = answer.credit_question ? (answer.credit_question.max_credit || 0) : 0;
+    var obtCredit = answer.credit_question ? (answer.credit_question.obt_credit || 0) : 0;
 
-      var maxCredit = answer.credit_question ? (answer.credit_question.max_credit || 0) : 0;
-      var obtCredit = answer.credit_question ? (answer.credit_question.obt_credit || 0) : 0;
+    var newCredit = Math.min(newAnswer * obtCredit, maxCredit);
+    return newCredit.toFixed(2);
+  }
 
-      function updateCredit() {
-        var newAnswer = parseFloat(answerField.value) || 0;
-        var newCredit = Math.min(newAnswer * obtCredit, maxCredit);
-        creditField.value = newCredit.toFixed(2);
+  function updateAllCredits() {
+    verifiedCountInputs.forEach(input => {
+      var answerId = parseInt(input.dataset.answerId);
+      var newAnswer = parseFloat(input.value) || 0;
+      var creditInput = document.querySelector(`.verified-credit[data-answer-id="${answerId}"]`);
+      if (creditInput) {
+        creditInput.value = updateCredit(answerId, newAnswer);
       }
+    });
+  }
 
-      answerField.addEventListener('input', updateCredit);
-
-      // Initial calculation
-      updateCredit();
-    })(answer.id);
+  verifiedCountInputs.forEach(input => {
+    input.addEventListener('input', updateAllCredits);
   });
+
+  updateAllBtn.addEventListener('click', function() {
+    var updateData = Array.from(verifiedCountInputs).map(input => ({
+      id: parseInt(input.dataset.answerId),
+      verified_count: parseFloat(input.value) || 0,
+      verified_credit: parseFloat(document.querySelector(`.verified-credit[data-answer-id="${input.dataset.answerId}"]`).value) || 0
+    }));
+
+    fetch('/update_credit_answers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ credit_answers: updateData })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('All credit answers updated successfully!');
+      } else {
+        alert('Error updating credit answers. Please try again.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred. Please try again.');
+    });
+  });
+
+  // Initial calculation
+  updateAllCredits();
 });
 </script>

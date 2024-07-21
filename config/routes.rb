@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resources :questions
   resources :homes
 
+post '/update_credit_answers', to: 'credit_answers#update_batch'
 
   resources :forms do
   get 'submit_form', on: :member

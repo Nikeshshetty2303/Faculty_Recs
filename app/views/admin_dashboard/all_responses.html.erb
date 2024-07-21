@@ -2,7 +2,7 @@
 <%= stylesheet_link_tag 'allresponses' %>
 <div class="container mt-4">
   <div class="row mb-4">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <label for="departmentFilter" class="form-label">Filter by Department:</label>
       <select class="form-select" id="departmentFilter">
         <option value="">All Departments</option>
@@ -11,7 +11,15 @@
         <% end %>
       </select>
     </div>
-    <div class="col-md-6 d-flex align-items-end">
+    <div class="col-md-4">
+      <label for="statusFilter" class="form-label">Filter by Status:</label>
+      <select class="form-select" id="statusFilter">
+        <option value="">All</option>
+        <option value="Freezed">Freezed</option>
+        <option value="Free">Free</option>
+      </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
       <span id="departmentCount" class="badge bg-secondary">Number of Responses: <span id="rowCount">0</span></span>
     </div>
   </div>
@@ -24,12 +32,13 @@
           <th scope="col">Verified Credits</th>
           <th scope="col">Application view</th>
           <th scope="col">Created At</th>
+          <th scope="col">Status</th>
         </tr>
       </thead>
       <tbody>
         <% Response.all.each do |response| %>
           <% if response.form.present? %>
-            <tr class="response-row">
+            <tr class="response-row" data-status="<%= response.status %>">
               <% present_response_id = response.id %>
               <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
               <% count_below_responses = below_responses.count %>
@@ -37,8 +46,15 @@
               <% dept = response.form.department.title %>
               <td class="application-id"><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
               <td><%= response.credit_score %></td>
-              <td><%= link_to "View Response", print_response_path(id: response.id, userid: response.user.id, format: :pdf), class: 'btn btn-outline-primary btn-sm' %></td>
+              <td>
+                <% if response.status == "Freezed" %>
+                  <%= link_to "View Response", view_app_pdf_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-sm' %>
+                <% else %>
+                  <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-secondary btn-sm' %>
+                <% end %>
+              </td>
               <td><%= response.created_at.strftime('%B %d, %Y %H:%M') %></td>
+              <td><%= response.status %></td>
             </tr>
           <% end %>
         <% end %>
@@ -50,17 +66,23 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     let departmentFilter = document.getElementById('departmentFilter');
+    let statusFilter = document.getElementById('statusFilter');
     let rowCountSpan = document.getElementById('rowCount');
 
     function updateRowCount() {
       let selectedDepartment = departmentFilter.value.toLowerCase();
+      let selectedStatus = statusFilter.value;
       let rows = document.querySelectorAll('.response-row');
       let count = 0;
 
       rows.forEach(function (row) {
         let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
+        let rowStatus = row.dataset.status;
 
-        if (selectedDepartment === '' || applicationId.includes(selectedDepartment)) {
+        let departmentMatch = selectedDepartment === '' || applicationId.includes(selectedDepartment);
+        let statusMatch = selectedStatus === '' || rowStatus === selectedStatus;
+
+        if (departmentMatch && statusMatch) {
           row.style.display = '';
           count++;
         } else {
@@ -72,6 +94,7 @@
     }
 
     departmentFilter.addEventListener('change', updateRowCount);
+    statusFilter.addEventListener('change', updateRowCount);
 
     // Initial count update on page load
     updateRowCount();

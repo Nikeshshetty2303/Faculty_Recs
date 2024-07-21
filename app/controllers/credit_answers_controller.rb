@@ -87,6 +87,24 @@ class CreditAnswersController < ApplicationController
     end
   end
 
+  def update_batch
+    updates = params[:credit_answers]
+
+    ActiveRecord::Base.transaction do
+      updates.each do |update|
+        credit_answer = CreditAnswer.find(update[:id])
+        credit_answer.update!(
+          verified_count: update[:verified_count],
+          verified_credit: update[:verified_credit]
+        )
+      end
+    end
+
+    render json: { success: true }
+  rescue ActiveRecord::RecordInvalid
+    render json: { success: false }, status: :unprocessable_entity
+  end
+
   def update_response
   @questions = CreditQuestion.all
   answer_params_array = params[:answers][:answers]

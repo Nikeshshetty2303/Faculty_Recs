@@ -57,7 +57,7 @@ class ResponsesController < ApplicationController
         else
           @user_sign_base64 = nil
         end
-        
+
         # Generate PDF
         pdf = WickedPdf.new.pdf_from_string(
           render_to_string(
