@@ -1,112 +1,108 @@
 <%= stylesheet_link_tag "credits" %>
 <%= render 'partials/navbar' %>
 
-
 <h2 class="font-jost text-center fw-bold">View And Update Credit Response</h2>
 
-<!--credits container div starts -->
 <div id="credits_container" class="font-jost my-3 mb-5">
-  <!-- Total sum display -->
   <div id="total_sum" class="mt-3 font-jost fw-bold">
-      <div class="mb-2">Credit Score : <span class="badge text" id="total_value">0</span> credits</div>
-    <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-      <div class="progress-bar" id="progres_bar" style="width: 0%">0%</div>
-    </div>
+    <div class="mb-2">Credit Score: <span class="badge text" id="total_value"><%= @response.credit_score %></span> credits</div>
   </div>
-  <!-- Questions section -->
+
   <div>
     <%= form_for :answers, url: update_response_credit_answer_path(res_id: @response.id) do |form| %>
       <% @section.each do |section| %>
-        <% file_view =0 %>
+        <% file_view = 0 %>
         <div class="my-3" style="background-color:#cfe2ff; border-radius:8px; padding:1em">
-          <div class="section-title"><%= section.title %></div>
+          <div class="section-title d-flex justify-content-between align-items-center">
+            <span><%= section.title %></span>
+            <span>
+              Section Credit: <span id="section_credit_<%= section.id %>">0</span>
+              <% if section.max_credit.present? && section.max_credit > 0 %>
+                / <%= section.max_credit %>
+              <% end %>
+            </span>
+          </div>
           <div class="mb-1">
-            <!-- Iterate over questions -->
-            <%@count =0%>
             <% @questions.where(credit_section_id: section.id).each do |question| %>
-            <% if question.isheader == true %>
-
-            <label class="question-title"> <%= question.title %> </label>
-            <div style="display:flex;">
-              <% @questions.where(header_id: question.id).each do |sub_question|  %>
-              <div style="display:flex;">
-              <%= form.fields_for "answers[]", CreditAnswer.where(credit_question_id: sub_question.id, response_id: @response.id)[0] do |answer_fields| %>
-                <%= answer_fields.hidden_field :credit_question_id,  class: "question_id" %>
-                <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value:section.id %>
-                  <div class="my-3 mx-2">
-                    <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
-                    <div class='input-group mb-1'>
-                      <%= answer_fields.number_field :answer, class: "form-control numeric-input" ,data: {questionId: sub_question.id,maxCredit: sub_question.max_credit,obtCredit: sub_question.obt_credit }%>
-                      <span id="credit_value_<%= sub_question.id %>" class="input-group-text">0</span>
-                    </div>
-                  </div>
-              <% end %>
-                </div>
-              <% end %>
-            </div>
-
-          <% elsif question.header_id == nil %>
-            <% @count = @count + 1 %>
-            <div class="mb-3">
-              <%= form.fields_for "answers[]", CreditAnswer.where(credit_question_id: question.id, response_id: @response.id)[0] do |answer_fields| %>
-                <% if @count == 1 %>
-                    <div class="file-upload-container">
-                      <div class="file-upload-field">
-                        <%= answer_fields.file_field :file_upload, class: "form-control" %>
-                      </div>
-                      <% if file_view == 0 %>
-                        <% @response.credit_answers.sort_by { |answer| answer.credit_question_id }.each do |answer| %>
-                          <% if section.id == answer.credit_section_id && answer.file_upload.attached? %>
-                            <div class="file-link">
-                              <%= link_to answer.file_upload.filename.to_s, view_pdf_response_path(ansid: answer, id: @response.id), class: "btn btn-light-blue btn-sm" %>
-                              <div class="remove-file-option">
-                                <%= check_box_tag "answers[answers][#{answer.id}][remove_file_upload]", "1", false, class: "remove-file-checkbox" %>
-                                <%= label_tag "answers[answers][#{answer.id}][remove_file_upload]", "Remove file", class: "remove-file-label" %>
-                              </div>
-                            </div>
-                            <% file_view = 1 %>
-                            <% break %>
-                          <% end %>
-                        <% end %>
+              <% if question.isheader == true %>
+                <label class="question-title"><%= question.title %></label>
+                <div style="display:flex;">
+                  <% @questions.where(header_id: question.id).each do |sub_question| %>
+                    <div style="display:flex;">
+                      <%= form.fields_for "answers[]", CreditAnswer.find_by(credit_question_id: sub_question.id, response_id: @response.id) do |answer_fields| %>
+                        <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
+                        <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value: section.id %>
+                        <div class="my-3 mx-2">
+                          <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
+                          <div class='input-group mb-1'>
+                            <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: sub_question.id, sectionId: section.id, obtCredit: sub_question.obt_credit} %>
+                            <span id="credit_value_<%= sub_question.id %>" class="input-group-text">0</span>
+                          </div>
+                        </div>
                       <% end %>
                     </div>
-                <% end %>
-                <div class="my-4">
-                  <%= answer_fields.label :answer, question.title, class: "form-label" %>
-                  <div class="input-group mb-3">
-                    <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: question.id, maxCredit: question.max_credit, obtCredit: question.obt_credit }, value: CreditAnswer.where(credit_question_id: question.id, response_id: @response.id)[0].answer %>
-                    <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
-                  </div>
+                  <% end %>
                 </div>
-
-                <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
-                <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value: section.id %>
+              <% elsif question.header_id.nil? %>
+                <div class="mb-3">
+                  <%= form.fields_for "answers[]", CreditAnswer.find_by(credit_question_id: question.id, response_id: @response.id) do |answer_fields| %>
+                    <% if file_view == 0 %>
+                      <div class="file-upload-container">
+                        <div class="file-upload-field">
+                          <%= answer_fields.file_field :file_upload, class: "form-control" %>
+                        </div>
+                        <% if answer_fields.object.file_upload.attached? %>
+                          <div class="file-link">
+                            <%= link_to answer_fields.object.file_upload.filename.to_s, view_pdf_response_path(ansid: answer_fields.object, id: @response.id), class: "btn btn-light-blue btn-sm" %>
+                            <div class="remove-file-option">
+                              <%= check_box_tag "answers[answers][#{answer_fields.object.id}][remove_file_upload]", "1", false, class: "remove-file-checkbox" %>
+                              <%= label_tag "answers[answers][#{answer_fields.object.id}][remove_file_upload]", "Remove file", class: "remove-file-label" %>
+                            </div>
+                          </div>
+                        <% end %>
+                      </div>
+                      <% file_view = 1 %>
+                    <% end %>
+                    <div class="my-4">
+                      <%= answer_fields.label :answer, question.title, class: "form-label" %>
+                      <div class="input-group mb-3">
+                        <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: question.id, sectionId: section.id, obtCredit: question.obt_credit} %>
+                        <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
+                      </div>
+                    </div>
+                    <%= answer_fields.hidden_field :credit_question_id, class: "question_id" %>
+                    <%= answer_fields.hidden_field :credit_section_id, class: "section_id", value: section.id %>
+                  <% end %>
+                </div>
               <% end %>
-            </div>
-            <% end %>
             <% end %>
           </div>
         </div>
       <% end %>
 
-
       <div class="alert" role="alert">
         <div id="error-message" style="color: red;"></div>
       </div>
-      <div  style="display:flex; justify-content:flex-end"><%= form.submit "Update Credit Reponses", class: "btn btn-primary ",  id: "submit-button", disabled: true  %></div>
+      <div style="display:flex; justify-content:flex-end">
+        <%= form.submit "Update Credit Responses", class: "btn btn-primary", id: "submit-button" %>
+      </div>
     <% end %>
-    <%=@entry%>
   </div>
-  <!-- End of Questions section -->
 </div>
-<!-- End of credits container div -->
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const numericInputs = document.querySelectorAll('.numeric-input');
   const totalValue = document.getElementById('total_value');
   const submitButton = document.getElementById('submit-button');
   const errorMessage = document.getElementById('error-message');
-  const progressBar = document.getElementById('progres_bar');
+
+  const sectionCredits = {};
+  const sectionMaxCredits = {};
+
+  <% @section.each do |section| %>
+    sectionMaxCredits[<%= section.id %>] = <%= section.max_credit || 0 %>;
+  <% end %>
 
   numericInputs.forEach(input => {
     input.addEventListener('input', updateTotal);
@@ -114,38 +110,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateTotal() {
     let total = 0;
-    let totalProgress = 0;
+
+    // Reset section credits
+    Object.keys(sectionCredits).forEach(key => {
+      sectionCredits[key] = 0;
+    });
 
     numericInputs.forEach(input => {
       const value = parseFloat(input.value) || 0;
-      const questionId = input.dataset.questionid || 0;
-      const maxCredit = input.dataset.maxcredit || 0;
-      const obtCredit = input.dataset.obtcredit || 0;
+      const questionId = input.dataset.questionid;
+      const sectionId = input.dataset.sectionid;
+      const obtCredit = parseFloat(input.dataset.obtcredit) || 0;
 
-      const credit = Math.min(maxCredit, obtCredit * value);
-      total += credit;
+      const credit = obtCredit * value;
+      sectionCredits[sectionId] = (sectionCredits[sectionId] || 0) + credit;
 
       const creditValueElement = document.getElementById(`credit_value_${questionId}`);
       creditValueElement.textContent = credit.toFixed(2);
+    });
 
-      totalProgress += (credit / <%= @form.credit_req %>) * 100;
+    // Apply section caps and update total
+    Object.keys(sectionCredits).forEach(sectionId => {
+      const sectionCredit = sectionCredits[sectionId];
+      const maxCredit = sectionMaxCredits[sectionId];
+      const cappedCredit = maxCredit > 0 ? Math.min(sectionCredit, maxCredit) : sectionCredit;
+
+      total += cappedCredit;
+
+      const sectionCreditElement = document.getElementById(`section_credit_${sectionId}`);
+      sectionCreditElement.textContent = cappedCredit.toFixed(2);
     });
 
     totalValue.innerText = total.toFixed(2);
-    progressBar.style.width = Math.min(totalProgress.toFixed(2), 100) + "%";
-    progressBar.textContent = Math.min(totalProgress.toFixed(2), 100) + "%";
-
-
-      if (total < <%= @form.credit_req %> ) {
-      const creditDifference = (<%= @form.credit_req %> - total).toFixed(2);
-      submitButton.disabled = true;
-      errorMessage.style.color = "red";
-      errorMessage.textContent = `Your credit score is ${total.toFixed(2)}. You are ${creditDifference} credits away from the cutoff!`;
-    } else {
-      submitButton.disabled = false;
-      errorMessage.style.color = "green";
-      errorMessage.textContent = "Congratulations! You meet the credit requirements!";
-    }
   }
+
+  // Initial calculation
+  updateTotal();
 });
 </script>

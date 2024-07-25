@@ -26,7 +26,7 @@ class CreditAnswersController < ApplicationController
   end
 
   # POST /credit_answers or /credit_answers.json
-   def create
+  def create
     @questions = CreditQuestion.all
     answer_params_array = params[:answers][:answers]
 
@@ -36,44 +36,46 @@ class CreditAnswersController < ApplicationController
     response.form_id = parameter_value
 
     @answers = []
-    credit = 0
+    section_credits = Hash.new(0)
 
-    answer_params_array.each do |_,answer_param|
-      permitted_params = answer_param.permit(:answer, :credit_question_id,:response_id, :is_upload,:credit_section_id, :file_upload)
+    answer_params_array.each do |_, answer_param|
+      permitted_params = answer_param.permit(:answer, :credit_question_id, :response_id, :is_upload, :credit_section_id, :file_upload)
       answer = CreditAnswer.new(permitted_params)
-      if answer.answer == nil
-        answer.answer =0
-      end
+      answer.answer = 0 if answer.answer.nil?
 
       if permitted_params[:file_upload].present?
         answer.file_upload.attach(permitted_params[:file_upload])
       end
 
-
-      credit_per_answer = 0
-      #credit calculations
-      if answer.credit_question.obt_credit * answer.answer >  answer.credit_question.max_credit
-        credit_per_answer = answer.credit_question.max_credit
-        credit = credit + answer.credit_question.max_credit
-      else
-        credit_per_answer = answer.credit_question.obt_credit * answer.answer
-         credit = credit + answer.credit_question.obt_credit * answer.answer
-      end
+      credit_per_answer = answer.credit_question.obt_credit * answer.answer
 
       answer.response_id = response.id
       answer.credit = credit_per_answer
       answer.verified_count = answer.answer
       answer.verified_credit = credit_per_answer
+
+      section_credits[answer.credit_section_id] += credit_per_answer
       @answers << answer
     end
 
-    response.credit_score = credit
+    total_credit = 0
+    section_credits.each do |section_id, section_credit|
+      section = CreditSection.find(section_id)
+      if section.max_credit.present? && section.max_credit > 0
+        capped_section_credit = [section_credit, section.max_credit].min
+        total_credit += capped_section_credit
+      else
+        total_credit += section_credit
+      end
+    end
+
+    response.credit_score = total_credit
     response.user_id = current_user.id
     response.title = current_user.email
     form_id = response.form_id
     @form = Form.find(form_id)
 
-    if credit >= @form.credit_req
+
       response.save
       if @answers.all? { |answer| answer.valid? }
         @answers.each(&:save)
@@ -81,10 +83,6 @@ class CreditAnswersController < ApplicationController
       else
         render :new
       end
-    else
-      redirect_to new_credit_answer_path(id: @form.id,userid: current_user.id)
-      response.destroy
-    end
   end
 
   def update_batch
@@ -117,7 +115,7 @@ class CreditAnswersController < ApplicationController
   response = Response.find(params[:res_id])
 
   @answers = []
-  credit = 0
+  section_credits = Hash.new(0)
 
   answer_params_array.each do |answer_param|
     permitted_params = answer_param[1].permit(:answer, :credit_question_id, :response_id, :is_upload, :credit_section_id, :file_upload, :remove_file_upload)
@@ -134,33 +132,34 @@ class CreditAnswersController < ApplicationController
       answer.file_upload.attach(permitted_params[:file_upload])
     end
 
-    credit_per_answer = 0
-    #credit calculations
-    if answer.credit_question.obt_credit * answer.answer > answer.credit_question.max_credit
-      credit_per_answer = answer.credit_question.max_credit
-      credit += answer.credit_question.max_credit
-    else
-      credit_per_answer = answer.credit_question.obt_credit * answer.answer
-      credit += credit_per_answer
-    end
+    credit_per_answer = answer.credit_question.obt_credit * answer.answer
 
-    answer.response_id = response.id
-    answer.credit = credit_per_answer.round(2)
-    if response.validation != true
+      answer.response_id = response.id
+      answer.credit = credit_per_answer
       answer.verified_count = answer.answer
       answer.verified_credit = credit_per_answer
-    end
 
-    @answers << answer
+      section_credits[answer.credit_section_id] += credit_per_answer
+      @answers << answer
   end
 
-  response.credit_score = credit.round(2)
-  response.user_id = current_user.id
-  response.title = current_user.email
-  form_id = response.form_id
-  @form = Form.find(form_id)
+  total_credit = 0
+    section_credits.each do |section_id, section_credit|
+      section = CreditSection.find(section_id)
+      if section.max_credit.present? && section.max_credit > 0
+        capped_section_credit = [section_credit, section.max_credit].min
+        total_credit += capped_section_credit
+      else
+        total_credit += section_credit
+      end
+    end
 
-  if credit >= @form.credit_req
+    response.credit_score = total_credit
+    response.user_id = current_user.id
+    response.title = current_user.email
+    form_id = response.form_id
+    @form = Form.find(form_id)
+
     response.save
     if @answers.all? { |answer| answer.valid? }
       @answers.each(&:save)
@@ -168,10 +167,6 @@ class CreditAnswersController < ApplicationController
     else
       render :new
     end
-  else
-    redirect_to new_credit_answer_path(id: @form.id, userid: current_user.id)
-    response.destroy
-  end
 end
   # PATCH/PUT /credit_answers/1 or /credit_answers/1.json
   def update
