@@ -35,30 +35,7 @@
                     </div>
                 </section>
 
-                <!-- Profile Section (Right) -->
-                <section class="profile-section">
-                    <h2>Profile and Signature</h2>
-                    <div class="photo-container">
-                        <div class="profile-photo">
-                            <% if @user_photo_base64 %>
-                                <%= image_tag "data:image/#{@user.photo.content_type};base64,#{@user_photo_base64}", class: 'user-photo' %>
-                            <% else %>
-                                <div class="photo-placeholder">
-                                    <span>No photo available</span>
-                                </div>
-                            <% end %>
-                        </div>
-                        <div class="profile-sign">
-                            <% if @user_sign_base64 %>
-                                <%= image_tag "data:image/#{@user.sign.content_type};base64,#{@user_sign_base64}", class: 'user-sign' %>
-                            <% else %>
-                                <div class="sign-placeholder">
-                                    <span>No signature available</span>
-                                </div>
-                            <% end %>
-                        </div>
-                    </div>
-                </section>
+
             </div>
 
 
