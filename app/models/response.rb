@@ -6,4 +6,5 @@ class Response < ApplicationRecord
   belongs_to :user, optional:true
   accepts_nested_attributes_for :answers, allow_destroy: true
   has_one_attached :current_stage, dependent: :destroy
+  has_one_attached :summary_pdf, dependent: :destroy
 end

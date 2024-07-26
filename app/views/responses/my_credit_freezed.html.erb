@@ -5,10 +5,8 @@
 
 <div id="credits_container" class="font-jost my-3 mb-5">
   <div id="total_sum" class="mt-3 font-jost fw-bold">
-    <div class="mb-2">Credit Score : <span class="badge text" id="total_value"><%= @total_credits %></span> credits</div>
-    <div class="progress" role="progressbar" aria-label="Credit progress" aria-valuemin="0" aria-valuemax="100">
-      <div class="progress-bar" id="progress_bar" style="width: <%= [(@total_credits.to_f / @form.credit_req) * 100, 100].min %>%"><%= [(@total_credits.to_f / @form.credit_req) * 100, 100].min.round(2) %>%</div>
-    </div>
+    <div class="mb-2">Credit Score : <span class="badge text" id="total_value"><%= @ %></span> credits</div>
+
   </div>
 
   <div>

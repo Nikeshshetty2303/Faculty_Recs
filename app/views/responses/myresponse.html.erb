@@ -26,6 +26,7 @@
             <%if response.status == "Freezed"%>
               <%= link_to "View Credit Response", my_credit_freezed_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-sm' %>
               <%= link_to "Print Finalized Application", view_app_pdf_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-success btn-sm' %>
+              
               <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#unfreezeModal<%= response.id %>">
                 Freezed
               </button>

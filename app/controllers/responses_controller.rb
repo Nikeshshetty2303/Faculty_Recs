@@ -81,6 +81,28 @@ class ResponsesController < ApplicationController
           content_type: 'application/pdf'
         )
 
+
+        # Generate PDF
+        sum_pdf = WickedPdf.new.pdf_from_string(
+          render_to_string(
+            template: 'admin_dashboard/summarypdf.html.erb',
+            layout: 'layouts/pdf.html.erb',
+            locals: {
+              response: @response,
+              user: @user,
+              app_response: Response.where(user_id: current_user.id, profile_response: true).last
+            }
+          ),
+          margin: { top: 0, bottom: 0, left: 0, right: 0 }
+        )
+
+        # Attach the generated PDF to current_stage
+        @response.summary_pdf.attach(
+          io: StringIO.new(sum_pdf),
+          filename: "response_#{@response.id}_summary.pdf",
+          content_type: 'application/pdf'
+        )
+
       elsif @response.status == "Freezed"
         @response.status = "Free"
       end
@@ -93,6 +115,11 @@ class ResponsesController < ApplicationController
   def view_app_pdf
     @response = Response.find(params[:id])
     send_data @response.current_stage.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+  end
+
+  def view_sum_pdf
+    @response = Response.find(params[:id])
+    send_data @response.summary_pdf.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
   end
 
 
@@ -220,6 +247,6 @@ class ResponsesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def response_params
-      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility, :current_stage, :validated_credit_score)
+      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility, :current_stage, :validated_credit_score, :summary_pdf)
     end
 end

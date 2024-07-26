@@ -48,7 +48,7 @@
               <td><%= response.credit_score %></td>
               <td>
                 <% if response.status == "Freezed" %>
-                  <%= link_to "View Response", view_app_pdf_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-sm' %>
+                  <%= link_to "View Response", view_sum_pdf_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-primary btn-sm' %>
                 <% else %>
                   <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-secondary btn-sm' %>
                 <% end %>
