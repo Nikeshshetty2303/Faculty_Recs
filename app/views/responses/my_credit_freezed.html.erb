@@ -46,7 +46,11 @@
                   <label class="form-label"><%= question.title %></label>
                   <div class="input-group mb-3">
                     <input type="text" class="form-control" value="<%= answer&.answer %>" readonly>
-                    <span class="input-group-text"><%= [question.obt_credit * answer&.answer.to_i, question.max_credit].min %></span>
+                    <%if question.max_credit.present?%>
+                      <span class="input-group-text"><%= [question.obt_credit * answer&.answer.to_i, question.max_credit].min %></span>
+                    <%else%>
+                      <span class="input-group-text"><%= question.obt_credit * answer&.answer.to_i %></span>
+                    <%end%>
                   </div>
                 </div>
               </div>

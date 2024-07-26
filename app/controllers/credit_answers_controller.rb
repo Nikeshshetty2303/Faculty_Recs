@@ -141,7 +141,7 @@ class CreditAnswersController < ApplicationController
 
     credit_per_answer = 0
     #credit calculations
-    if answer.credit_question.obt_credit * answer.answer >  answer.credit_question.max_credit
+    if answer.credit_question.max_credit.present? && answer.credit_question.obt_credit * answer.answer >  answer.credit_question.max_credit
       credit_per_answer = answer.credit_question.max_credit
     else
       credit_per_answer = answer.credit_question.obt_credit * answer.answer
