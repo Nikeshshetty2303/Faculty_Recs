@@ -26,7 +26,11 @@
                       <label class="form-label"><%= sub_question.title %></label>
                       <div class='input-group mb-1'>
                         <input type="text" class="form-control" value="<%= CreditAnswer.find_by(credit_question_id: sub_question.id, response_id: @response.id)&.answer %>" readonly>
+                        <%if sub_question.max_credit.present?%>
                         <span class="input-group-text"><%= [sub_question.obt_credit * CreditAnswer.find_by(credit_question_id: sub_question.id, response_id: @response.id)&.answer.to_i, sub_question.max_credit].min %></span>
+                        <%else%>
+                        <span class="input-group-text"><%= sub_question.obt_credit * CreditAnswer.find_by(credit_question_id: sub_question.id, response_id: @response.id)&.answer.to_i %></span>
+                        <%end%>
                       </div>
                     </div>
                   </div>
