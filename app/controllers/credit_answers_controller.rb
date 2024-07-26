@@ -47,7 +47,14 @@ class CreditAnswersController < ApplicationController
         answer.file_upload.attach(permitted_params[:file_upload])
       end
 
-      credit_per_answer = answer.credit_question.obt_credit * answer.answer
+      credit_per_answer = 0
+      #credit calculations
+
+      if answer.credit_question.max_credit.present? && answer.credit_question.obt_credit * answer.answer >  answer.credit_question.max_credit
+        credit_per_answer = answer.credit_question.max_credit
+      else
+        credit_per_answer = answer.credit_question.obt_credit * answer.answer
+      end
 
       answer.response_id = response.id
       answer.credit = credit_per_answer
@@ -132,7 +139,13 @@ class CreditAnswersController < ApplicationController
       answer.file_upload.attach(permitted_params[:file_upload])
     end
 
-    credit_per_answer = answer.credit_question.obt_credit * answer.answer
+    credit_per_answer = 0
+    #credit calculations
+    if answer.credit_question.obt_credit * answer.answer >  answer.credit_question.max_credit
+      credit_per_answer = answer.credit_question.max_credit
+    else
+      credit_per_answer = answer.credit_question.obt_credit * answer.answer
+    end
 
       answer.response_id = response.id
       answer.credit = credit_per_answer

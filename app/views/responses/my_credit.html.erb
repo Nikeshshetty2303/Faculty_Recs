@@ -35,8 +35,11 @@
                         <div class="my-3 mx-2">
                           <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
                           <div class='input-group mb-1'>
-                            <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: sub_question.id, sectionId: section.id, obtCredit: sub_question.obt_credit} %>
+                            <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: sub_question.id, sectionId: section.id, obtCredit: sub_question.obt_credit, maxCredit: sub_question.max_credit} %>
                             <span id="credit_value_<%= sub_question.id %>" class="input-group-text">0</span>
+                            <% if sub_question.max_credit.present? && sub_question.max_credit > 0 %>
+                              <span class="input-group-text">/ <%= sub_question.max_credit %></span>
+                            <% end %>
                           </div>
                         </div>
                       <% end %>
@@ -66,7 +69,7 @@
                     <div class="my-4">
                       <%= answer_fields.label :answer, question.title, class: "form-label" %>
                       <div class="input-group mb-3">
-                        <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: question.id, sectionId: section.id, obtCredit: question.obt_credit} %>
+                        <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: question.id, sectionId: section.id, obtCredit: question.obt_credit, maxCredit: question.max_credit} %>
                         <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
                       </div>
                     </div>
@@ -121,8 +124,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const questionId = input.dataset.questionid;
       const sectionId = input.dataset.sectionid;
       const obtCredit = parseFloat(input.dataset.obtcredit) || 0;
+      const maxCredit = parseFloat(input.dataset.maxcredit) || 0;
 
-      const credit = obtCredit * value;
+      let credit;
+      if (maxCredit > 0) {
+        credit = Math.min(maxCredit, obtCredit * value);
+      } else {
+        credit = obtCredit * value;
+      }
       sectionCredits[sectionId] = (sectionCredits[sectionId] || 0) + credit;
 
       const creditValueElement = document.getElementById(`credit_value_${questionId}`);

@@ -45,6 +45,8 @@ class ResponsesController < ApplicationController
       @app_response = Response.where(user_id: current_user.id, profile_response: true).last
       if @response.status == "Free"
         @response.status = "Freezed"
+        @user.tab_no = 7
+        @user.nav_tab_no = 7
 
         if @user.photo.attached?
           @user_photo_base64 = Base64.strict_encode64(@user.photo.download)
@@ -84,6 +86,7 @@ class ResponsesController < ApplicationController
       end
 
       @response.save
+      @user.save
       redirect_to myresponse_response_path
   end
 

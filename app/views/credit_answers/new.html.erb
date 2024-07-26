@@ -34,8 +34,11 @@
                           <div class="my-3 mx-2">
                             <%= answer_fields.label :answer, sub_question.title, class: "form-label" %>
                             <div class='input-group mb-1'>
-                              <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: sub_question.id, sectionId: section.id, obtCredit: sub_question.obt_credit } %>
+                              <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: sub_question.id, sectionId: section.id, obtCredit: sub_question.obt_credit, maxCredit: sub_question.max_credit } %>
                               <span id="credit_value_<%= sub_question.id %>" class="input-group-text">0</span>
+                              <% if sub_question.max_credit.present? && sub_question.max_credit > 0 %>
+                                <span class="input-group-text">/ <%= sub_question.max_credit %></span>
+                              <% end %>
                             </div>
                           </div>
                         <% end %>
@@ -52,8 +55,9 @@
                       <div class="my-4">
                         <%= answer_fields.label :answer, question.title, class: "form-label" %>
                         <div class="input-group mb-3">
-                          <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: question.id, sectionId: section.id, obtCredit: question.obt_credit } %>
+                          <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: question.id, sectionId: section.id, obtCredit: question.obt_credit, maxCredit: question.max_credit } %>
                           <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
+                          
                         </div>
                       </div>
                       <%= answer_fields.hidden_field :credit_question_id, class: "question_id", value: question.id %>
@@ -72,7 +76,7 @@
           <div id="error-message" style="color: red;"></div>
         </div>
         <div style="display:flex; justify-content:flex-end">
-          <%= form.submit "Create Answers", class: "btn btn-success", id: "submit-button"%>
+          <%= form.submit "Create Answers", class: "btn btn-success", id: "submit-button" %>
         </div>
       <% end %>
       <%= @entry %>
@@ -86,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const totalValue = document.getElementById('total_value');
   const submitButton = document.getElementById('submit-button');
   const errorMessage = document.getElementById('error-message');
-  const progressBar = document.getElementById('progres_bar');
 
   const sectionCredits = {};
   const sectionMaxCredits = {};
@@ -101,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateTotal() {
     let total = 0;
-    let totalProgress = 0;
 
     // Reset section credits
     Object.keys(sectionCredits).forEach(key => {
@@ -113,8 +115,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const questionId = input.dataset.questionid;
       const sectionId = input.dataset.sectionid;
       const obtCredit = parseFloat(input.dataset.obtcredit) || 0;
+      const maxCredit = parseFloat(input.dataset.maxcredit) || 0;
 
-      const credit = obtCredit * value;
+      let credit;
+      if (maxCredit > 0) {
+        credit = Math.min(maxCredit, obtCredit * value);
+      } else {
+        credit = obtCredit * value;
+      }
       sectionCredits[sectionId] = (sectionCredits[sectionId] || 0) + credit;
 
       const creditValueElement = document.getElementById(`credit_value_${questionId}`);
@@ -128,19 +136,12 @@ document.addEventListener('DOMContentLoaded', function() {
       const cappedCredit = maxCredit > 0 ? Math.min(sectionCredit, maxCredit) : sectionCredit;
 
       total += cappedCredit;
-      totalProgress += (cappedCredit / <%= @form.credit_req %>) * 100;
 
       const sectionCreditElement = document.getElementById(`section_credit_${sectionId}`);
       sectionCreditElement.textContent = cappedCredit.toFixed(2);
     });
 
     totalValue.innerText = total.toFixed(2);
-    const progressPercentage = Math.min(totalProgress, 100).toFixed(2);
-    if (progressBar) {
-      progressBar.style.width = progressPercentage + "%";
-      progressBar.textContent = progressPercentage + "%";
-      progressBar.setAttribute('aria-valuenow', progressPercentage);
-    }
   }
 });
 </script>
