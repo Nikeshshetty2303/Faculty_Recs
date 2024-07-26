@@ -52,7 +52,7 @@
                     <% if file_view == 0 %>
                       <div class="file-upload-container">
                         <div class="file-upload-field">
-                          <%= answer_fields.file_field :file_upload, class: "form-control" %>
+                          <%= answer_fields.file_field :file_upload, class: "form-control", accept: ".pdf" %>
                         </div>
                         <% if answer_fields.object.file_upload.attached? %>
                           <div class="file-link">

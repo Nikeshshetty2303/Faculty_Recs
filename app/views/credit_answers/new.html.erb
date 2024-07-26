@@ -49,7 +49,7 @@
                   <div class="mb-3">
                     <%= form.fields_for "answers[]", CreditAnswer.new, index: question.id do |answer_fields| %>
                       <% if first_question %>
-                        <%= answer_fields.file_field :file_upload, class: "form-control" %>
+                        <%= answer_fields.file_field :file_upload, class: "form-control", accept: ".pdf" %>
                         <% first_question = false %>
                       <% end %>
                       <div class="my-4">
@@ -57,7 +57,7 @@
                         <div class="input-group mb-3">
                           <%= answer_fields.number_field :answer, class: "form-control numeric-input", data: {questionId: question.id, sectionId: section.id, obtCredit: question.obt_credit, maxCredit: question.max_credit } %>
                           <span class="input-group-text" id="credit_value_<%= question.id %>">0</span>
-                          
+
                         </div>
                       </div>
                       <%= answer_fields.hidden_field :credit_question_id, class: "question_id", value: question.id %>
