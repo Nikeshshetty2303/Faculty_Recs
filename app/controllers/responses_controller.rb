@@ -45,7 +45,6 @@ class ResponsesController < ApplicationController
       @app_response = Response.where(user_id: current_user.id, profile_response: true).last
       if @response.status == "Free"
         @response.status = "Freezed"
-        @user.tab_no = 8
         @user.nav_tab_no = 8
 
         @app_response.combine_and_store_pdfs(@response)
