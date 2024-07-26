@@ -45,8 +45,10 @@ class ResponsesController < ApplicationController
       @app_response = Response.where(user_id: current_user.id, profile_response: true).last
       if @response.status == "Free"
         @response.status = "Freezed"
-        @user.tab_no = 7
-        @user.nav_tab_no = 7
+        @user.tab_no = 8
+        @user.nav_tab_no = 8
+
+        @app_response.combine_and_store_pdfs(@response)
 
         if @user.photo.attached?
           @user_photo_base64 = Base64.strict_encode64(@user.photo.download)
@@ -120,6 +122,11 @@ class ResponsesController < ApplicationController
   def view_sum_pdf
     @response = Response.find(params[:id])
     send_data @response.summary_pdf.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+  end
+
+  def view_combined_pdf
+    @response = Response.find(params[:id])
+    send_data @response.combined_pdf.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
   end
 
 
@@ -247,6 +254,6 @@ class ResponsesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def response_params
-      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility, :current_stage, :validated_credit_score, :summary_pdf)
+      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility, :current_stage, :validated_credit_score, :summary_pdf, :combined_pdf)
     end
 end

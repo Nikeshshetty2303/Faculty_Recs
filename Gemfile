@@ -90,3 +90,5 @@ gem 'razorpay'
 
 gem 'cancancan'
 
+gem 'combine_pdf'
+
