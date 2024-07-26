@@ -115,7 +115,9 @@
                                     <input readonly value=" ">
                                 <%end%>
                             </div>
-                        <% elsif question.question_type_id != 9 && question.question_type_id != 7 %>
+                        <%elsif question.question_type_id == 7 %>
+                            <label><%= question.title %></label>
+                        <% elsif question.question_type_id != 9 %>
                             <div class="mb-3">
                                 <label><%= question.title %></label>
                                 <% if answer%>
