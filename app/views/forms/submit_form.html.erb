@@ -34,6 +34,9 @@
           <% when 8 %>
             <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
 
+          <% when 9 %>
+              <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control' , required: question.mandatory, accept: ".pdf"%>
+
           <% when 5 %>
             <div class="input-group">
               <span class="input-group-text"><%= question.title %></span>
