@@ -67,7 +67,10 @@ body {
   .department-filter {
     width: 300px;
   }
-  .announcement-text {
-    font-size: 0.9rem;
+  .announcement-card .card {
+    transition: box-shadow 0.3s ease;
+  }
 
+  .announcement-card .card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }

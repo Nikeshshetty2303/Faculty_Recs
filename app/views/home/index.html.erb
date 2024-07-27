@@ -2,23 +2,34 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
 <div class="container mt-4">
-  <div class="d-flex align-items-center mb-4">
-    <div class="me-3 department-filter">
-      <label for="departmentFilter" class="form-label">Filter by Department:</label>
-      <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-filter"></i></span>
-        <select class="form-select" id="departmentFilter">
-          <option value="">All Departments</option>
-          <% Department.all.each do |department| %>
-            <option value="<%= department.full_name %>"><%= department.full_name %></option>
-          <% end %>
-        </select>
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="department-filter">
+        <label for="departmentFilter" class="form-label">Filter by Department:</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-filter"></i></span>
+          <select class="form-select" id="departmentFilter">
+            <option value="">All Departments</option>
+            <% Department.all.each do |department| %>
+              <option value="<%= department.full_name %>"><%= department.full_name %></option>
+            <% end %>
+          </select>
+        </div>
       </div>
     </div>
-    <div class="announcement-text flex-grow-1">
-      <%= @announcement.description %>
+    <div class="col-md-8">
+      <div class="announcement-card">
+        <div class="card">
+          <div class="card-body">
+            <small class="text-muted"><i class="fas fa-bullhorn me-2"></i>Announcement</small>
+            <p class="card-text mb-0"><%= @announcement.description %></p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
+
 
   <div id="loading" class="text-center d-none">
     <div class="spinner-border text-primary" role="status">
