@@ -2,8 +2,8 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
 <div class="container mt-4">
-  <div class="d-flex align-items-start flex-wrap">
-    <div class="flex-grow-1 me-3 mb-3">
+  <div class="d-flex align-items-center mb-4">
+    <div class="me-3 department-filter">
       <label for="departmentFilter" class="form-label">Filter by Department:</label>
       <div class="input-group">
         <span class="input-group-text"><i class="fas fa-filter"></i></span>
@@ -15,15 +15,12 @@
         </select>
       </div>
     </div>
-    <div class="announcement-card mb-3">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title"><%= @announcement.title %></h5>
-          <p class="card-text small"><%= truncate(@announcement.description, length: 100) %></p>
-        </div>
-      </div>
+    <div class="announcement-text flex-grow-1">
+      <strong><%= @announcement.title %>:</strong>
+      <%= @announcement.description %>
     </div>
   </div>
+
   <div id="loading" class="text-center d-none">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
