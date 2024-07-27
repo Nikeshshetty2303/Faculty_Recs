@@ -3,6 +3,7 @@ class HomeController < ApplicationController
     @user = User.find(current_user.id)
     @forms = Form.all
     @departments = Department.all
+    @announcement = Announcement.find(1)
   end
 
   def app_profile
