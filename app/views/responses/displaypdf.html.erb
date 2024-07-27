@@ -209,7 +209,7 @@
                                     <tr>
                                         <th>Question</th>
                                         <th>Response</th>
-                                         <% if credit_section != "Research/Teaching Experience(Mandatory Field)"%>
+                                         <% if credit_section.title != "Research/Teaching Experience(Mandatory Field)"%>
                                             <th>Credit</th>
                                         <%end%>
                                     </tr>
@@ -220,7 +220,7 @@
                                         <tr>
                                             <td><%= credit_question.title %></td>
                                             <td><%= credit_answer ? credit_answer.answer : " " %></td>
-                                            <% if credit_section != "Research/Teaching Experience(Mandatory Field)"%>
+                                            <% if credit_section.title != "Research/Teaching Experience(Mandatory Field)"%>
                                             <td><%= credit_answer ? credit_answer.credit : " " %></td>
                                              <%end%>
                                         </tr>
