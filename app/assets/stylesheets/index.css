@@ -64,6 +64,9 @@ body {
     }
   }
 
+  .department-filter {
+    width: 300px;
+  }
   .announcement-text {
     font-size: 0.9rem;
     white-space: nowrap;
