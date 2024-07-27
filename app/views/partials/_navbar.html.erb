@@ -60,21 +60,23 @@
       </div>
       <div class="modal-body">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item announcement-item">
-            <p class="text-muted mb-1">Date</p>
-            <div class="d-flex align-items-center">
-              <%= render 'partials/announcementIcon' %>
-              <h6 class="mb-0 ms-2">
-                <a href="#" class="text-decoration-none">Announcement element heading</a>
-              </h6>
-            </div>
-          </li>
-          <!-- Add more announcement items as needed -->
+          <% Announcement.order(created_at: :desc).each do |announcement| %>
+            <li class="list-group-item announcement-item">
+              <p class="text-muted mb-1"><%= announcement.created_at.in_time_zone('Asia/Kolkata').strftime("%B %d, %Y at %I:%M %p IST") %></p>
+              <div class="d-flex align-items-center">
+                <%= render 'partials/announcementIcon' %>
+                <h6 class="mb-0 ms-2">
+                  <%= link_to announcement.title, announcement_path(announcement), class: "text-decoration-none" %>
+                </h6>
+              </div>
+              <p class="mt-2 mb-0"><%= truncate(announcement.description, length: 100) %></p>
+            </li>
+          <% end %>
         </ul>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">All Notifications</button>
+        <%= link_to "View All Announcements", announcements_path, class: "btn btn-primary" %>
       </div>
     </div>
   </div>

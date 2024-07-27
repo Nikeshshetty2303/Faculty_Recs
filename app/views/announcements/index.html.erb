@@ -1,0 +1,32 @@
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+
+<div class="container mt-4">
+  <% if notice.present? %>
+    <div class="alert alert-success" role="alert">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Announcements</h1>
+
+  </div>
+
+  <div class="list-group">
+    <% @announcements.each do |announcement| %>
+      <div class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"><%= link_to announcement.title, announcement, class: 'text-decoration-none' %></h5>
+          <small class="text-muted"><%= announcement.created_at.in_time_zone('Asia/Kolkata').strftime("%B %d, %Y at %I:%M %p IST") %></small>
+        </div>
+        <p class="mb-1"><%= truncate(announcement.description, length: 150) %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @announcements.empty? %>
+    <div class="alert alert-info mt-4" role="alert">
+      There are no announcements at the moment.
+    </div>
+  <% end %>
+</div>
