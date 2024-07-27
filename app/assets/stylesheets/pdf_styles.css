@@ -238,3 +238,44 @@ th {
         grid-template-columns: 1fr;
     }
 }
+
+.credit-details {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    padding: 15px;
+}
+
+.credit-header {
+    margin-bottom: 15px;
+}
+
+.credit-section {
+    margin-bottom: 20px;
+}
+
+.credit-section h3 {
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.credit-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.credit-table th, .credit-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.credit-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.credit-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}

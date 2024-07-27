@@ -189,6 +189,50 @@
                     <%end%>
                 </div>
             </section>
+
+            <section class="application-details">
+                <h2>Credit Details</h2>
+            <div class="application-header">
+            <div class="header-content">
+                <p class="note">NOTE: Information populated here is from the data that you have entered while filling the credit form</p>
+            </div>
+            </div>
+
+
+            <section class="credit-details">
+                <h2>Credit Details</h2>
+                <div class="credit-header">
+                    <div class="header-content">
+                        <p class="note">NOTE: Information populated here is from the data that you have entered while filling the credit form</p>
+                    </div>
+                </div>
+
+                <div class="credit-container">
+                    <% CreditSection.all.each do |credit_section| %>
+                        <div class="credit-section">
+                            <h3><%= credit_section.title %></h3>
+                            <table class="credit-table">
+                                <thead>
+                                    <tr>
+                                        <th>Question</th>
+                                        <th>Credit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% credit_section.credit_questions.each do |credit_question| %>
+                                        <% credit_answer = CreditAnswer.where(response_id: @response.id, credit_section_id: credit_section.id, credit_question_id: credit_question.id).last %>
+                                        <tr>
+                                            <td><%= credit_question.title %></td>
+                                            <td><%= credit_answer ? credit_answer.answer : " " %></td>
+                                        </tr>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% end %>
+                </div>
+            </section>
+
         </main>
     </div>
 </body>
