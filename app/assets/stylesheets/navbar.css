@@ -116,3 +116,37 @@
       margin: 0.5rem;
     }
   }
+
+  .updates-btn {
+    position: relative;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .updates-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0,123,255,0.5);
+  }
+
+  .pulse {
+    animation: pulse-animation 2s infinite;
+  }
+
+  @keyframes pulse-animation {
+    0% {
+      box-shadow: 0 0 0 0px rgba(0, 123, 255, 0.2);
+    }
+    100% {
+      box-shadow: 0 0 0 20px rgba(0, 123, 255, 0);
+    }
+  }
+
+  .blink {
+    animation: blink-animation 1s steps(5, start) infinite;
+  }
+
+  @keyframes blink-animation {
+    to {
+      visibility: hidden;
+    }
+  }

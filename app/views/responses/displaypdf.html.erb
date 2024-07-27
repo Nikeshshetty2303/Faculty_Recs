@@ -115,6 +115,8 @@
                                     <input readonly value=" ">
                                 <%end%>
                             </div>
+                        <%elsif question.question_type_id == 7 %>
+                            <label><%= question.title %></label>
                         <% elsif question.question_type_id != 9%>
                             <div class="mb-3">
                                 <label><%= question.title %></label>
@@ -170,6 +172,8 @@
                                     <input readonly value=" ">
                                 <%end%>
                             </div>
+                         <%elsif question.question_type_id == 7 %>
+                            <label><%= question.title %></label>
                         <% elsif question.question_type_id != 9%>
                             <div class="mb-3">
                                 <label><%= question.title %></label>

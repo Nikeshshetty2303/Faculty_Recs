@@ -41,10 +41,13 @@
         </li>
       </ul>
       <div class="navbar-nav">
-        <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#updatesModal">
+        <button type="button" class="btn btn-primary me-2 updates-btn pulse" data-bs-toggle="modal" data-bs-target="#updatesModal">
           Updates
+          <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle blink">
+            <span class="visually-hidden">New updates</span>
+          </span>
         </button>
-        <%= button_to 'Log Out', destroy_user_session_path, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: 'Are you sure you want to log out?' } } %>
+        <%= button_to 'Log Out', destroy_user_session_path, method: :delete, class: "btn btn-outline-danger", form: { data: { turbo_confirm: 'Are you sure you want to log out?' } } %>
       </div>
     </div>
   </div>
