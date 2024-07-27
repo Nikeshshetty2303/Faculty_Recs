@@ -1,47 +1,58 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%=stylesheet_link_tag 'validate'%>
 
 <div class="container mt-4">
   <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
 
-  <div class="table-responsive">
-    <table class="table table-bordered table-striped">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">Question</th>
-          <th scope="col">Count</th>
-          <th scope="col">Credit</th>
-          <th scope="col">Uploads</th>
-          <th scope="col">Verified Count</th>
-          <th scope="col">Verified Credit</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% CreditSection.all.each do |credit_section| %>
-      
+  <div class="credit-container">
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped credit-table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Question</th>
+            <th scope="col">Response</th>
+            <th scope="col">Credit</th>
+            <th scope="col">Verified Count</th>
+            <th scope="col">Verified Credit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% CreditSection.all.each do |credit_section| %>
             <tr>
-              <% @question = CreditQuestion.find_by(id: answer.credit_question_id) %>
-              <% @response = Response.find_by(id: answer.response_id) %>
-              <td><%= @question.title %></td>
-              <td><%= answer.answer %></td>
-              <td><%= answer.credit %></td>
-              <td>
-                <% if answer.file_upload.present? %>
-                  <%= link_to "View", view_pdf_response_path(ansid: answer.id, id: @response.id), class: "btn btn-sm btn-outline-primary" %>
-                <% else %>
-                  No Upload
+              <td colspan="5" class="bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span><%= credit_section.title %></span>
+                  <span class="section-credit badge" data-section-id="<%= credit_section.id %>">0</span>
+                </div>
+                <% first_question = credit_section.credit_questions.first %>
+                <% first_answer = CreditAnswer.where(response_id: @responses.id, credit_section_id: credit_section.id, credit_question_id: first_question.id).last if first_question %>
+                <% if first_answer&.file_upload&.present? %>
+                  <div class="mt-2">
+                    <%= link_to "View Upload", view_pdf_response_path(ansid: first_answer.id, id: @responses.id), class: "btn btn-sm btn-outline-primary" %>
+                  </div>
                 <% end %>
               </td>
-              <td>
-                <input type="number" class="form-control verified-count" data-answer-id="<%= answer.id %>" value="<%= answer.verified_count %>">
-              </td>
-              <td>
-                <input type="number" class="form-control verified-credit" data-answer-id="<%= answer.id %>" value="<%= answer.verified_credit %>" readonly>
-              </td>
             </tr>
+            <% credit_section.credit_questions.each do |credit_question| %>
+              <% credit_answer = CreditAnswer.where(response_id: @responses.id, credit_section_id: credit_section.id, credit_question_id: credit_question.id).last %>
+              <% if credit_answer %>
+                <tr>
+                  <td><%= credit_question.title %></td>
+                  <td><%= credit_answer.answer %></td>
+                  <td><%= credit_answer.credit %></td>
+                  <td>
+                    <input type="number" class="form-control verified-count" data-answer-id="<%= credit_answer.id %>" value="<%= credit_answer.verified_count %>">
+                  </td>
+                  <td>
+                    <input type="number" class="form-control verified-credit" data-answer-id="<%= credit_answer.id %>" value="<%= credit_answer.verified_credit %>" readonly>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
           <% end %>
-        <% end %>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="mt-3">
@@ -51,7 +62,7 @@
 
   <button id="updateAllBtn" class="btn btn-primary mt-3">Update All</button>
 
-    <!-- The Remarks and Eligibility Section -->
+  <!-- The Remarks and Eligibility Section -->
   <div class="row mt-4">
     <div class="col-md-6">
       <%= form_with(model: @responses, url: add_remark_response_path(res_id: @responses.id), method: :post, class: 'mb-4') do |f| %>
@@ -83,40 +94,91 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  var creditAnswers = <%= raw CreditAnswer.where(response_id: @responses&.id).includes(:credit_question).to_json(only: [:id, :credit_question_id], include: { credit_question: { only: [:max_credit, :obt_credit] } }) %>;
+  var creditAnswers = <%= raw CreditAnswer.where(response_id: @responses&.id).includes(:credit_question, :credit_section).to_json(
+    only: [:id, :credit_question_id, :credit_section_id],
+    include: {
+      credit_question: { only: [:max_credit, :obt_credit] },
+      credit_section: { only: [:id, :max_credit] }
+    }
+  ) %>;
   var verifiedCountInputs = document.querySelectorAll('.verified-count');
   var verifiedCreditInputs = document.querySelectorAll('.verified-credit');
   var updateAllBtn = document.getElementById('updateAllBtn');
   var totalValidatedCreditSpan = document.getElementById('totalValidatedCredit');
+  var sectionCreditSpans = document.querySelectorAll('.section-credit');
 
-  function updateCredit(answerId, newAnswer) {
+  function updateCredit(answerId, newCount) {
     var answer = creditAnswers.find(a => a.id === answerId);
-    if (!answer) return;
+    if (!answer || !answer.credit_question) return 0;
 
-    var maxCredit = answer.credit_question ? (answer.credit_question.max_credit || 0) : 0;
-    var obtCredit = answer.credit_question ? (answer.credit_question.obt_credit || 0) : 0;
+    var obtCredit = answer.credit_question.obt_credit || 0;
+    var maxCredit = answer.credit_question.max_credit;
 
-    var newCredit = Math.min(newAnswer * obtCredit, maxCredit);
-    return newCredit.toFixed(2);
+    var calculatedCredit = newCount * obtCredit;
+
+    if (maxCredit !== null && maxCredit !== undefined) {
+      return Math.min(calculatedCredit, maxCredit);
+    } else {
+      return calculatedCredit;
+    }
+  }
+
+  function calculateSectionTotal(sectionId) {
+    var sectionAnswers = creditAnswers.filter(a => a.credit_section_id === sectionId);
+    var sectionTotal = sectionAnswers.reduce((total, answer) => {
+      var creditInput = document.querySelector(`.verified-credit[data-answer-id="${answer.id}"]`);
+      return total + (parseFloat(creditInput.value) || 0);
+    }, 0);
+
+    var sectionMaxCredit = sectionAnswers[0]?.credit_section?.max_credit;
+    if (sectionMaxCredit !== null && sectionMaxCredit !== undefined) {
+      return Math.min(sectionTotal, sectionMaxCredit);
+    } else {
+      return sectionTotal;
+    }
   }
 
   function updateAllCredits() {
     var totalCredit = 0;
+    var sectionTotals = {};
+
     verifiedCountInputs.forEach(input => {
       var answerId = parseInt(input.dataset.answerId);
-      var newAnswer = parseFloat(input.value) || 0;
+      var newCount = parseFloat(input.value) || 0;
       var creditInput = document.querySelector(`.verified-credit[data-answer-id="${answerId}"]`);
       if (creditInput) {
-        var newCredit = updateCredit(answerId, newAnswer);
-        creditInput.value = newCredit;
-        totalCredit += parseFloat(newCredit);
+        var newCredit = updateCredit(answerId, newCount);
+        creditInput.value = newCredit.toFixed(2);
       }
     });
+
+    // Calculate section totals and overall total
+    var uniqueSectionIds = [...new Set(creditAnswers.map(a => a.credit_section_id))];
+    uniqueSectionIds.forEach(sectionId => {
+      var sectionTotal = calculateSectionTotal(sectionId);
+      sectionTotals[sectionId] = sectionTotal;
+      totalCredit += sectionTotal;
+
+      // Update section credit display
+      var sectionCreditSpan = document.querySelector(`.section-credit[data-section-id="${sectionId}"]`);
+      if (sectionCreditSpan) {
+        sectionCreditSpan.textContent = sectionTotal.toFixed(2);
+      }
+    });
+
     totalValidatedCreditSpan.textContent = totalCredit.toFixed(2);
   }
 
   verifiedCountInputs.forEach(input => {
-    input.addEventListener('input', updateAllCredits);
+    input.addEventListener('input', function() {
+      var answerId = parseInt(this.dataset.answerId);
+      var newCount = parseFloat(this.value) || 0;
+      var creditInput = document.querySelector(`.verified-credit[data-answer-id="${answerId}"]`);
+      if (creditInput) {
+        creditInput.value = updateCredit(answerId, newCount).toFixed(2);
+      }
+      updateAllCredits();
+    });
   });
 
   updateAllBtn.addEventListener('click', function() {
