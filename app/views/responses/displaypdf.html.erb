@@ -208,6 +208,7 @@
                                 <thead>
                                     <tr>
                                         <th>Question</th>
+                                        <th>Response</th>
                                         <th>Credit</th>
                                     </tr>
                                 </thead>
@@ -217,6 +218,7 @@
                                         <tr>
                                             <td><%= credit_question.title %></td>
                                             <td><%= credit_answer ? credit_answer.answer : " " %></td>
+                                            <td><%= credit_answer ? credit_answer.credit : " " %></td>
                                         </tr>
                                     <% end %>
                                 </tbody>
