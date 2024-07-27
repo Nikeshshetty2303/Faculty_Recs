@@ -141,7 +141,7 @@ class ResponsesController < ApplicationController
   def print
     @response = Response.find(params[:id])
     @user = User.find(params[:userid])
-    @app_response = Response.where(user_id: current_user.id, profile_response: true).last
+    @app_response = Response.where(user_id: @user.id, profile_response: true).last
     if @user.photo.attached?
       @user_photo_base64 = Base64.strict_encode64(@user.photo.download)
     else
