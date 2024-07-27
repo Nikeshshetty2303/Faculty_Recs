@@ -180,3 +180,17 @@ body {
       font-size: 14px;
     }
   }
+  .upload-info {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+
+  .upload-info:hover {
+    background-color: #f8f9fa;
+  }
+
+  .upload-notice {
+    margin-bottom: 0;
+  }

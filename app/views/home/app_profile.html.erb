@@ -137,7 +137,14 @@
           <% end %>
         </div>
 
-        <h2 class="form-title"><%= @tab.title %></h2>
+       <h2 class="form-title"><%= @tab.title %></h2>
+<% if @tab.title == "Uploads" %>
+  <div class="upload-info mb-3">
+    <p class="upload-notice">
+      If there are multiple files/pages to upload against any of the below fields, please combine them into a single PDF file before uploading.
+    </p>
+  </div>
+<% end %>
 
         <% map = {} %>
         <% field_map = {} %>
