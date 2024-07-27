@@ -315,7 +315,6 @@ th {
 }
 
 .signature-box::after {
-    content: "(Sign above this line)";
     position: absolute;
     bottom: -20px;
     left: 0;
