@@ -80,19 +80,21 @@ def update_app_profile_response
         content = content.is_a?(Array) ? content : [content].compact
       end
 
+      answer = @response.answers.find_by(question: question)
       if question.question_type_id == 9
-        if answer_data[:file].present?
+        if answer_data[:remove_file] == '1'
+          answer.file.purge if answer && answer.file.attached?
+          file = nil
+        elsif answer_data[:file].present?
           file = answer_data[:file]
         end
       end
-
-      if @response.answers.find_by(question: question)
-        @response.answers.where(question: question).update(content: content, file: file)
+      if answer
+        answer.update(content: content)
+        answer.file.attach(file) if file
       else
         @response.answers.build(question: question, content: content, file: file)
       end
-
-
     end
   end
 

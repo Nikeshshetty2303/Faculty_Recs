@@ -167,12 +167,14 @@
               <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id], required: question.mandatory %>
 
             <% when 9 %>
-              <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control', accept: ".pdf"%>
-              <% if question.question_type_id == 9 && field_map[question.id] != nil && field_map[question.id].file.attached? %>
-                <div class="file-actions">
-                  <%= link_to field_map[question.id].file.filename.to_s, view_pdf_form_path(ansid: field_map[question.id].id, id: field_map[question.id].response_id), class: "btn btn-light-blue btn-sm" %>
-                </div>
-              <% end %>
+            <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control', accept: ".pdf"%>
+            <% if question.question_type_id == 9 && field_map[question.id] != nil && field_map[question.id].file.attached? %>
+              <div class="file-actions">
+                <%= link_to field_map[question.id].file.filename.to_s, view_pdf_form_path(ansid: field_map[question.id].id, id: field_map[question.id].response_id), class: "btn btn-light-blue btn-sm" %>
+                <%= form.check_box :remove_file, name: "response[answers_attributes][#{question.id}][remove_file]", id: "remove_file_#{question.id}" %>
+                <%= form.label :remove_file, "Remove file", for: "remove_file_#{question.id}" %>
+              </div>
+            <% end %>
 
             <% when 5 %>
               <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control', value: map[question.id], required: question.mandatory %>
