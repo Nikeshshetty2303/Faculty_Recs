@@ -1,6 +1,5 @@
 //= link_tree ../images
 //= link_tree ../builds
-//= link_tree ../pdfs
 //= link auth.css
 //= link home.css
 //= link new_nav.css

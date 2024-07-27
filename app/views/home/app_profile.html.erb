@@ -30,7 +30,7 @@
           <div class="question-container" data-role="<%= question.role %>" <%= 'style="display: none;"' if question.role == 'O' %>>
             <label class="form-label"><%= question.title %></label>
             <%if question.title == "Self Attestation"%>
-            <%= link_to "View Self Attestation Document", asset_path('self attestation.pdf'), target: '_blank' %>
+              <%= link_to "View Self Attestation Document", "/self attestation.pdf", target: '_blank' %>
             <%end%>
 
             <% case question.question_type_id %>
@@ -153,7 +153,7 @@
 
             <label class="form-label"><%= question.title %></label>
             <%if question.title == "Self Attestation"%>
-            <%= link_to "View PDF", asset_path('self attestation.pdf'), target: '_blank' %>
+              <%= link_to "View Self Attestation Document", "/self attestation.pdf", target: '_blank' %>
             <%end%>
 
             <% case question.question_type_id %>
