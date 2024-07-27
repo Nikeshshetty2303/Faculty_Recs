@@ -279,3 +279,46 @@ th {
 .credit-table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
+
+.summary-and-signature {
+    margin-top: 30px;
+    border-top: 2px solid #ddd;
+    padding-top: 20px;
+}
+
+.total-credit {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.total-credit strong {
+    font-size: 18px;
+}
+
+.signature-section {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 30px;
+}
+
+.signature-label {
+    flex: 0 0 150px;
+    padding-top: 10px;
+}
+
+.signature-box {
+    flex: 1;
+    height: 80px;
+    border-bottom: 1px solid #000;
+    margin-left: 10px;
+    position: relative;
+}
+
+.signature-box::after {
+    content: "(Sign above this line)";
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    font-size: 12px;
+    color: #666;
+}

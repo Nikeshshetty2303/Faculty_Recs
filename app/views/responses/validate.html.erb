@@ -16,8 +16,8 @@
         </tr>
       </thead>
       <tbody>
-        <% CreditAnswer.all.each do |answer| %>
-          <% if answer.response_id == @responses.id %>
+        <% CreditSection.all.each do |credit_section| %>
+      
             <tr>
               <% @question = CreditQuestion.find_by(id: answer.credit_question_id) %>
               <% @response = Response.find_by(id: answer.response_id) %>
