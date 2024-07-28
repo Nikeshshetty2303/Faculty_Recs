@@ -9,7 +9,7 @@
         <div class="input-group">
           <span class="input-group-text"><i class="fas fa-filter"></i></span>
           <select class="form-select" id="departmentFilter">
-            <option value="">All Departments</option>
+            <option value="" selected disabled>Select a Department</option>
             <% Department.all.each do |department| %>
               <option value="<%= department.full_name %>"><%= department.full_name %></option>
             <% end %>
@@ -29,7 +29,13 @@
     </div>
   </div>
 
-
+  <div id="selectDepartmentCard" class="card mb-4">
+    <div class="card-body text-center">
+      <h5 class="card-title">Please Select a Department</h5>
+      <p class="card-text">You need to select a department to view and apply for available positions.</p>
+      <p class="card-text"><strong>Note:</strong> Make sure that the faculty positions you are applying for are vacant (Not applicable for internal candidates).</p>
+    </div>
+  </div>
 
   <div id="loading" class="text-center d-none">
     <div class="spinner-border text-primary" role="status">
@@ -37,40 +43,41 @@
     </div>
   </div>
 
-  <% Form.all.each do |form| %>
-    <div class='card_div mb-4'>
-      <div class="card shadow-sm">
-        <div class="card-header bg-light">
-          <h3 class='card-title my-3 fw-bold'><%= form.name %></h3>
-          <div class="info">
-            <div class="dept" style="display: none;"><%= form.department.full_name %></div>
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <div class="d-flex align-items-center">
-                <%= image_tag "building.png", width: 15, height: 15, class: 'me-2' %>
-                <span class="text-muted"><%= form.department.full_name %></span>
+  <div id="jobListings" class="d-none">
+    <% Form.all.each do |form| %>
+      <div class='card_div mb-4'>
+        <div class="card shadow-sm">
+          <div class="card-header bg-light">
+            <h3 class='card-title my-3 fw-bold'><%= form.name %></h3>
+            <div class="info">
+              <div class="dept" style="display: none;"><%= form.department.full_name %></div>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                  <%= image_tag "building.png", width: 15, height: 15, class: 'me-2' %>
+                  <span class="text-muted"><%= form.department.full_name %></span>
+                </div>
               </div>
-
+            </div>
+          </div>
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Job Description</h6>
+            <p class="card-text description"><%= form.description %></p>
+            <div class="mt-3">
+              <% if @user.tab_no > Tab.count %>
+                <%= link_to "Apply now", new_credit_answer_path(id: form.id, userid: @user.id), class: "btn btn-outline-primary" %>
+              <% else %>
+                <% if @user.tab_no != 1 %>
+                  <p>You can't apply now, please complete your <%= link_to 'Application Profile', home_app_profile_path(id: @user.id, res_id: @user.responses.last.id, nav_tab_no: @user.nav_tab_no) %></p>
+                <% else %>
+                  <p>You can't apply now, please complete your <%= link_to 'Application Profile', home_app_profile_path(id: @user.id) %></p>
+                <% end %>
+              <% end %>
             </div>
           </div>
         </div>
-        <div class="card-body">
-          <h6 class="fw-bold mb-3">Job Description</h6>
-          <p class="card-text description"><%= form.description %></p>
-          <div class="mt-3">
-            <% if @user.tab_no > Tab.count %>
-              <%= link_to "Apply now", new_credit_answer_path(id: form.id, userid: @user.id), class: "btn btn-outline-primary" %>
-            <% else %>
-              <% if @user.tab_no != 1 %>
-                <p>You can't apply now, please complete your <%= link_to 'Application Profile', home_app_profile_path(id: @user.id, res_id: @user.responses.last.id, nav_tab_no: @user.nav_tab_no) %></p>
-              <% else %>
-                <p>You can't apply now, please complete your <%= link_to 'Application Profile', home_app_profile_path(id: @user.id) %></p>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>
 
 <script>
@@ -90,22 +97,27 @@
     let departmentFilter = document.getElementById('departmentFilter');
     let cardDivs = document.querySelectorAll('.card_div');
     let loading = document.getElementById('loading');
+    let selectDepartmentCard = document.getElementById('selectDepartmentCard');
+    let jobListings = document.getElementById('jobListings');
 
     departmentFilter.addEventListener('change', function () {
       loading.classList.remove('d-none');
+      selectDepartmentCard.classList.add('d-none');
+      jobListings.classList.add('d-none');
       let selectedDepartment = departmentFilter.value;
 
       setTimeout(() => {
         cardDivs.forEach(function (cardDiv) {
           let cardDepartment = cardDiv.querySelector('.dept').textContent.trim();
 
-          if (selectedDepartment === '' || cardDepartment === selectedDepartment) {
+          if (cardDepartment === selectedDepartment) {
             cardDiv.style.display = 'block';
           } else {
             cardDiv.style.display = 'none';
           }
         });
         loading.classList.add('d-none');
+        jobListings.classList.remove('d-none');
       }, 500);
     });
 
