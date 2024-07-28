@@ -26,13 +26,13 @@
 
           <% case question.question_type_id %>
           <% when 1 %>
-            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+            <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control',required: question.mandatory %>
 
           <% when 4 %>
-            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+            <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control',required: question.mandatory %>
 
           <% when 8 %>
-            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+            <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control',required: question.mandatory %>
 
           <% when 9 %>
               <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control' , required: question.mandatory, accept: ".pdf"%>
@@ -40,7 +40,7 @@
           <% when 5 %>
             <div class="input-group">
               <span class="input-group-text"><%= question.title %></span>
-              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control' %>
+              <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class: 'form-control',required: question.mandatory %>
             </div>
 
           <% when 6 %>
@@ -74,7 +74,7 @@
             <div class="radio-group">
               <% question.options.each do |option| %>
                 <div class="form-check">
-                  <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", class: "form-check-input" %>
+                  <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", class: "form-check-input",required: question.mandatory %>
                   <%= form.label :content, option.title, class: "form-check-label" %>
                 </div>
               <% end %>
