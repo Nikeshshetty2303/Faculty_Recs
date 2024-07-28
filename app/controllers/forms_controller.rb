@@ -139,10 +139,16 @@ def update_response
       #   content = [content].reject(&:empty?)
       # end
 
+      if question.question_type_id == 9
+        if answer_data[:file].present?
+          file = answer_data[:file]
+        end
+      end
+
       if @response.answers.find_by(question: question)
-        @response.answers.where(question: question).update(content: content)
+        @response.answers.where(question: question).update(content: content, file: file)
       else
-        @response.answers.build(question: question, content: content)
+        @response.answers.build(question: question, content: content, file: file)
       end
     end
   end
