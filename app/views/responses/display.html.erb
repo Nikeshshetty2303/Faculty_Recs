@@ -26,11 +26,11 @@
 
           <% when 9 %>
               <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control' , required: question.mandatory, accept: ".pdf"%>
-              <div class="file-actions">
               <% if Answer.where(question_id: question.id, response_id: @response.id)[0].present?%>
+              <div class="file-actions">
               <%= link_to Answer.where(question_id: question.id, response_id: @response.id)[0].file.filename.to_s, view_pdf_form_path(ansid:  Answer.where(question_id: question.id, response_id: @response.id)[0].id, id:  Answer.where(question_id: question.id, response_id: @response.id)[0].response_id), class: "btn btn-light-blue btn-sm" %>
-              <%end%>
               </div>
+               <%end%>
           <% when 5 %>
             <div class="input-group">
               <span class="input-group-text"><%= question.title %></span>
