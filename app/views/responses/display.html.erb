@@ -120,16 +120,16 @@
 
                 <% elsif question.question_type_id == 4 %>
                   <label class="form-label"><%= question.title %></label>
-                  <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', required: question.mandator%>
+                  <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', required: question.mandatory%>
 
                 <% elsif question.question_type_id == 8 %>
                   <label class="form-label"><%= question.title %></label>
-                  <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', required: question.mandator %>
+                  <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', required: question.mandatory%>
 
                 <% elsif question.question_type_id == 5 %>
                   <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
-                    <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', required: question.mandator %>
+                    <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control', required: question.mandatory %>
                   </div>
 
 
@@ -144,7 +144,7 @@
                   <label class="form-label"><%= question.title %></label>
                   <% question.options.each do |option| %>
                     <label>
-                      <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", required: question.mandator %>
+                      <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]", required: question.mandatory %>
                       <%= option.title %>
                     </label>
                   <% end %>
