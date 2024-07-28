@@ -81,6 +81,7 @@ end
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
    get 'home/edit_app_profile'
    post 'home/app_profile'
+   get 'home/instruction'
 
    resources :credit_questions do
     collection do

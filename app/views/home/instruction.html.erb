@@ -1,0 +1,13 @@
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%= stylesheet_link_tag 'instruction' %>
+<div class="container documents-container">
+  <h1 class="documents-title">Important Documents</h1>
+  <div class="documents-list">
+    <% Dir.glob(Rails.root.join('public', 'Docs.for.FR.Portal', '*.pdf')).each do |pdf_path| %>
+      <% filename = File.basename(pdf_path) %>
+      <div class="document-item">
+        <%= link_to filename, "/Docs.for.FR.Portal/#{filename}", target: "_blank", class: "document-link" %>
+      </div>
+    <% end %>
+  </div>
+</div>

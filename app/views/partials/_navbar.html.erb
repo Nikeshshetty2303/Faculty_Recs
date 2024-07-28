@@ -47,6 +47,9 @@
             <span class="visually-hidden">New updates</span>
           </span>
         </button>
+
+       <%= link_to 'Instructions', home_instruction_path, class: "btn btn-outline-dark me-2" %>
+
         <%= button_to 'Log Out', destroy_user_session_path, method: :delete, class: "btn btn-outline-danger", form: { data: { turbo_confirm: 'Are you sure you want to log out?' } } %>
       </div>
     </div>

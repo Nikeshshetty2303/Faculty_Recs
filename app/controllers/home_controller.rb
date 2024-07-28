@@ -20,6 +20,10 @@ class HomeController < ApplicationController
     @questions = Question.all
   end
 
+  def instruction
+    @user = current_user
+  end
+
   def edit_app_profile
     @user = User.find(current_user.id)
     @response = Response.where(id: @res_id)
