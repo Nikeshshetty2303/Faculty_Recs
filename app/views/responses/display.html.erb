@@ -110,94 +110,11 @@
 
           <% end %>
           <%else%>
-          <%= form_with(model: @response, url: update_response_form_path(form_id: @form.id, id: @response.id), method: :post) do |form| %>
-
-            <% @questions.sort_by(&:position).each do |question| %>
-              <div style="margin-bottom: 20px;">
-                <% if question.question_type_id == 1 %>
-                  <label class="form-label"><%= question.title %></label>
-                  <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
-
-                <% elsif question.question_type_id == 4 %>
-                  <label class="form-label"><%= question.title %></label>
-                  <%= form.text_area :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control'%>
-
-                <% elsif question.question_type_id == 8 %>
-                  <label class="form-label"><%= question.title %></label>
-                  <%= form.date_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
-
-                <% elsif question.question_type_id == 5 %>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
-                    <%= form.number_field :content, name: "response[answers_attributes][#{question.id}][content]", class:'form-control' %>
-                  </div>
-
-
-                <% elsif question.question_type_id == 9 %>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1"><%= question.title %></span>
-                    <%= form.file_field :file, name: "response[answers_attributes][#{question.id}][file]", class: 'form-control' , required: question.mandatory, accept: ".pdf"%>
-                  </div>
-
-
-                <% elsif question.question_type_id == 2 %>
-                  <label class="form-label"><%= question.title %></label>
-                  <% question.options.each do |option| %>
-                    <label>
-                      <%= form.radio_button :content, option.title, name: "response[answers_attributes][#{question.id}][content]" %>
-                      <%= option.title %>
-                    </label>
-                  <% end %>
-
-                <% elsif question.question_type_id == 3 %>
-                  <label class="form-label"><%= question.title %></label>
-                  <% question.options.each do |option| %>
-                    <label>
-                      <%= form.check_box :content, { multiple: true, name: "response[answers_attributes][#{question.id}][content][]" }, option.title, nil %>
-                      <%= option.title %>
-                      <% if @response && @response.answers.any? { |answer| answer.content.include?(option.title.to_s) } %>
-                        <%= hidden_field_tag "response[answers_attributes][#{question.id}][content]", option.title %>
-                      <% end %>
-                    </label>
-                  <% end %>
-
-                <% elsif question.question_type_id == 6 %>
-                  <hr class="horizontal-line">
-                  <label class="form-label"><%= question.title %></label>
-                  <div id="text_fields_<%= question.id %>">
-                    <table class="option-table" id="option_table_<%= question.id %>">
-                      <thead>
-                        <tr>
-                          <% question.options.each do |option| %>
-                            <th><%= option.title %></th>
-                          <% end %>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <% question.options.each do |_option| %>
-                            <td>
-                              <%= form.text_field :content, name: "response[answers_attributes][#{question.id}][content][]", class: 'form-control' %>
-                            </td>
-                          <% end %>
-                          <td>
-                            <button type="button" class="btn btn-danger" onclick="deleteTableRow(this)">Delete</button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <button type="button" class="btn btn-primary" onclick="addTableRow('<%= question.id %>')">+</button>
-                <% end %>
-              </div>
-            <% end %>
-
-            <div style="display:flex; justify-content:flex-end;">
-              <%= form.submit "Create Response", class:"btn btn-success mt-3" %>
-            </div>
-          <% end %>
-          <% end %>
+         <div class="alert alert-light" role="alert">
+            No responses found. Would you like to submit a new response?
+          </div>
+          <%= link_to "Submit your Response", submit_form_form_path(id: @response.id, userid: current_user.id, form_id: @form.id), class: "btn btn-primary" %>
+        <%end%>
           </div>
           </div>
 
