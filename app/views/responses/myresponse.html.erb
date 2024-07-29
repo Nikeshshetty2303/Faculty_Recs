@@ -23,8 +23,8 @@
           <%end%>
 
 
-      <% if response.status == "Free" && response.skipped.present? && response.skipped != "[]" %>
-            <% skipped_items = response.skipped.is_a?(String) ? response.skipped.gsub(/[\[\]]/, '').split(/[,\s]+/) : [] %>
+         <% if response.status == "Free" && response.skipped.present? && response.skipped != "[]" %>
+            <% skipped_items = JSON.parse(response.skipped) rescue [] %>
             <% if skipped_items.any? %>
               <div class="alert alert-danger mt-3" role="alert">
                 <i class="fas fa-exclamation-triangle me-2"></i>
@@ -34,11 +34,12 @@
                     <li><%= item %></li>
                   <% end %>
                 </ul>
-                <small class="d-block mt-2">These PDFs cannot be combined and might have scanning issues, can be corrupted or password-secured. Scan them properly and upload.</small>
+                <small class="d-block mt-2">These PDFs cannot be combined and might be corrupted or password-secured.</small>
               </div>
             <% end %>
           <% end %>
 
+          
     <div class="d-flex justify-content-between align-items-center mt-3">
       <p class="mb-0">
         <strong>Credits Obtained:</strong> <%= response.credit_score %>
