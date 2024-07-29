@@ -65,9 +65,19 @@
               <%= link_to "Form Response", display_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-secondary btn-sm' %>
               <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
               <%= link_to "View Uploads", combine_pdf_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-info btn-sm', target: "_blank" %>
+              <% if response.app_no.present?%>
               <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#freezeModal<%= response.id %>">
                 Freeze
               </button>
+              <%else%>
+                <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#freezeModal<%= response.id %>" disabled>
+                Freeze
+                </button>
+                <small class="text-dark">
+                    (complete the post specific form to enable freeze option.)
+              </small>
+
+              <%end%>
 
             <% end %>
           </div>
