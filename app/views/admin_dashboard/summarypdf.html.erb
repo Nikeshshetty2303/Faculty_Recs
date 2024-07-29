@@ -95,6 +95,11 @@
                             </div>
                         <%elsif question.question_type_id == 7 %>
                             <label><%= question.title %></label>
+                        <%elsif question.question_type_id == 4%>
+                          <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <div class="content-field"><%= answer ? answer.content : '' %></div>
+                        </div>
                         <% elsif question.question_type_id != 9 %>
                             <div class="mb-3">
                                 <label><%= question.title %></label>
@@ -152,6 +157,11 @@
                             </div>
                         <%elsif question.question_type_id == 7 %>
                             <label><%= question.title %></label>
+                        <%elsif question.question_type_id == 4%>
+                          <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <div class="content-field"><%= answer ? answer.content : '' %></div>
+                        </div>
                         <% elsif question.question_type_id != 9 %>
                             <div class="mb-3">
                                 <label><%= question.title %></label>
