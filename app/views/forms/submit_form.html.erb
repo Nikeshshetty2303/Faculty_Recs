@@ -23,6 +23,9 @@
       <% @questions.sort_by(&:position).each do |question| %>
         <div class="mb-4">
           <label class="form-label fw-bold"><%= question.title %></label>
+          <% if question.title == "Processing fees Details"%>
+          <p>If SC, ST & PwD candidate, then enter 0 in UTR and amount field. In the Attachments add relevent certificate in pdf format.<p>
+          <%end%>
 
           <% case question.question_type_id %>
           <% when 1 %>
