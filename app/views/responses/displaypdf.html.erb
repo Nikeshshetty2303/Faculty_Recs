@@ -181,19 +181,10 @@
                          <%elsif question.question_type_id == 7 %>
                             <label><%= question.title %></label>
                         <%elsif question.question_type_id == 4%>
-                               <div class="mb-3">
-                                    <label><%= question.title %></label>
-                                    <% if answer %>
-                                        <% content = answer.content %>
-                                        <div class="full-content-textarea">
-                                            <%= content %>
-                                        </div>
-                                    <% else %>
-                                        <div class="full-content-textarea">
-                                            &nbsp;
-                                        </div>
-                                    <% end %>
-                                </div>
+                          <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <div class="content-field"><%= answer ? answer.content : '' %></div>
+                            </div>
                         <% elsif question.question_type_id != 9%>
                             <div class="mb-3">
                                 <label><%= question.title %></label>
