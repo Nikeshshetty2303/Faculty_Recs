@@ -5,7 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :confirmable
 
-  has_many :forms, dependent: :destroy
+  has_many :forms
   has_many :responses, dependent: :destroy
   has_one_attached :photo, dependent: :destroy
   has_one_attached :sign, dependent: :destroy
