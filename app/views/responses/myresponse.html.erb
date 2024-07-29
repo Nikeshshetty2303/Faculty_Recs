@@ -38,6 +38,16 @@
               </small>
             <% end %>
           <% end %>
+
+          <% if response.status == "Freezed"%>
+            <% skipped_items = response.skipped.is_a?(String) ? response.skipped.gsub(/[\[\]]/, '').split(/[,\s]+/) : [] %>
+            <% if skipped_items.any? %>
+              <small class="text-success">
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                  The application has been submitted successfully!
+              </small>
+            <% end %>
+          <% end %>
       </div>
 
           <div class="btn-group btn-group-responsive" role="group" aria-label="Response actions">
