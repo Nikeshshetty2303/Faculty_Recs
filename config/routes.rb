@@ -82,6 +82,7 @@ end
    get 'home/app_profile'
    get 'admin_dashboard/all_responses'
    get 'admin_dashboard/all_users'
+   get 'admin_dashboard/statistics'
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
    get 'home/edit_app_profile'
    post 'home/app_profile'

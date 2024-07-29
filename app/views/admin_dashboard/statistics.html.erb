@@ -1,0 +1,126 @@
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%= stylesheet_link_tag 'allresponses' %>
+
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <%= link_to 'Users', admin_dashboard_all_users_path(userid: @user.id), class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Responses', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Statistics', admin_dashboard_statistics_path(userid: @user.id), class: "nav-link active" %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <h2 class="mb-4">Response Statistics</h2>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Responses by Department</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="departmentChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Responses by Status</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Detailed Statistics</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Department</th>
+                  <th>Total Responses</th>
+                  <th>Freezed</th>
+                  <th>Free</th>
+                  <th>Average Credit Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @department_stats.each do |dept, stats| %>
+                  <tr>
+                    <td><%= dept %></td>
+                    <td><%= stats[:total] %></td>
+                    <td><%= stats[:freezed] %></td>
+                    <td><%= stats[:free] %></td>
+                    <td><%= stats[:avg_credit_score].round(2) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Department Chart
+    var deptCtx = document.getElementById('departmentChart').getContext('2d');
+    new Chart(deptCtx, {
+      type: 'bar',
+      data: {
+        labels: <%= raw @department_stats.keys %>,
+        datasets: [{
+          label: 'Number of Responses',
+          data: <%= raw @department_stats.values.map { |stats| stats[:total] } %>,
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // Status Chart
+    var statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Freezed', 'Free'],
+        datasets: [{
+          data: [<%= @total_freezed %>, <%= @total_free %>],
+          backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)'],
+          borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+          borderWidth: 1
+        }]
+      }
+    });
+  });
+</script>
