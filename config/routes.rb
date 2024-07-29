@@ -63,6 +63,8 @@ post '/update_credit_answers', to: 'credit_answers#update_batch'
     get 'update_status'
     patch 'update_status'
     get 'view_app_pdf'
+    get 'combine_pdf'
+    patch 'combine_pdf'
   end
 end
 

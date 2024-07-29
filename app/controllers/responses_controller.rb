@@ -113,6 +113,14 @@ class ResponsesController < ApplicationController
       redirect_to myresponse_response_path
   end
 
+  def combine_pdf
+    @response = Response.find(params[:id])
+    @user = User.find(current_user.id)
+    @app_response = Response.where(user_id: current_user.id, profile_response: true).last
+    @app_response.combine_and_store_pdfs(@response)
+    send_data @response.combined_pdf.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+  end
+
   def view_app_pdf
     @response = Response.find(params[:id])
     send_data @response.current_stage.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
@@ -253,6 +261,6 @@ class ResponsesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def response_params
-      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility, :current_stage, :validated_credit_score, :summary_pdf, :combined_pdf)
+      params.require(:response).permit(:title, :validation,:new_count, :remark, :eligibility, :current_stage, :validated_credit_score, :summary_pdf, :combined_pdf, :skipped)
     end
 end
