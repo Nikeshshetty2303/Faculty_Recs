@@ -14,13 +14,13 @@ class AdminDashboardController < ApplicationController
           hash[dept.title] = {
             total: responses.count,
             freezed: responses.where(status: 'Freezed').count,
-            free: responses.where(status: 'Free').count,
+            free: responses.where(status: 'Free').where.not(form_id: nil).count,
             avg_credit_score: responses.average(:credit_score).to_f.round(2)
           }
         end
 
         @total_freezed = Response.where(status: 'Freezed').count
-        @total_free = Response.where(status: 'Free').count
+        @total_free = Response.where(status: 'Free').where.not(form_id: nil).count
       end
 
     def view_app_pdf
