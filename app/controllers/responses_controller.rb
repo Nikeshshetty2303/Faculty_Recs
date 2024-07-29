@@ -107,7 +107,7 @@ class ResponsesController < ApplicationController
       elsif @response.status == "Freezed"
         @response.status = "Free"
       end
-      
+
       @response.save
       @user.save
       redirect_to myresponse_response_path
@@ -118,7 +118,11 @@ class ResponsesController < ApplicationController
     @user = User.find(current_user.id)
     @app_response = Response.where(user_id: current_user.id, profile_response: true).last
     @app_response.combine_and_store_pdfs(@response)
-    send_data @response.combined_pdf.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+    if @response.skipped.present?
+      redirect_to myresponse_response_path
+    else
+      send_data @response.combined_pdf.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+    end
   end
 
   def view_app_pdf
