@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_29_064813) do
+ActiveRecord::Schema.define(version: 2024_07_29_132252) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -176,7 +176,7 @@ ActiveRecord::Schema.define(version: 2024_07_29_064813) do
     t.boolean "payment_status"
     t.integer "amount"
     t.boolean "profile_response"
-    t.integer "app_no"
+    t.string "app_no"
     t.string "remark"
     t.boolean "eligibility", default: false
     t.string "status", default: "Free"

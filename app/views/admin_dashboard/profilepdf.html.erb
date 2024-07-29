@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching Staff Recruitment Portal NITK</title>
+    <%= wicked_pdf_stylesheet_link_tag 'pdf_styles' %>
+</head>
+<body>
+    <div class="pdf-container">
+        <header class="pdf-header">
+            <%= image_tag wicked_pdf_asset_base64("NITK_Emblem.png"), class: 'logo' %>
+            <div class="header-text">
+                <h1>Teaching Staff Recruitment Portal NITK</h1>
+                <p>National Institute of Technology Karnataka, Surathkal</p>
+            </div>
+        </header>
+
+        <main>
+            <div class="top-section">
+
+                <!-- Profile Section (Right) -->
+                <section class="profile-section">
+                    <h2>Profile and Signature</h2>
+                    <div class="photo-container">
+                        <div class="profile-photo">
+                            <% if @user_photo_base64 %>
+                                <%= image_tag "data:image/#{@user.photo.content_type};base64,#{@user_photo_base64}", class: 'user-photo' %>
+                            <% else %>
+                                <div class="photo-placeholder">
+                                    <span>No photo available</span>
+                                </div>
+                            <% end %>
+                        </div>
+                        <div class="profile-sign">
+                            <% if @user_sign_base64 %>
+                                <%= image_tag "data:image/#{@user.sign.content_type};base64,#{@user_sign_base64}", class: 'user-sign' %>
+                            <% else %>
+                                <div class="sign-placeholder">
+                                    <span>No signature available</span>
+                                </div>
+                            <% end %>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+
+            <!-- Application Details Info -->
+            <section class="application-details">
+                <h2>Application Details</h2>
+            <div class="application-header">
+            <div class="header-content">
+                <p class="note">NOTE: Information populated here is from the data that you have entered while filling the application</p>
+
+            </div>
+        </div>
+
+                <div class="response-container">
+                    <% Question.where.not(tab_id: nil).order(:position).each do |question| %>
+                        <%answer = Answer.where(response_id: @app_response.id, question_id: question.id).last%>
+                        <% if question.question_type_id == 6 %>
+                            <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <% question.options.each do |option| %>
+                                                <th><%= option.title %></th>
+                                            <% end %>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%if answer%>
+                                            <% content = eval(answer.content) %>
+                                            <% content.each_slice(question.options.size) do |chunk| %>
+                                                <tr>
+                                                    <% chunk.each do |element| %>
+                                                        <td><%= element.gsub(/[\[\]\"]/,"") %></td>
+                                                    <% end %>
+                                                </tr>
+                                            <% end %>
+                                        <%else%>
+                                            <% question.options.each do |option| %>
+                                                <td><%=" " %></td>
+                                            <% end %>
+                                        <%end%>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        <% elsif question.question_type_id == 3 %>
+                            <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <% if answer%>
+                                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
+                                    <input readonly value="<%= content %>">
+                                <%else%>
+                                    <input readonly value=" ">
+                                <%end%>
+                            </div>
+                        <%elsif question.question_type_id == 7 %>
+                            <label><%= question.title %></label>
+                         <%elsif question.question_type_id == 4%>
+                          <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <div class="content-field"><%= answer ? answer.content : '' %></div>
+                            </div>
+                        <% elsif question.question_type_id != 9%>
+                            <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <% if answer%>
+                                    <% content = answer.content %>
+                                    <input readonly value="<%= content %>">
+                                <%else%>
+                                    <input readonly value=" ">
+                                <%end%>
+                            </div>
+                        <%end%>
+                    <%end%>
+
+
+
+
+        </main>
+    </div>
+</body>
+</html>

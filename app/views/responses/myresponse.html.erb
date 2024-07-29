@@ -16,7 +16,12 @@
           <% role = response.form.role %>
           <% dept = response.form.department.title %>
 
-          <h5 class="card-title"><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></h5>
+          <%if response.app_no.present?%>
+            <h5 class="card-title"><%=response.app_no%></h5>
+          <%else%>
+            <h5 class="card-title"><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></h5>
+          <%end%>
+
 
 
     <div class="d-flex justify-content-between align-items-center mt-3">

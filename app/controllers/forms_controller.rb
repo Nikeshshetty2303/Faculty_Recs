@@ -153,6 +153,14 @@ def update_response
     end
   end
 
+  present_response_id = @response.id
+  below_responses = Response.where(profile_response: true).where("id < ?", present_response_id)
+  count_below_responses = below_responses.count
+  role = @response.form.role
+  dept = @response.form.department.title
+
+  @response.app_no = "#{role}#{dept}#{1000 + @response.id - count_below_responses}"
+
   if @response.save
     redirect_to display_response_path(id: @response.id, userid: current_user.id), notice: 'Form submitted successfully.'
   else

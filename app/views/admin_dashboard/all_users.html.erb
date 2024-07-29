@@ -1,0 +1,72 @@
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%= stylesheet_link_tag 'allresponses' %>
+
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <%= link_to 'Users', admin_dashboard_all_users_path(userid: @user.id), class: "nav-link active" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Responses', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link" %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-4 d-flex align-items-end">
+      <span id="departmentCount" class="badge bg-secondary">Number of Users: <span id="rowCount">0</span></span>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Name </th>
+          <th scope="col">Email</th>
+          <th scope="col">Profile</th>
+            <th scope="col">Applications</th>
+        </tr>
+      </thead>
+      <tbody>
+       <% User.all.each do |user| %>
+  <% if user.responses.where(profile_response: true).present? %>
+    <% profile_response = user.responses.where(profile_response: true).first %>
+    <tr class="response-row" data-status="<%= profile_response.status %>">
+      <% name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }) %>
+      <td><%= name_answer ? name_answer.content : "Not Entered" %></td>
+      <td><%= user.email %></td>
+      <td><%= link_to "View Profile", print_profile_response_path(id: profile_response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-primary btn-sm' %></td>
+      <td>
+        <% user.responses.where(profile_response: [nil, false]).each do |response| %>
+          <% dept = response.form.department.title %>
+          <%= response.app_no%><br>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+<% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  let rowCountSpan = document.getElementById('rowCount');
+
+  function updateRowCount() {
+    let rows = document.querySelectorAll('.response-row');
+    let count = rows.length;
+    rowCountSpan.textContent = count;
+  }
+
+  // Initial count update on page load
+  updateRowCount();
+});
+</script>

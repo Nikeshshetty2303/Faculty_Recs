@@ -1,5 +1,21 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 <%= stylesheet_link_tag 'allresponses' %>
+
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <%= link_to 'Users', admin_dashboard_all_users_path(userid: @user.id), class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Responses', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link active" %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <div class="container mt-4">
   <div class="row mb-4">
     <div class="col-md-4">
@@ -28,6 +44,7 @@
     <table class="table table-bordered table-striped table-hover">
       <thead class="table-dark">
         <tr>
+          <th scope="col">Old Application ID</th>
           <th scope="col">Application ID</th>
           <th scope="col">Verified Credits</th>
           <th scope="col">Application view</th>
@@ -45,7 +62,8 @@
               <% count_below_responses = below_responses.count %>
               <% role = response.form.role %>
               <% dept = response.form.department.title %>
-              <td class="application-id"><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
+              <td><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
+              <td class="application-id"><%= response.app_no%></td>
               <td><%= response.credit_score %></td>
               <td>
                 <% if response.status == "Freezed" %>

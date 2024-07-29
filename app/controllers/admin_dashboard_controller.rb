@@ -3,6 +3,10 @@ class AdminDashboardController < ApplicationController
         @user = current_user
     end
 
+    def all_users
+        @user = current_user
+    end
+
     def view_app_pdf
         @response = Response.find(params[:id])
         send_data @response.current_stage.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"

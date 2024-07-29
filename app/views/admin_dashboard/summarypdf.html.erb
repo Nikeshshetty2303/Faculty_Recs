@@ -28,7 +28,11 @@
                     <% dept = response.form.department.title %>
 
                     <div class="job-details">
+                        <%if response.app_no.present?%>
+                            <p>Application ID: <strong><%= response.app_no%></strong></p>
+                        <%else%>
                         <p>Application ID: <strong><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></strong></p>
+                         <%end%>
                         <p>Role: <strong><%= @response.form.role %></strong></p>
                         <p>Position: <strong><%= @response.form.name %> </strong></p>
                         <p>Recruiting Department: <strong><%= @response.form.department.title %></strong></p>
