@@ -69,9 +69,7 @@ def update_app_profile_response
   @questions = Question.where(tab_id: @user.nav_tab_no)
   present_tab_no = @user.nav_tab_no
   @user.nav_tab_no = present_tab_no +1
-  if  @user.nav_tab_no > @user.tab_no
-      @user.nav_tab_no = @user.tab_no
-  end
+
   @user.save
   answers_attributes = params.dig(:response, :answers_attributes)
   if answers_attributes.present?
