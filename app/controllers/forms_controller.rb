@@ -50,7 +50,6 @@ def create_response
   if @response.save
     if @user.tab_no > Tab.count
       @user.nav_tab_no = 1
-      @user.tab_no = Tab.count +1
       @user.save
       redirect_to home_index_path(id: @user.id), notice: 'Form submitted successfully.'
     else
@@ -69,7 +68,6 @@ def update_app_profile_response
   @questions = Question.where(tab_id: @user.nav_tab_no)
   present_tab_no = @user.nav_tab_no
   @user.nav_tab_no = present_tab_no +1
-
   @user.save
   answers_attributes = params.dig(:response, :answers_attributes)
   if answers_attributes.present?
@@ -99,8 +97,6 @@ def update_app_profile_response
       end
     end
   end
-
-
 
   if @response.save
     if @user.tab_no > Tab.count
