@@ -50,7 +50,7 @@ def create_response
   if @response.save
     if @user.tab_no > Tab.count
       @user.nav_tab_no = 1
-      @user.tab_no = Tab.count + 1
+      @user.tab_no = Tab.count +1
       @user.save
       redirect_to home_index_path(id: @user.id), notice: 'Form submitted successfully.'
     else
@@ -107,7 +107,6 @@ def update_app_profile_response
   if @response.save
     if @user.tab_no > Tab.count
       @user.nav_tab_no = 1
-      @user.tab_no = 9
       @user.save
       redirect_to home_index_path(id: @user.id), notice: 'Form submitted successfully.'
     else
