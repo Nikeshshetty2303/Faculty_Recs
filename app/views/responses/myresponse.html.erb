@@ -50,8 +50,6 @@
         <strong>Credits Obtained:</strong> <%= response.credit_score %>
       </p>
 
-
-
           <% if response.status == "Freezed"%>
 
               <small class="text-success">
@@ -78,7 +76,7 @@
               <%= link_to "Form Response", display_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-secondary btn-sm' %>
               <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
               <%= link_to "View Uploads", combine_pdf_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-info btn-sm' %>
-              <% if response.app_no.present?%>
+              <% if response.app_no.present? && response.combined_pdf.present?%>
               <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#freezeModal<%= response.id %>">
                 Freeze
               </button>
@@ -95,7 +93,11 @@
             <small class="text-dark mt-2 d-block">
               Complete the post-specific form (by clicking on form response) to enable the freeze option.
             </small>
-          <% end %>
+          <% elsif !response.combined_pdf.present?%>
+            <small class="text-dark mt-2 d-block">
+              You haven't reviewed and verified your application profile uploads, click on view uploads to do so and enable freeze option.
+            </small>
+            <%end%>
         </div>
       </div>
 
