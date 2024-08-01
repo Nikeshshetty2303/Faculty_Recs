@@ -117,7 +117,6 @@ class ResponsesController < ApplicationController
     @response = Response.find(params[:id])
     @user = User.find(current_user.id)
     @app_response = Response.where(user_id: current_user.id, profile_response: true).last
-    puts 'HEREEEEEEEEEEEEEE'
     @app_response.combine_and_store_pdfs(@response)
     if @response.skipped.present?
       redirect_to myresponse_response_path
