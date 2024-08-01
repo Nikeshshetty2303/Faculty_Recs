@@ -61,6 +61,8 @@ class Response < ApplicationRecord
       response.save!
       Rails.logger.info "Combined PDFs for response #{response.id}, but skipped problematic PDFs for questions: #{skipped_pdfs.join(', ')}"
     else
+      response.skipped = nil
+      response.save!
       Rails.logger.info "Successfully combined all PDFs for response #{response.id}"
     end
   rescue StandardError => e
