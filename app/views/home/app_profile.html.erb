@@ -25,10 +25,25 @@
         </div>
 
         <h2 class="form-title"><%= @tab.title %></h2>
-
+        <% if @tab.title == "Uploads" %>
+        <div class="upload-info mb-3">
+          <p class="upload-notice">
+            If there are multiple files/pages to upload against any of the below fields, please combine them into a single PDF file before uploading.
+            Please make sure that all the pdfs that you are uploading is below 7Mb and also note that none of the pdfs should be corrupted or password secured.
+          </p>
+        </div>
+      <% end %>
+      <% if @tab.title == "Referee Details"%>
+        <div class="upload-info mb-3">
+          <p class="upload-notice">
+            Please provide details of two Professional References.
+          </p>
+        </div>
+      <% end %>
         <% @questions.where(tab_id: @tab.id).sort_by(&:position).each do |question| %>
           <div class="question-container" data-role="<%= question.role %>" <%= 'style="display: none;"' if question.role == 'O' %>>
             <label class="form-label"><%= question.title %></label>
+
             <%if question.title == "Self Attestation"%>
               <%= link_to "View Self Attestation Document", "/Attestation Form.pdf", target: '_blank' %>
             <%end%>
@@ -138,14 +153,21 @@
         </div>
 
        <h2 class="form-title"><%= @tab.title %></h2>
-<% if @tab.title == "Uploads" %>
-  <div class="upload-info mb-3">
-    <p class="upload-notice">
-      If there are multiple files/pages to upload against any of the below fields, please combine them into a single PDF file before uploading.
-      Please make sure that all the pdfs that you are uploading is below 7Mb and also note that none of the pdfs should be corrupted or password secured.
-    </p>
-  </div>
-<% end %>
+      <% if @tab.title == "Uploads" %>
+        <div class="upload-info mb-3">
+          <p class="upload-notice">
+            If there are multiple files/pages to upload against any of the below fields, please combine them into a single PDF file before uploading.
+            Please make sure that all the pdfs that you are uploading is below 7Mb and also note that none of the pdfs should be corrupted or password secured.
+          </p>
+        </div>
+      <% end %>
+      <% if @tab.title == "Referee"%>
+      <div class="upload-info mb-3">
+        <p class="upload-notice">
+          Please provide details of two Professional References.
+        </p>
+      </div>
+      <% end %>
 
         <% map = {} %>
         <% field_map = {} %>

@@ -76,7 +76,7 @@
               <%= link_to "Form Response", display_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-secondary btn-sm' %>
               <%= link_to "Print Response", print_response_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
               <%= link_to "View Uploads", combine_pdf_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-info btn-sm' %>
-              <% if response.app_no.present? && response.combined_pdf.present?%>
+              <% if response.app_no.present? && response.combined_pdf.present? && response.user.tab_no > Tab.count%>
               <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#freezeModal<%= response.id %>">
                 Freeze
               </button>
@@ -89,7 +89,11 @@
             <% end %>
           </div>
 
-          <% if !response.app_no.present? %>
+          <%if response.user.tab_no <= Tab.count%>
+               <small class="text-dark mt-2 d-block">
+              Please complete the appplication profile (Referee tab has been added)
+              </small>
+          <% elsif !response.app_no.present? %>
             <small class="text-dark mt-2 d-block">
               Complete the post-specific form (by clicking on form response) to enable the freeze option.
             </small>

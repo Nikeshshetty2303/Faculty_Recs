@@ -74,7 +74,11 @@
               <td class="application-id"><%= response.app_no%></td>
               <td><%= response.credit_score %></td>
               <td>
-                <%= link_to "View Application", print_response_path(id: response.id, userid: response.user.id, format: :pdf), class: 'btn btn-outline-secondary btn-sm' %>
+                <% if response.status == "Freezed" %>
+                  <%= link_to "View Application", view_app_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm' %>
+                <% else %>
+                  <%= link_to "View Application", print_response_path(id: response.id, userid: response.user.id, format: :pdf), class: 'btn btn-outline-secondary btn-sm' %>
+                <% end %>
               </td>
               <td>
                 <% if response.status == "Freezed" %>
