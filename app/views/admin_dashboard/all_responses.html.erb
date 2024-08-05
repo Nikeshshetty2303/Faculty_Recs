@@ -21,6 +21,10 @@
 
 <div class="container mt-4">
   <div class="row mb-4">
+    <div class="col-md-12 mb-3">
+      <label for="searchBar" class="form-label">Search:</label>
+      <input type="text" class="form-control" id="searchBar" placeholder="Search for content...">
+    </div>
     <div class="col-md-4">
       <label for="departmentFilter" class="form-label">Filter by Department:</label>
       <select class="form-select" id="departmentFilter">
@@ -89,27 +93,30 @@
     </table>
   </div>
 </div>
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     let departmentFilter = document.getElementById('departmentFilter');
     let statusFilter = document.getElementById('statusFilter');
+    let searchBar = document.getElementById('searchBar');
     let rowCountSpan = document.getElementById('rowCount');
 
-    function updateRowCount() {
+    function updateRowVisibility() {
       let selectedDepartment = departmentFilter.value.toLowerCase();
       let selectedStatus = statusFilter.value;
+      let searchTerm = searchBar.value.toLowerCase();
       let rows = document.querySelectorAll('.response-row');
       let count = 0;
 
       rows.forEach(function (row) {
         let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
         let rowStatus = row.dataset.status;
+        let rowContent = row.textContent.toLowerCase();
 
         let departmentMatch = selectedDepartment === '' || applicationId.includes(selectedDepartment);
         let statusMatch = selectedStatus === '' || rowStatus === selectedStatus;
+        let searchMatch = searchTerm === '' || rowContent.includes(searchTerm);
 
-        if (departmentMatch && statusMatch) {
+        if (departmentMatch && statusMatch && searchMatch) {
           row.style.display = '';
           count++;
         } else {
@@ -120,10 +127,11 @@
       rowCountSpan.textContent = count;
     }
 
-    departmentFilter.addEventListener('change', updateRowCount);
-    statusFilter.addEventListener('change', updateRowCount);
+    departmentFilter.addEventListener('change', updateRowVisibility);
+    statusFilter.addEventListener('change', updateRowVisibility);
+    searchBar.addEventListener('input', updateRowVisibility);
 
-    // Initial count update on page load
-    updateRowCount();
+    // Initial update on page load
+    updateRowVisibility();
   });
 </script>

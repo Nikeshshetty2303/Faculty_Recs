@@ -18,6 +18,10 @@
 
 <div class="container mt-4">
   <div class="row mb-4">
+    <div class="col-md-8">
+      <label for="searchBar" class="form-label">Search:</label>
+      <input type="text" class="form-control" id="searchBar" placeholder="Search for users...">
+    </div>
     <div class="col-md-4 d-flex align-items-end">
       <span id="departmentCount" class="badge bg-secondary">Number of Users: <span id="rowCount">0</span></span>
     </div>
@@ -30,7 +34,7 @@
           <th scope="col">Name </th>
           <th scope="col">Email</th>
           <th scope="col">Profile</th>
-            <th scope="col">Applications</th>
+          <th scope="col">Applications</th>
         </tr>
       </thead>
       <tbody>
@@ -58,15 +62,30 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-  let rowCountSpan = document.getElementById('rowCount');
+    let searchBar = document.getElementById('searchBar');
+    let rowCountSpan = document.getElementById('rowCount');
 
-  function updateRowCount() {
-    let rows = document.querySelectorAll('.response-row');
-    let count = rows.length;
-    rowCountSpan.textContent = count;
-  }
+    function updateRowVisibility() {
+      let searchTerm = searchBar.value.toLowerCase();
+      let rows = document.querySelectorAll('.response-row');
+      let count = 0;
 
-  // Initial count update on page load
-  updateRowCount();
-});
+      rows.forEach(function (row) {
+        let rowContent = row.textContent.toLowerCase();
+        if (searchTerm === '' || rowContent.includes(searchTerm)) {
+          row.style.display = '';
+          count++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      rowCountSpan.textContent = count;
+    }
+
+    searchBar.addEventListener('input', updateRowVisibility);
+
+    // Initial count update on page load
+    updateRowVisibility();
+  });
 </script>
