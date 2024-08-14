@@ -21,7 +21,7 @@ class AdminDashboardController < ApplicationController
 
         @total_freezed = Response.where(status: 'Freezed').count
         @total_free = Response.where(status: 'Free').where.not(form_id: nil).count
-      end
+    end
 
     def view_app_pdf
         @response = Response.find(params[:id])

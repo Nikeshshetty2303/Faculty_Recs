@@ -92,8 +92,8 @@
       data: {
         labels: <%= raw @department_stats.keys %>,
         datasets: [{
-          label: 'Number of Responses',
-          data: <%= raw @department_stats.values.map { |stats| stats[:total] } %>,
+          label: 'Number of Freezed Responses',
+          data: <%= raw @department_stats.values.map { |stats| stats[:freezed] } %>,
           backgroundColor: 'rgba(75, 192, 192, 0.6)',
           borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 1
