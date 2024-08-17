@@ -7,21 +7,26 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f9;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            background-image: url('<%= asset_path "NITK_Lighthouse.jpg" %>');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
         }
         .container {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.7); /* Increased transparency */
             padding: 50px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             text-align: center;
             max-width: 600px;
             width: 90%;
+            z-index: 1;
         }
         h1 {
             color: #2c3e50;
@@ -45,6 +50,16 @@
             font-size: 0.9em;
             color: #7f8c8d;
             margin-top: 30px;
+        }
+        #logo_div {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 2;
+        }
+        #logo_div img {
+            max-width: 100px;
+            height: auto;
         }
     </style>
 </head>
