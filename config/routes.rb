@@ -69,9 +69,9 @@ post '/update_credit_answers', to: 'credit_answers#update_batch'
   end
 end
 
-  devise_scope :user do
-  root to: "devise/sessions#new"
-  end
+  # devise_scope :user do
+  # root to: "devise/sessions#new"
+  # end
 
   devise_scope :user do
      get '/users/sign_out' => 'devise/sessions#destroy'
@@ -88,6 +88,7 @@ end
    post 'home/app_profile'
    get 'home/instruction'
    get 'home/deadline'
+   root to: "home#deadline"
 
    resources :credit_questions do
     collection do

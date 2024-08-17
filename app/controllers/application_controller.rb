@@ -5,13 +5,23 @@ class ApplicationController < ActionController::Base
   before_action :delete_unconfirmed_users
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_confirmation_notice, if: :devise_controller?
-  before_action :redirect_to_deadline
+  before_action :authorize_admin
+  # before_action :redirect_to_deadline
 
   # rescue_from StandardError, with: :handle_error
   # rescue_from ActionController::RoutingError, with: :handle_routing_error
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to main_app.root_path, alert: "You are not authorized to access this page."
+  end
+
+  def authorize_admin
+    unless current_user&.role == 'admin' || devise_controller? || controller_name == 'home' && action_name == 'deadline'
+      if(current_user)
+          sign_out current_user
+      end
+      redirect_to root_path, alert: "You are not authorized to access this page."
+    end
   end
 
   def redirect_to_deadline
