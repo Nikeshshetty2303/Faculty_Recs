@@ -87,6 +87,7 @@ end
    get 'home/edit_app_profile'
    post 'home/app_profile'
    get 'home/instruction'
+   get 'home/deadline'
 
    resources :credit_questions do
     collection do

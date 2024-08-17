@@ -63,35 +63,59 @@
   <button id="updateAllBtn" class="btn btn-primary mt-3">Update All</button>
 
   <!-- The Remarks and Eligibility Section -->
-  <div class="row mt-4">
-    <div class="col-md-6">
-      <%= form_with(model: @responses, url: add_remark_response_path(res_id: @responses.id), method: :post, class: 'mb-4') do |f| %>
-        <div class="form-group">
-          <%= f.label :remark, "Remarks", class: "form-label", for: "remark" %>
-          <%= f.text_area :remark, class: "form-control", id: "remark", rows: 3 %>
-          <%= f.submit "Add", class: "btn btn-outline-primary mt-2" %>
-        </div>
-      <% end %>
-    </div>
 
-    <div class="col-md-6">
-      <%= form_with(model: @responses, url: update_eligibility_response_path(res_id: @responses.id), method: :post) do |f| %>
-        <div class="form-group">
+
+<div class="row mt-4">
+  <!-- Eligibility Form -->
+  <div class="col-md-8">
+    <h4 class="mb-3">Eligibility Assessment</h4>
+    <%= form_with(model: @responses, url: update_eligibility_response_path(res_id: @responses.id), method: :post) do |f| %>
+      <div class="row">
+        <div class="col-md-6 mb-3">
           <%= f.label :eligibility, "Eligibility", class: "form-label" %>
           <% if @responses.eligibility == true %>
             <em class="text-success">(The Applicant is Eligible)</em>
-          <% else %>
+          <% elsif @responses.eligibility == false %>
             <em class="text-danger">(The Applicant is Not Eligible)</em>
           <% end %>
-          <br>
-          <%= f.hidden_field :eligibility, value: !@responses.eligibility %>
-          <%= f.submit "Update", class: "btn btn-outline-primary" %>
+          <%= f.select :eligibility, options_for_select([['Select', ''], ['Yes', true], ['No', false]], @responses.eligibility), {}, class: "form-select" %>
         </div>
-      <% end %>
-    </div>
+        <div class="col-md-6 mb-3">
+          <%= f.label :academic_experience, "Academic Experience", class: "form-label" %>
+          <%= f.select :academic_experience, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.academic_experience), {}, class: "form-select" %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= f.label :professional_experience, "Professional Experience", class: "form-label" %>
+          <%= f.select :professional_experience, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.professional_experience), {}, class: "form-select" %>
+        </div>
+        <div class="col-md-6 mb-3">
+          <%= f.label :credit_requirements, "Credit Requirements", class: "form-label" %>
+          <%= f.select :credit_requirements, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.credit_requirements), {}, class: "form-select" %>
+        </div>
+      </div>
+      <div class="text-center mt-3">
+        <%= f.submit "Update Eligibility", class: "btn btn-outline-primary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Remarks Form -->
+  <div class="col-md-4">
+    <h4 class="mb-3">Remarks</h4>
+    <%= form_with(model: @responses, url: add_remark_response_path(res_id: @responses.id), method: :post) do |f| %>
+      <div class="form-group">
+        <%= f.label :remark, "Add Remarks", class: "form-label" %>
+        <%= f.text_area :remark, class: "form-control", rows: 5 %>
+        <div class="text-center mt-3">
+          <%= f.submit "Add Remarks", class: "btn btn-outline-primary" %>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
-
+</div>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   var creditAnswers = <%= raw CreditAnswer.where(response_id: @responses&.id).includes(:credit_question, :credit_section).to_json(

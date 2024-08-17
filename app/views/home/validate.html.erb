@@ -8,7 +8,10 @@
         <th scope="col">Application ID</th>
         <th scope="col">Credit Score</th>
         <th scope="col">Validate Credit Response</th>
-        <th scope="col">Verified Credit Score</th>
+        <th scope="col">Verified Credits</th>
+        <th scope="col">Academic Experience</th>
+        <th scope="col">Professional Experience</th>
+        <th scope="col">Credit Requirements</th>
         <th scope="col">Eligibility</th>
       </tr>
     </thead>
@@ -35,13 +38,37 @@
             <td><%= response.validated_credit_score %></td>
 
 
-            <td>
-              <% if response.eligibility == true %>
-                  <%= "Eligible" %>
-              <% else %>
-                  <%= "Not Eligible" %>
+
+             <td>
+              <% if response.academic_experience == true %>
+                  <%= "Satisfactory" %>
+              <% elsif response.academic_experience == false %>
+                  <%= "Not Satisfactory" %>
               <% end %>
             </td>
+
+             <td>
+              <% if response.professional_experience == true %>
+                  <%= "Satisfactory" %>
+              <% elsif response.professional_experience== false %>
+                  <%= "Not Satisfactory" %>
+              <% end %>
+            </td>
+
+            <td>
+              <% if response.credit_requirements == true %>
+                  <%= "Satisfactory" %>
+              <% elsif response.credit_requirements== false %>
+                  <%= "Not Satisfactory" %>
+              <% end %>
+            </td>
+            <td>
+            <% if response.eligibility == true %>
+                <%= "Eligible" %>
+            <% elsif response.eligibility  == false%>
+                <%= "Not Eligible" %>
+            <% end %>
+          </td>
           </tr>
         <% end %>
       <% end %>

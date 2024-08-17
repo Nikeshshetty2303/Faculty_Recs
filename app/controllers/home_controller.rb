@@ -37,6 +37,10 @@ class HomeController < ApplicationController
     @response = Response.all
   end
 
+  def deadline
+    
+  end
+
   # respond_to do |format|
   #     format.html
   #     format.pdf do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_29_132252) do
+ActiveRecord::Schema.define(version: 2024_08_16_142843) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -183,6 +183,9 @@ ActiveRecord::Schema.define(version: 2024_07_29_132252) do
     t.float "validated_credit_score"
     t.boolean "is_summary", default: false
     t.string "skipped"
+    t.boolean "academic_experience"
+    t.boolean "professional_experience"
+    t.boolean "credit_requirements"
     t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
   end

@@ -1,16 +1,23 @@
 class ApplicationController < ActionController::Base
 
-  before_action :authenticate_user!
+
+  # before_action :authenticate_user!
   before_action :delete_unconfirmed_users
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_confirmation_notice, if: :devise_controller?
+  before_action :redirect_to_deadline
 
-
-  rescue_from StandardError, with: :handle_error
-  rescue_from ActionController::RoutingError, with: :handle_routing_error
+  # rescue_from StandardError, with: :handle_error
+  # rescue_from ActionController::RoutingError, with: :handle_routing_error
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to main_app.root_path, alert: "You are not authorized to access this page."
+  end
+
+  def redirect_to_deadline
+    unless request.path == '/home/deadline'
+      redirect_to '/home/deadline', status: :found
+    end
   end
 
   def handle_error(exception)
