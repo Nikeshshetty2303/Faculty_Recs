@@ -88,9 +88,12 @@ end
    post 'home/app_profile'
    get 'home/instruction'
    get 'home/deadline'
+
   #  root to: "home#deadline"
 
    get 'restriction/frozen_application'
+    get 'restriction/view_frozen_app_pdf'
+    get 'restriction/view_frozen_combined_pdf'
    root to: "restriction#frozen_application"
 
    resources :credit_questions do

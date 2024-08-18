@@ -4,4 +4,14 @@ class RestrictionController < ApplicationController
         @responses = Response.where(user_id: @user.id)
     end
 
+    def view_frozen_app_pdf
+        @response = Response.find(params[:id])
+        send_data @response.current_stage.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+    end
+
+      def view_frozen_combined_pdf
+        @response = Response.find(params[:id])
+        send_data @response.combined_pdf.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+      end
+
 end

@@ -9,6 +9,7 @@
   <%= button_to 'Log Out', destroy_user_session_path,  method: :delete,  class: "btn btn-outline-danger"%>
 
   <div class="responses">
+
     <% @responses.where(profile_response: nil, status: "Freezed").each do |response| %>
       <div class="card mb-4">
         <div class="card-body">
@@ -33,15 +34,17 @@
 
           <div class="btn-group btn-group-responsive" role="group" aria-label="Response actions">
             <%if response.status == "Freezed"%>
-              <%= link_to "Download Frozen Application", view_app_pdf_response_path(id: response.id, userid: @user.id), class: 'btn btn-outline-success btn-sm' %>
-              <%= link_to "Download Finalized Uploads", view_combined_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-info btn-sm', target: "_blank" %>
+              <%= link_to "Download Frozen Application", restriction_view_frozen_app_pdf_path(id: response.id, userid: @user.id), class: 'btn btn-outline-success btn-sm', target: "_blank"  %>
+              <%= link_to "Download Finalized Uploads", restriction_view_frozen_combined_pdf_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-info btn-sm', target: "_blank" %>
             <% end %>
           </div>
         </div>
       </div>
-    <% end %>
+
+    <%end%>
   </div>
 </div>
+
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
