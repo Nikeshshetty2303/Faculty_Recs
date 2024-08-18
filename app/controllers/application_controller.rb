@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
 
 
-  # before_action :authenticate_user!
+  before_action :authenticate_user!
   before_action :delete_unconfirmed_users
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_confirmation_notice, if: :devise_controller?
@@ -16,10 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_admin
-    unless current_user&.role == 'admin' || devise_controller? || controller_name == 'home' && action_name == 'deadline'
-      if(current_user)
-          sign_out current_user
-      end
+    unless current_user&.role == 'admin' || devise_controller? || controller_name == 'restriction'
       redirect_to root_path, alert: "You are not authorized to access this page."
     end
   end

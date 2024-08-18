@@ -88,7 +88,10 @@ end
    post 'home/app_profile'
    get 'home/instruction'
    get 'home/deadline'
-   root to: "home#deadline"
+  #  root to: "home#deadline"
+
+   get 'restriction/frozen_application'
+   root to: "restriction#frozen_application"
 
    resources :credit_questions do
     collection do
