@@ -1,0 +1,121 @@
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%= stylesheet_link_tag 'allresponses' %>
+
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-12 mb-3">
+      <label for="searchBar" class="form-label">Search:</label>
+      <input type="text" class="form-control" id="searchBar" placeholder="Search for content...">
+    </div>
+    <div class="col-md-4">
+      <label for="departmentFilter" class="form-label">Filter by Department:</label>
+      <select class="form-select" id="departmentFilter">
+        <option value="">All Departments</option>
+        <% Department.all.each do |department| %>
+          <option value="<%= department.title %>"><%= department.title %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <span id="departmentCount" class="badge bg-secondary">Number of Responses: <span id="rowCount">0</span></span>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Application ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Applied position</th>
+          <th scope="col">Category</th>
+          <th scope="col">PWD candidate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Response.where(status: 'Freezed').all.each do |response| %>
+          <% if response.form.present? %>
+            <tr class="response-row" data-status="<%= response.status %>">
+              <% @pres_user = response.user%>
+              <% profile_response = @pres_user.responses.where(profile_response: true).first %>
+              <% name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }) %>
+              <% cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Category" }) %>
+              <% pwd_answer =  profile_response.answers.joins(:question).find_by(questions: { title: "Are you a PWD candidate" }) %>
+              <td class="application-id"><%= response.app_no%></td>
+              <td><%= name_answer ? name_answer.content : "Not Entered" %></td>
+              <td><%= response.form.name%></td>
+              <td><%= cat_answer ? cat_answer.content : "Not Entered" %></td>
+              <td><%= pwd_answer ? pwd_answer.content : "Not Entered" %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-3">
+    <button id="generateCSV" class="btn btn-primary">Generate CSV</button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let departmentFilter = document.getElementById('departmentFilter');
+    let searchBar = document.getElementById('searchBar');
+    let rowCountSpan = document.getElementById('rowCount');
+    let generateCSVButton = document.getElementById('generateCSV');
+
+    function updateRowVisibility() {
+      let selectedDepartment = departmentFilter.value.toLowerCase();
+      let searchTerm = searchBar.value.toLowerCase();
+      let rows = document.querySelectorAll('.response-row');
+      let count = 0;
+
+      rows.forEach(function (row) {
+        let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
+        let rowContent = row.textContent.toLowerCase();
+
+        let departmentMatch = selectedDepartment === '' || applicationId.includes(selectedDepartment);
+        let searchMatch = searchTerm === '' || rowContent.includes(searchTerm);
+
+        if (departmentMatch && searchMatch) {
+          row.style.display = '';
+          count++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      rowCountSpan.textContent = count;
+    }
+
+    departmentFilter.addEventListener('change', updateRowVisibility);
+    searchBar.addEventListener('input', updateRowVisibility);
+
+    generateCSVButton.addEventListener('click', function() {
+      let visibleRows = document.querySelectorAll('.response-row:not([style*="display: none"])');
+      let csvContent = "Application ID,Name,Applied position,Category,PWD candidate\n";
+
+      visibleRows.forEach(function(row) {
+        let columns = row.querySelectorAll('td');
+        let rowData = Array.from(columns).map(col => col.textContent.replace(/,/g, "")).join(',');
+        csvContent += rowData + "\n";
+      });
+
+      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      let link = document.createElement("a");
+      if (link.download !== undefined) {
+        let url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "filtered_data.csv");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    });
+
+    // Initial update on page load
+    updateRowVisibility();
+  });
+</script>

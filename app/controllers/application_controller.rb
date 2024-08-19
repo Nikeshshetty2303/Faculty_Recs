@@ -8,15 +8,15 @@ class ApplicationController < ActionController::Base
   before_action :authorize_admin
   # before_action :redirect_to_deadline
 
-  rescue_from StandardError, with: :handle_error
-  rescue_from ActionController::RoutingError, with: :handle_routing_error
+  # rescue_from StandardError, with: :handle_error
+  # rescue_from ActionController::RoutingError, with: :handle_routing_error
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to main_app.root_path, alert: "You are not authorized to access this page."
   end
 
   def authorize_admin
-    unless current_user&.role == 'admin' || devise_controller? || controller_name == 'home'&& action_name == 'deadline'
+    unless current_user&.role == 'admin' || devise_controller? || controller_name == 'home'&& action_name == 'deadline' || current_user&.role == 'admin' && controller_name == 'developer'
       if(current_user&.role != 'admin')
           sign_out(current_user)
       end
