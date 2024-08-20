@@ -18,18 +18,7 @@
     <tbody>
       <% Response.all
            .select { |response| response.form.present? && response.form.department.title == @user.validator && response.status == "Freezed" }
-           .sort_by { |response|
-             if response.app_no.present?
-               match = response.app_no.match(/^AP(\d+)CV(\d+)$/)
-               if match
-                 [match[1].to_i, match[2].to_i]
-               else
-                 [Float::INFINITY, Float::INFINITY]
-               end
-             else
-               [Float::INFINITY, Float::INFINITY]
-             end
-           }
+           .sort_by { |response| response.app_no.to_s }
            .each do |response| %>
         <tr>
           <td><%= response.app_no if response.app_no.present? %></td>
