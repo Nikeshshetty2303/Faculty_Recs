@@ -16,61 +16,28 @@
       </tr>
     </thead>
     <tbody>
-      <% Response.all.each do |response| %>
-        <% if response.form.present? && response.form.department.title == @user.validator %>
-          <tr>
-            <% present_response_id = response.id %>
-            <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
-            <% count_below_responses = below_responses.count %>
-
-            <% role = response.form.role %>
-            <% dept = response.form.department.title  %>
-
-            <%if response.app_no.present?%>
-              <td><%= response.app_no%></td>
-            <%else%>
-            <td><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
-              <%end%>
-
-
-            <td><%= response.credit_score %></td>
-            <td><%= link_to "View Response", validate_response_path(id: response.id), class: 'btn btn-outline-primary btn-sm' %></td>
-            <td><%= response.validated_credit_score %></td>
-
-
-
-             <td>
-              <% if response.academic_experience == true %>
-                  <%= "Satisfactory" %>
-              <% elsif response.academic_experience == false %>
-                  <%= "Not Satisfactory" %>
-              <% end %>
-            </td>
-
-             <td>
-              <% if response.professional_experience == true %>
-                  <%= "Satisfactory" %>
-              <% elsif response.professional_experience== false %>
-                  <%= "Not Satisfactory" %>
-              <% end %>
-            </td>
-
-            <td>
-              <% if response.credit_requirements == true %>
-                  <%= "Satisfactory" %>
-              <% elsif response.credit_requirements== false %>
-                  <%= "Not Satisfactory" %>
-              <% end %>
-            </td>
-            <td>
-            <% if response.eligibility == true %>
-                <%= "Eligible" %>
-            <% elsif response.eligibility  == false%>
-                <%= "Not Eligible" %>
-            <% end %>
+      <% Response.all
+           .select { |response| response.form.present? && response.form.department.title == @user.validator && response.status == "Freezed" }
+           .sort_by { |response| response.app_no }
+           .each do |response| %>
+        <tr>
+          <td><%= response.app_no if response.app_no.present? %></td>
+          <td><%= response.credit_score %></td>
+          <td><%= link_to "View Response", validate_response_path(id: response.id), class: 'btn btn-outline-primary btn-sm' %></td>
+          <td><%= response.validated_credit_score %></td>
+          <td>
+            <%= response.academic_experience ? "Satisfactory" : "Not Satisfactory" %>
           </td>
-          </tr>
-        <% end %>
+          <td>
+            <%= response.professional_experience ? "Satisfactory" : "Not Satisfactory" %>
+          </td>
+          <td>
+            <%= response.credit_requirements ? "Satisfactory" : "Not Satisfactory" %>
+          </td>
+          <td>
+            <%= response.eligibility ? "Eligible" : "Not Eligible" %>
+          </td>
+        </tr>
       <% end %>
     </tbody>
   </table>
