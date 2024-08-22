@@ -119,6 +119,7 @@
 
                      <% Question.where(form_id: @response.form.id).order(:position).each do |question|%>
                         <%answer = Answer.where(response_id: @response.id, question_id: question.id).last%>
+                             <% if question.title!= "Processing fees Details"%>
                         <% if question.question_type_id == 6 %>
                             <div class="mb-3">
                                 <label><%= question.title %></label>
@@ -177,6 +178,7 @@
                                 <%end%>
                             </div>
                         <%end%>
+                         <%end%>
                     <%end%>
                 </div>
             </section>
