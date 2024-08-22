@@ -34,6 +34,7 @@
           <th scope="col">Name </th>
           <th scope="col">Email</th>
           <th scope="col">Profile</th>
+          <th scope="col">Summary pdfs</th>
           <th scope="col">Applications</th>
         </tr>
       </thead>
@@ -47,6 +48,12 @@
                     <td><%= name_answer ? name_answer.content : "Not Entered" %></td>
                     <td><%= user.email %></td>
                     <td><%= link_to "View Profile", print_profile_response_path(id: profile_response.id, userid: user.id, format: :pdf), class: 'btn btn-outline-primary btn-sm' %></td>
+                    <td>
+                        <% user.responses.where(profile_response: [nil, false], status: "Freezed").each do |response| %>
+                        <% dept = response.form.department.title %>
+                        <%= link_to "View Summary", view_sum_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm' %><br>
+                        <% end %>
+                    </td>
                     <td>
                         <% user.responses.where(profile_response: [nil, false], status: "Freezed").each do |response| %>
                         <% dept = response.form.department.title %>
