@@ -95,7 +95,7 @@ end
     get 'restriction/view_frozen_app_pdf'
     get 'restriction/view_frozen_combined_pdf'
   #  root to: "restriction#frozen_application"
-
+  get 'developer/multiple_app_user'
   get 'developer/csv_generator'
    resources :credit_questions do
     collection do

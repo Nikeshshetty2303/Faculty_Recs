@@ -3,4 +3,7 @@ class DeveloperController < ApplicationController
         @user = current_user
     end
 
+    def multiple_app_user
+        @user = current_user
+    end
 end
