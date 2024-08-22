@@ -3,7 +3,7 @@ body {
     font-size: 10px;
     line-height: 1.6;
     color: #333;
-    margin: 0;
+    margin-bottom: 20px;
     padding: 0;
 }
 
@@ -11,6 +11,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    margin-bottom: 30px;
 }
 
 .pdf-header {
@@ -136,6 +137,7 @@ h2 {
 
 .application-details {
     clear: both;
+    margin-bottom: 40px;
 }
 
 .application-header {
@@ -397,20 +399,10 @@ th {
         width: 100%;
     }
 }
-body {
-    margin-bottom: 20px; /* Adds margin to the bottom of the body */
-}
 
-.pdf-container {
-    margin-bottom: 30px; /* Adds margin to the bottom of the main container */
-}
 
 main {
     padding-bottom: 30px; /* Adds padding to the bottom of the main content area */
-}
-
-.application-details {
-    margin-bottom: 40px; /* Adds margin to the bottom of the application details section */
 }
 
 @media print {
