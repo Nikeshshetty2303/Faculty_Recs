@@ -28,13 +28,13 @@ body {
 }
 
 .header-text h1 {
-    font-size: 24px;
+    font-size: 20px;
     margin: 0;
     color: #0056b3;
 }
 
 .header-text p {
-    font-size: 16px;
+    font-size: 14px;
     margin: 5px 0 0;
 }
 
