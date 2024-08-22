@@ -397,3 +397,24 @@ th {
         width: 100%;
     }
 }
+body {
+    margin-bottom: 20px; /* Adds margin to the bottom of the body */
+}
+
+.pdf-container {
+    margin-bottom: 30px; /* Adds margin to the bottom of the main container */
+}
+
+main {
+    padding-bottom: 30px; /* Adds padding to the bottom of the main content area */
+}
+
+.application-details {
+    margin-bottom: 40px; /* Adds margin to the bottom of the application details section */
+}
+
+@media print {
+    @page {
+        margin-bottom: 20mm; /* Adds margin to the bottom when printing */
+    }
+}
