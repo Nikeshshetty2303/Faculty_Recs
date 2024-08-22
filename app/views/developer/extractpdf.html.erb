@@ -19,27 +19,40 @@
         <main>
             <div class="top-section">
                 <!-- Job Description Section (Left) -->
-                <section class="job-info">
-                    <h2>Job Description</h2>
-                    <% present_response_id = response.id %>
-                    <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
-                    <% count_below_responses = below_responses.count %>
-                    <% role = response.form.role %>
-                    <% dept = response.form.department.title %>
-
-                    <div class="job-details">
-                        <%if response.app_no.present?%>
-                            <p>Application ID: <strong><%= response.app_no%></strong></p>
-                        <%else%>
-                        <p>Application ID: <strong><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></strong></p>
-                         <%end%>
-                        <p>Role: <strong><%= @response.form.role %></strong></p>
-                        <p>Position: <strong><%= @response.form.name %> </strong></p>
-                        <p>Recruiting Department: <strong><%= @response.form.department.title %></strong></p>
-                        <p>Total Credit: <strong><%= @response.credit_score%></strong></p>
-                    </div>
-                </section>
-
+<section class="job-info">
+    <h2>Candidate Details</h2>
+    <div class="job-details">
+        <% profile_response = response.user.responses.where(profile_response: true).first %>
+        <div class="detail-row">
+            <p><span>Name of the Department:</span> <strong><%= response.form.department.full_name%></strong></p>
+            <p><span>Application No.:</span> <strong><%= response.app_no%></strong></p>
+        </div>
+        <div class="detail-row">
+            <p><span>Position:</span> <strong><%= @response.form.name %></strong></p>
+            <% dob_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Date of Birth (DD-MM-YYYY)" }) %>
+            <p><span>DOB:</span> <strong><%= dob_answer ? dob_answer.content : "Not Entered" %></strong></p>
+        </div>
+        <div class="detail-row">
+            <% name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }) %>
+            <p><span>Candidate Name:</span> <strong><%= name_answer ? name_answer.content : "Not Entered" %></strong></p>
+            <% mobile_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Mobile Number" }) %>
+            <p><span>Mobile No.:</span> <strong><%= mobile_answer ? mobile_answer.content : "Not Entered" %></strong></p>
+        </div>
+        <div class="detail-row">
+            <p><span>Email:</span> <strong><%= @response.user.email %></strong></p>
+            <% pwd_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Are you a PWD candidate" }) %>
+            <p><span>PWD:</span> <strong><%= pwd_answer ? pwd_answer.content : "Not Entered" %></strong></p>
+        </div>
+        <div class="detail-row">
+            <% cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Category" }) %>
+            <p><span>Category:</span> <strong><%= cat_answer ? cat_answer.content : "Not Entered" %></strong></p>
+            <p><span>Cumulative Credit Points:</span> <strong><%= @response.credit_score %></strong></p>
+        </div>
+        <div class="detail-row full-width">
+            <p><span>Areas of Specialization:</span> <strong><%= response.app_no%></strong></p>
+        </div>
+    </div>
+</section>
 
             </div>
 
