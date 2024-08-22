@@ -28,12 +28,27 @@
             <p><span>Application No.:</span> <strong><%= response.app_no%></strong></p>
         </div>
         <div class="detail-row">
-            <p><span>Position:</span> <strong><%= @response.form.name %></strong></p>
-            <% dob_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Date of Birth (DD-MM-YYYY)" }) %>
-            <p><span>DOB:</span> <strong>
-  <%= dob_answer.try(:content).present? ? Date.parse(dob_answer.content).strftime("%d-%m-%Y") : "Not Entered" %>
-</strong></p>
-        </div>
+    <p><span>Position:</span> <strong><%= @response.form.name %></strong></p>
+    <% dob_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Date of Birth (DD-MM-YYYY)" }) %>
+    <p>
+        <span>DOB:</span>
+        <strong>
+            <%= if dob_answer.try(:content).present?
+                  dob = Date.parse(dob_answer.content)
+                  dob.strftime("%d-%m-%Y")
+                else
+                  "Not Entered"
+                end
+            %>
+        </strong>
+        <% if dob_answer.try(:content).present? %>
+            <span style="margin-left: 10px;">Age:</span>
+            <strong>
+                <%= ((Date.today - dob).to_i / 365.25).floor %> years
+            </strong>
+        <% end %>
+    </p>
+</div>
         <div class="detail-row">
             <% name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }) %>
             <p><span>Candidate Name:</span> <strong><%= name_answer ? name_answer.content : "Not Entered" %></strong></p>
