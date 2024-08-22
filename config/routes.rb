@@ -97,6 +97,8 @@ end
   #  root to: "restriction#frozen_application"
   get 'developer/multiple_app_user'
   get 'developer/csv_generator'
+  get 'developer/extract_print'
+  get 'developer/extractpdf'
    resources :credit_questions do
     collection do
       post :import

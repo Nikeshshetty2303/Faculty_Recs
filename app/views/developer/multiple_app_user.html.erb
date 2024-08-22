@@ -9,7 +9,7 @@
           <%= link_to 'Multi Application User', developer_multiple_app_user_path(userid: @user.id), class: "nav-link active" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'CSV Generator', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link" %>
+          <%= link_to 'CSV Generator', developer_csv_generator_path(userid: @user.id), class: "nav-link" %>
         </li>
       </ul>
     </div>
@@ -35,6 +35,7 @@
           <th scope="col">Email</th>
           <th scope="col">Profile</th>
           <th scope="col">Summary pdfs</th>
+           <th scope="col">Extract pdfs</th>
           <th scope="col">Applications</th>
         </tr>
       </thead>
@@ -52,6 +53,12 @@
                         <% user.responses.where(profile_response: [nil, false], status: "Freezed").each do |response| %>
                         <% dept = response.form.department.title %>
                         <%= link_to "View Summary", view_sum_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm' %><br>
+                        <% end %>
+                    </td>
+                    <td>
+                        <% user.responses.where(profile_response: [nil, false], status: "Freezed").each do |response| %>
+                        <% dept = response.form.department.title %>
+                         <%= link_to "view Extract", developer_extract_print_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
                         <% end %>
                     </td>
                     <td>

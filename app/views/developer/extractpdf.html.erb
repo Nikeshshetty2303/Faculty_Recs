@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching Staff Recruitment Portal NITK</title>
+    <%= wicked_pdf_stylesheet_link_tag 'pdf_styles' %>
+</head>
+<body>
+    <div class="pdf-container">
+        <header class="pdf-header">
+            <%= image_tag wicked_pdf_asset_base64("NITK_Emblem.png"), class: 'logo' %>
+            <div class="header-text">
+                <h1>Teaching Staff Recruitment Portal NITK</h1>
+                <p>National Institute of Technology Karnataka, Surathkal</p>
+            </div>
+        </header>
+
+        <main>
+            <div class="top-section">
+                <!-- Job Description Section (Left) -->
+                <section class="job-info">
+                    <h2>Job Description</h2>
+                    <% present_response_id = response.id %>
+                    <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
+                    <% count_below_responses = below_responses.count %>
+                    <% role = response.form.role %>
+                    <% dept = response.form.department.title %>
+
+                    <div class="job-details">
+                        <%if response.app_no.present?%>
+                            <p>Application ID: <strong><%= response.app_no%></strong></p>
+                        <%else%>
+                        <p>Application ID: <strong><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></strong></p>
+                         <%end%>
+                        <p>Role: <strong><%= @response.form.role %></strong></p>
+                        <p>Position: <strong><%= @response.form.name %> </strong></p>
+                        <p>Recruiting Department: <strong><%= @response.form.department.title %></strong></p>
+                        <p>Total Credit: <strong><%= @response.credit_score%></strong></p>
+                    </div>
+                </section>
+
+
+            </div>
+
+
+            <!-- Application Details Info -->
+            <section class="application-details">
+                <h2>Application Details</h2>
+            <div class="application-header">
+            <div class="header-content">
+                <p class="note">NOTE: Information populated here is from the data that you have entered while filling the application</p>
+
+            </div>
+        </div>
+
+                <div class="response-container">
+                    <% Question.where(is_summary: true).where.not(tab_id: nil).order(:position).each do |question| %>
+                        <%answer = Answer.where(response_id: @app_response.id, question_id: question.id).last%>
+                        <% if question.question_type_id == 6 %>
+                            <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <% question.options.each do |option| %>
+                                                <th><%= option.title %></th>
+                                            <% end %>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%if answer%>
+                                            <% content = eval(answer.content) %>
+                                            <% content.each_slice(question.options.size) do |chunk| %>
+                                                <tr>
+                                                    <% chunk.each do |element| %>
+                                                        <td><%= element.gsub(/[\[\]\"]/,"") %></td>
+                                                    <% end %>
+                                                </tr>
+                                            <% end %>
+                                        <%else%>
+                                            <% question.options.each do |option| %>
+                                                <td><%=" " %></td>
+                                            <% end %>
+                                        <%end%>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        <% elsif question.question_type_id == 3 %>
+                            <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <% if answer%>
+                                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
+                                    <input readonly value="<%= content %>">
+                                <%else%>
+                                    <input readonly value=" ">
+                                <%end%>
+                            </div>
+                        <%elsif question.question_type_id == 7 %>
+                            <label><%= question.title %></label>
+                        <%elsif question.question_type_id == 4%>
+                          <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <div class="content-field"><%= answer ? answer.content : '' %></div>
+                        </div>
+                        <% elsif question.question_type_id != 9 %>
+                            <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <% if answer%>
+                                    <% content = answer.content %>
+                                    <input readonly value="<%= content %>">
+                                <%else%>
+                                    <input readonly value=" ">
+                                <%end%>
+                            </div>
+                        <%end%>
+                    <%end%>
+
+                     <% Question.where(form_id: @response.form.id).order(:position).each do |question|%>
+                        <%answer = Answer.where(response_id: @response.id, question_id: question.id).last%>
+                        <% if question.question_type_id == 6 %>
+                            <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <% question.options.each do |option| %>
+                                                <th><%= option.title %></th>
+                                            <% end %>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%if answer%>
+                                            <% content = eval(answer.content) %>
+                                            <% content.each_slice(question.options.size) do |chunk| %>
+                                                <tr>
+                                                    <% chunk.each do |element| %>
+                                                        <td><%= element.gsub(/[\[\]\"]/,"") %></td>
+                                                    <% end %>
+                                                </tr>
+                                            <% end %>
+                                        <%else%>
+                                            <% question.options.each do |option| %>
+                                                <td><%= " " %></td>
+                                            <% end %>
+                                        <%end%>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        <% elsif question.question_type_id == 3 %>
+                            <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <% if answer%>
+                                    <% content = answer.content.gsub(/[\[\]\"]/,"").split(", ") %>
+                                    <input readonly value="<%= content %>">
+                                <%else%>
+                                    <input readonly value=" ">
+                                <%end%>
+                            </div>
+                        <%elsif question.question_type_id == 7 %>
+                            <label><%= question.title %></label>
+                        <%elsif question.question_type_id == 4%>
+                          <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <div class="content-field"><%= answer ? answer.content : '' %></div>
+                        </div>
+                        <% elsif question.question_type_id != 9 %>
+                            <div class="mb-3">
+                                <label><%= question.title %></label>
+                                <% if answer%>
+                                    <% content = answer.content %>
+                                    <input readonly value="<%= content %>">
+                                <%else%>
+                                    <input readonly value=" ">
+                                <%end%>
+                            </div>
+                        <%end%>
+                    <%end%>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
