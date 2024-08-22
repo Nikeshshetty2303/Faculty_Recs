@@ -44,9 +44,9 @@
     </p>
     <p>
         <% if dob_answer.try(:content).present? %>
-            <span style="margin-left: 10px;">Age:</span>
+            <span>Age:</span>
             <strong>
-                <%= ((Date.today - dob).to_i / 365.25).floor %> years
+                <%=((Date.today - dob).to_i / 365.25).floor %>years
             </strong>
         <% end %>
     </p>
