@@ -9,9 +9,9 @@ body {
 
 .pdf-container {
     max-width: 1200px;
-    margin: 20mm;  /* This adds a 20mm margin on all sides */
-    padding: 20mm;  /* This adds a 20mm padding on all sides */
-    box-sizing: border-box;  /* This ensures padding is included in the element's total width and height */
+    margin: 0 auto;
+    padding: 20px;
+    margin-bottom: 30px;
 }
 
 .pdf-header {
@@ -401,20 +401,15 @@ th {
 }
 
 
-main {
-    padding-bottom: 30px; /* Adds padding to the bottom of the main content area */
+@page {
+    margin-bottom: 20mm; /* Adds margin to the bottom of each page when printing */
 }
 
+main {
+    padding-bottom: 20mm; /* Adds padding to the bottom of the main content area */
+}
 @media print {
     @page {
         margin-bottom: 20mm; /* Adds margin to the bottom when printing */
     }
-}
-
-@page {
-    margin: 0;  /* This removes any default page margins */
-}
-
-body {
-    margin: 0;  /* This removes any default body margins */
 }
