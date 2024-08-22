@@ -58,7 +58,7 @@
                     <td>
                         <% user.responses.where(profile_response: [nil, false], status: "Freezed").each do |response| %>
                         <% dept = response.form.department.title %>
-                         <%= link_to "view Extract", developer_extract_print_path(id: response.id, userid: @user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
+                         <%= link_to "view Extract", developer_extract_print_path(id: response.id, userid: user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
                         <% end %>
                     </td>
                     <td>
