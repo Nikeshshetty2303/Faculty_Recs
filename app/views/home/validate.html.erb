@@ -8,37 +8,43 @@
   <% app_group[response.form] << response %>
 <%end%>
 
-<div class="container">
-  <%= link_to "Go Back", :back, class: "btn btn-light mt-3" %>
-  <table class="table table-bordered table-striped">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">Application ID</th>
-        <th scope="col">Credit Score</th>
-        <th scope="col">Validate Credits</th>
-        <th scope="col">Verified Credits</th>
-        <th scope="col">Eligibility</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% app_group.each do |form, responses| %>
-        <% responses.each do |response| %>
-          <tr>
-            <td><%= response.app_no.strip if response.app_no.present? %></td>
-            <td><%= response.credit_score %></td>
-            <td><%= link_to "View Response", validate_response_path(id: response.id), class: 'btn btn-outline-primary btn-sm' %></td>
-            <td><%= response.validated_credit_score %></td>
-            <td>
-              <%= response.eligibility ? "Eligible" : "Not Eligible" %>
-            </td>
-          </tr>
-        <% end %>
-        <tr>
-          <td colspan="5" class="text-center">
-            <%= link_to "Generate Summary Report", admin_dashboard_view_summary_report_path(form_id: form.id,format: :pdf), class: 'btn btn-success' %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+<div class="container mt-4">
+  <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
+
+  <% app_group.each do |form, responses| %>
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">Form: <%= form.name %></h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Application ID</th>
+                <th scope="col">Credit Score</th>
+                <th scope="col">Validate Credits</th>
+                <th scope="col">Verified Credits</th>
+                <th scope="col">Eligibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% responses.each do |response| %>
+                <tr>
+                  <td><%= response.app_no.strip if response.app_no.present? %></td>
+                  <td><%= response.credit_score %></td>
+                  <td><%= link_to "View Response", validate_response_path(id: response.id), class: 'btn btn-outline-secondary btn-sm' %></td>
+                  <td><%= response.validated_credit_score %></td>
+                  <td><%= response.eligibility ? "Eligible" : "Not Eligible" %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer bg-light text-center">
+        <%= link_to "Generate Summary Report", admin_dashboard_view_summary_report_path(form_id: form.id, format: :pdf), class: 'btn btn-outline-secondary' %>
+      </div>
+    </div>
+  <% end %>
 </div>
