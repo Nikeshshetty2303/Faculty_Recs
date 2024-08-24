@@ -85,7 +85,10 @@ end
    get 'admin_dashboard/statistics'
    get 'admin_dashboard/view_summary_report'
    get 'admin_dashboard/summary_report'
-    patch 'admin_dashboard/view_summary_report'
+   patch 'admin_dashboard/view_summary_report'
+   get 'admin_dashboard/extract_print'
+   get 'admin_dashboard/extractpdf'
+
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
    get 'home/edit_app_profile'
    post 'home/app_profile'
