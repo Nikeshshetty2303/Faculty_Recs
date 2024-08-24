@@ -67,7 +67,7 @@
                         <td><%= response.postdoc %></td>
                         <td><%= response.experience_type %></td>
                         <td><%= response.credit_score.round(2) %></td>
-                        <td><%= response.validated_credit_score.round(2) %></td>
+                        <td><%= response.validated_credit_score ? response.validated_credit_score.round(2) : response.validated_credit_score %></td>
                         <td><%= response.major_awards %></td>
                         <td><%= response.academic_experience == true ? 'S' : (response.academic_experience == false ? 'N' : '') %></td>
                         <td><%= response.academic_experience == false ? response.acad_exp_comments : '' %></td>
