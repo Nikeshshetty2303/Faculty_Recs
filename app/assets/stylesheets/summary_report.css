@@ -84,3 +84,24 @@ body {
         margin-bottom: 15px;
     }
 }
+
+.compact-summary {
+    margin-top: 20px;
+    border-top: 1px solid #0057b3;
+    padding-top: 10px;
+}
+
+.compact-summary table {
+    width: 100%;
+    font-size: 12px;
+}
+
+.compact-summary td {
+    padding: 5px 10px;
+    text-align: center;
+    border-right: 1px solid #0057b3;
+}
+
+.compact-summary td:last-child {
+    border-right: none;
+}

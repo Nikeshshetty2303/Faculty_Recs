@@ -25,7 +25,7 @@
                     <tr>
                         <th rowspan="3">Application ID</th>
                         <th rowspan="3">Name</th>
-                        <th colspan="4">Qualification Group</th>
+                        <th colspan="4">Qualification Group(G1, G2, G3, G4)</th>
                         <th rowspan="3">Experience Type/Ranking of Institute</th>
                         <th rowspan="3">Credit Points (Applicant)</th>
                         <th rowspan="3">Credit Points (After Scrutiny)</th>
@@ -41,11 +41,11 @@
                         <th rowspan="2">PG</th>
                         <th rowspan="2">PhD</th>
                         <th rowspan="2">Post-Doc</th>
-                        <th rowspan="2">S/N</th>
+                        <th rowspan="2">(S/N)</th>
                         <th>Comments</th>
-                        <th rowspan="2">S/N</th>
+                        <th rowspan="2">(S/N)</th>
                         <th>Comments</th>
-                        <th rowspan="2">S/N</th>
+                        <th rowspan="2">(S/N)</th>
                         <th>Comments</th>
                     </tr>
                     <tr>
@@ -81,6 +81,15 @@
                     <% end %>
                 </tbody>
             </table>
+
+            <div class="compact-summary">
+                <table>
+                    <tr>
+                        <td>Total Applications: <%= form.responses.where(status: "Freezed").count %></td>
+                        <td>Eligible Applications: <%= form.responses.where(status: "Freezed", eligibility: true).count %></td>
+                    </tr>
+                </table>
+            </div>
         </main>
     </div>
 </body>
