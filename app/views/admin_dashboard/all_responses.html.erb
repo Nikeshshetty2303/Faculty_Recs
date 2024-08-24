@@ -72,7 +72,7 @@
               <% dept = response.form.department.title %>
               <td><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
               <td class="application-id"><%= response.app_no%></td>
-              <td><%= response.credit_score %></td>
+              <td><%= response.credit_score.round(2) %></td>
               <td>
                 <% if response.status == "Freezed" %>
                   <%= link_to "View Application", view_app_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm' %>
