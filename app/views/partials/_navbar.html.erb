@@ -18,7 +18,7 @@
         </li>
         <% if @user.validator.present? %>
           <li class="nav-item">
-            <%= link_to 'Validate Credit', home_validate_path(id: @user.id), class: "nav-link" %>
+            <%= link_to 'Validation Form', home_validate_path(id: @user.id), class: "nav-link" %>
           </li>
         <% end %>
         <% if @user.role == 'admin' %>

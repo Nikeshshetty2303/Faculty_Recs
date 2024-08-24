@@ -1,5 +1,5 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
-<%=stylesheet_link_tag 'validate'%>
+<%= stylesheet_link_tag 'validate' %>
 
 <div class="container mt-4">
   <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
@@ -60,62 +60,105 @@
     <span id="totalValidatedCredit">0</span>
   </div>
 
-  <button id="updateAllBtn" class="btn btn-primary mt-3">Update All</button>
+  <button id="updateAllBtn" class="btn btn-outline-dark mt-3">Update All</button>
 
-  <!-- The Remarks and Eligibility Section -->
+  <div class="row mt-5 justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header text-white">
+          <h4 class="mb-0">Eligibility Assessment Form</h4>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: @responses, url: update_eligibility_response_path(res_id: @responses.id), method: :post, class: "eligibility-form") do |f| %>
+            <div class="row mb-3">
+            <h6 class="card-title mb-4">Qualification Group:</h6>
+            <div class="col-md-12">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Undergraduate</th>
+                    <th>Postgraduate</th>
+                    <th>PhD</th>
+                    <th>PostDoc</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><%= f.select :undergraduate, options_for_select([['Select', ''], ['G1'], ['G2'], ['G3'], ['G4']], @responses.undergraduate), {}, class: "form-select" %></td>
+                    <td><%= f.select :postgraduate, options_for_select([['Select', ''], ['G1'], ['G2'], ['G3'], ['G4']], @responses.postgraduate), {}, class: "form-select" %></td>
+                    <td><%= f.select :phd, options_for_select([['Select', ''], ['G1'], ['G2'], ['G3'], ['G4']], @responses.phd), {}, class: "form-select" %></td>
+                    <td><%= f.select :postdoc, options_for_select([['Select', ''], ['G1'], ['G2'], ['G3'], ['G4'], ['None']], @responses.postdoc), {}, class: "form-select" %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <%= f.label :experience_type, "Experience Type/Institute Ranking", class: "form-label" %>
+                <%= f.select :experience_type, options_for_select([['Select', ''], ['E1'], ['E2'], ['E3'], ['E4'], ['None']], @responses.experience_type), {}, class: "form-select" %>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :major_awards, "Major Awards / Fellowship", class: "form-label" %>
+                <%= f.text_area :major_awards, class: "form-control", rows: 3 %>
+              </div>
+            </div>
 
-<div class="row mt-4">
-  <!-- Eligibility Form -->
-  <div class="col-md-8">
-    <h4 class="mb-3">Eligibility Assessment</h4>
-    <%= form_with(model: @responses, url: update_eligibility_response_path(res_id: @responses.id), method: :post) do |f| %>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <%= f.label :eligibility, "Eligibility", class: "form-label" %>
-          <% if @responses.eligibility == true %>
-            <em class="text-success">(The Applicant is Eligible)</em>
-          <% elsif @responses.eligibility == false %>
-            <em class="text-danger">(The Applicant is Not Eligible)</em>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <%= f.label :academic_experience, "Academic Experience", class: "form-label" %>
+                <%= f.select :academic_experience, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.academic_experience), {}, class: "form-select experience-select", id: "academic_experience_select" %>
+              </div>
+              <div class="col-md-6 comments-field" id="academic_experience_comments" style="display: none;">
+                <%= f.label :acad_exp_comments, "Comments", class: "form-label" %>
+                <%= f.text_area :acad_exp_comments, class: "form-control", rows: 3 %>
+              </div>
+            </div>
+
+           <div class="row mb-3">
+              <div class="col-md-6">
+                <%= f.label :professional_experience, "Professional Experience", class: "form-label" %>
+                <%= f.select :professional_experience, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.professional_experience), {}, class: "form-select experience-select", id: "professional_experience_select" %>
+              </div>
+              <div class="col-md-6 comments-field" id="professional_experience_comments" style="display: none;">
+                <%= f.label :prof_exp_comments, "Comments", class: "form-label" %>
+                <%= f.text_area :prof_exp_comments, class: "form-control", rows: 3 %>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <%= f.label :credit_requirements, "Credit Requirements", class: "form-label" %>
+                <%= f.select :credit_requirements, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.credit_requirements), {}, class: "form-select experience-select", id: "credit_requirements_select" %>
+              </div>
+              <div class="col-md-6 comments-field" id="credit_requirements_comments" style="display: none;">
+                <%= f.label :credit_req_comments, "Comments", class: "form-label" %>
+                <%= f.text_area :credit_req_comments, class: "form-control", rows: 3 %>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <%= f.label :eligibility, class: "form-label" %>
+                <%= f.select :eligibility, options_for_select([['Select', ''], ['Yes', true], ['No', false]], @responses.eligibility), {}, class: "form-select" %>
+              </div>
+              <div class="col-md-6">
+                <%= f.label :remark, "Add Remarks", class: "form-label" %>
+                <%= f.text_area :remark, class: "form-control", rows: 3 %>
+              </div>
+            </div>
+
+            <div class="text-center mt-4">
+              <%= f.submit "Update Eligibility", class: "btn btn-outline-dark" %>
+            </div>
           <% end %>
-          <%= f.select :eligibility, options_for_select([['Select', ''], ['Yes', true], ['No', false]], @responses.eligibility), {}, class: "form-select" %>
-        </div>
-        <div class="col-md-6 mb-3">
-          <%= f.label :academic_experience, "Academic Experience", class: "form-label" %>
-          <%= f.select :academic_experience, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.academic_experience), {}, class: "form-select" %>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <%= f.label :professional_experience, "Professional Experience", class: "form-label" %>
-          <%= f.select :professional_experience, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.professional_experience), {}, class: "form-select" %>
-        </div>
-        <div class="col-md-6 mb-3">
-          <%= f.label :credit_requirements, "Credit Requirements", class: "form-label" %>
-          <%= f.select :credit_requirements, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.credit_requirements), {}, class: "form-select" %>
-        </div>
-      </div>
-      <div class="text-center mt-3">
-        <%= f.submit "Update Eligibility", class: "btn btn-outline-primary" %>
-      </div>
-    <% end %>
+    </div>
   </div>
+</div>
 
-  <!-- Remarks Form -->
-  <div class="col-md-4">
-    <h4 class="mb-3">Remarks</h4>
-    <%= form_with(model: @responses, url: add_remark_response_path(res_id: @responses.id), method: :post) do |f| %>
-      <div class="form-group">
-        <%= f.label :remark, "Add Remarks", class: "form-label" %>
-        <%= f.text_area :remark, class: "form-control", rows: 5 %>
-        <div class="text-center mt-3">
-          <%= f.submit "Add Remarks", class: "btn btn-outline-primary" %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-</div>
-</div>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   var creditAnswers = <%= raw CreditAnswer.where(response_id: @responses&.id).includes(:credit_question, :credit_section).to_json(
@@ -242,5 +285,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Initial calculation
   updateAllCredits();
+
+  // New code for handling experience selects
+  const experienceSelects = [
+    { selectId: 'academic_experience_select', commentId: 'academic_experience_comments' },
+    { selectId: 'professional_experience_select', commentId: 'professional_experience_comments' },
+    { selectId: 'credit_requirements_select', commentId: 'credit_requirements_comments' }
+  ];
+
+  experienceSelects.forEach(({ selectId, commentId }) => {
+    const select = document.getElementById(selectId);
+    const commentField = document.getElementById(commentId);
+
+    if (select && commentField) {
+      select.addEventListener('change', function() {
+        commentField.style.display = this.value === 'false' ? 'block' : 'none';
+      });
+
+      // Trigger change event on page load to set initial state
+      select.dispatchEvent(new Event('change'));
+    }
+  });
+
+  // Log for debugging
+  console.log('Experience selects:', experienceSelects);
+  experienceSelects.forEach(({ selectId, commentId }) => {
+    console.log(`${selectId} exists:`, !!document.getElementById(selectId));
+    console.log(`${commentId} exists:`, !!document.getElementById(commentId));
+  });
 });
+
 </script>

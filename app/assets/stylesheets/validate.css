@@ -1,7 +1,3 @@
-
-
-
-
   .table {
     width: 100%;
     margin-bottom: 1rem;
@@ -16,6 +12,7 @@
   }
 
   .table thead th {
+    font-weight: 400;
     vertical-align: bottom;
     border-bottom: 2px solid #dee2e6;
   }
@@ -130,3 +127,84 @@
     color: #007bff;
     margin-left: 10px;
   }
+
+  /* General form styling */
+.eligibility-form .form-label {
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.eligibility-form .form-select,
+.eligibility-form .form-control {
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.eligibility-form .form-select:focus,
+.eligibility-form .form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.card-header {
+  background-color: #717274;
+  border-bottom: none;
+  padding: 1rem 1.25rem;
+}
+
+.card-header h4 {
+  margin-bottom: 0;
+  color: #fff;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+  .eligibility-form .row > div {
+    margin-bottom: 1rem;
+  }
+}
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+/* Transition for comment fields */
+.comments-field {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Badge styling */
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.section-credit {
+  background-color: #232222f3;
+  color: #fff;
+}
+
