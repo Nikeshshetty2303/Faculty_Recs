@@ -69,13 +69,13 @@
                         <td><%= response.credit_score %></td>
                         <td><%= response.validated_credit_score %></td>
                         <td><%= response.major_awards %></td>
-                        <td><%= response.academic_experience ? 'S' : 'N' %></td>
-                        <td><%= response.academic_experience ? '' : response.acad_exp_comments %></td>
-                        <td><%= response.professional_experience ? 'S' : 'N' %></td>
-                        <td><%= response.professional_experience ? '' : response.prof_exp_comments %></td>
-                        <td><%= response.credit_requirements ? 'S' : 'N' %></td>
-                        <td><%= response.credit_requirements ? '' : response.credit_req_comments %></td>
-                        <td><%= response.eligibility ? 'S' : 'N' %></td>
+                        <td><%= response.academic_experience == true ? 'S' : (response.academic_experience == false ? 'N' : '') %></td>
+                        <td><%= response.academic_experience == false ? response.acad_exp_comments : '' %></td>
+                        <td><%= response.professional_experience == true ? 'S' : (response.professional_experience == false ? 'N' : '') %></td>
+                        <td><%= response.professional_experience == false ? response.prof_exp_comments : '' %></td>
+                        <td><%= response.credit_requirements == true ? 'S' : (response.credit_requirements == false ? 'N' : '') %></td>
+                        <td><%= response.credit_requirements == false ? response.credit_req_comments : '' %></td>
+                        <td><%= response.eligibility == true ? 'S' : (response.eligibility == false ? 'N' : '') %></td>
                         <td><%= response.remark %></td>
                     </tr>
                     <% end %>

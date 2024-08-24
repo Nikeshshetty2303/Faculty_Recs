@@ -84,10 +84,10 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td><%= f.select :undergraduate, options_for_select([['Select', ''], ['G1'], ['G2'], ['G3'], ['G4']], @responses.undergraduate), {}, class: "form-select" %></td>
-                    <td><%= f.select :postgraduate, options_for_select([['Select', ''], ['G1'], ['G2'], ['G3'], ['G4']], @responses.postgraduate), {}, class: "form-select" %></td>
-                    <td><%= f.select :phd, options_for_select([['Select', ''], ['G1'], ['G2'], ['G3'], ['G4']], @responses.phd), {}, class: "form-select" %></td>
-                    <td><%= f.select :postdoc, options_for_select([['Select', ''], ['G1'], ['G2'], ['G3'], ['G4'], ['None']], @responses.postdoc), {}, class: "form-select" %></td>
+                    <td><%= f.select :undergraduate, options_for_select([['G1'], ['G2'], ['G3'], ['G4']], @responses.undergraduate), {}, class: "form-select", required: true %></td>
+                    <td><%= f.select :postgraduate, options_for_select([['G1'], ['G2'], ['G3'], ['G4']], @responses.postgraduate), {}, class: "form-select", required: true %></td>
+                    <td><%= f.select :phd, options_for_select([['G1'], ['G2'], ['G3'], ['G4']], @responses.phd), {}, class: "form-select", required: true %></td>
+                    <td><%= f.select :postdoc, options_for_select([['G1'], ['G2'], ['G3'], ['G4'], ['None']], @responses.postdoc), {}, class: "form-select", required: true %></td>
                   </tr>
                 </tbody>
               </table>
@@ -97,18 +97,18 @@
             <div class="row mb-3">
               <div class="col-md-6">
                 <%= f.label :experience_type, "Experience Type/Institute Ranking", class: "form-label" %>
-                <%= f.select :experience_type, options_for_select([['Select', ''], ['E1'], ['E2'], ['E3'], ['E4'], ['None']], @responses.experience_type), {}, class: "form-select" %>
+                <%= f.select :experience_type, options_for_select([['E1'], ['E2'], ['E3'], ['E4'], ['None']], @responses.experience_type), {}, class: "form-select", required: true %>
               </div>
               <div class="col-md-6">
                 <%= f.label :major_awards, "Major Awards / Fellowship", class: "form-label" %>
-                <%= f.text_area :major_awards, class: "form-control", rows: 3 %>
+                <%= f.text_area :major_awards, class: "form-control", rows: 3, required: true %>
               </div>
             </div>
 
             <div class="row mb-3">
               <div class="col-md-6">
                 <%= f.label :academic_experience, "Academic Experience", class: "form-label" %>
-                <%= f.select :academic_experience, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.academic_experience), {}, class: "form-select experience-select", id: "academic_experience_select" %>
+                <%= f.select :academic_experience, options_for_select([['Satisfactory', true], ['Not Satisfactory', false]], @responses.academic_experience), {}, class: "form-select experience-select", id: "academic_experience_select", required: true %>
               </div>
               <div class="col-md-6 comments-field" id="academic_experience_comments" style="display: none;">
                 <%= f.label :acad_exp_comments, "Comments", class: "form-label" %>
@@ -119,7 +119,7 @@
            <div class="row mb-3">
               <div class="col-md-6">
                 <%= f.label :professional_experience, "Professional Experience", class: "form-label" %>
-                <%= f.select :professional_experience, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.professional_experience), {}, class: "form-select experience-select", id: "professional_experience_select" %>
+                <%= f.select :professional_experience, options_for_select([['Satisfactory', true], ['Not Satisfactory', false]], @responses.professional_experience), {}, class: "form-select experience-select", id: "professional_experience_select", required: true  %>
               </div>
               <div class="col-md-6 comments-field" id="professional_experience_comments" style="display: none;">
                 <%= f.label :prof_exp_comments, "Comments", class: "form-label" %>
@@ -130,7 +130,7 @@
             <div class="row mb-3">
               <div class="col-md-6">
                 <%= f.label :credit_requirements, "Credit Requirements", class: "form-label" %>
-                <%= f.select :credit_requirements, options_for_select([['Select', ''], ['Satisfactory', true], ['Not Satisfactory', false]], @responses.credit_requirements), {}, class: "form-select experience-select", id: "credit_requirements_select" %>
+                <%= f.select :credit_requirements, options_for_select([['Satisfactory', true], ['Not Satisfactory', false]], @responses.credit_requirements), {}, class: "form-select experience-select", id: "credit_requirements_select" , required: true %>
               </div>
               <div class="col-md-6 comments-field" id="credit_requirements_comments" style="display: none;">
                 <%= f.label :credit_req_comments, "Comments", class: "form-label" %>
@@ -141,11 +141,11 @@
             <div class="row mb-3">
               <div class="col-md-6">
                 <%= f.label :eligibility, class: "form-label" %>
-                <%= f.select :eligibility, options_for_select([['Select', ''], ['Yes', true], ['No', false]], @responses.eligibility), {}, class: "form-select" %>
+                <%= f.select :eligibility, options_for_select([['Yes', true], ['No', false]], @responses.eligibility), {}, class: "form-select" , required: true %>
               </div>
               <div class="col-md-6">
                 <%= f.label :remark, "Add Remarks", class: "form-label" %>
-                <%= f.text_area :remark, class: "form-control", rows: 3 %>
+                <%= f.text_area :remark, class: "form-control", rows: 3 , required: true %>
               </div>
             </div>
 
