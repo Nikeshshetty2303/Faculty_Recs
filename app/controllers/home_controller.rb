@@ -4,6 +4,8 @@ class HomeController < ApplicationController
     @forms = Form.all
     @departments = Department.all
     @announcement = Announcement.find(1)
+
+    redirect_to home_validate_path
   end
 
   def app_profile
@@ -38,7 +40,7 @@ class HomeController < ApplicationController
   end
 
   def deadline
-    
+
   end
 
   # respond_to do |format|

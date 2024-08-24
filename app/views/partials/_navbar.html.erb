@@ -2,24 +2,30 @@
 
 <nav class="navbar navbar-expand-lg bg-light">
   <div class="container">
-    <a class="navbar-brand" href="/">
       <%= image_tag "NITK_Emblem.png", alt: "NITK Logo", class: "navbar-logo" %>
-    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+       <% if @user.validator.present? %>
         <li class="nav-item">
+          <%= link_to 'Validation Form', home_validate_path(id: @user.id), class: "nav-link" %>
+        </li>
+        <% else %>
+          <li class="nav-item">
           <%= link_to 'Home', home_index_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
           <%= link_to 'My Applications', myresponse_response_path(id: @user.id), class: "nav-link" %>
         </li>
-        <% if @user.validator.present? %>
-          <li class="nav-item">
-            <%= link_to 'Validation Form', home_validate_path(id: @user.id), class: "nav-link" %>
-          </li>
+        <li class="nav-item">
+          <% if @user.tab_no != 1 %>
+            <%= link_to 'Application Profile', home_app_profile_path(id: @user.id, res_id: @user.responses.where(profile_response: true)[0].id, nav_tab_no: @user.nav_tab_no), class: "nav-link" %>
+          <% else %>
+            <%= link_to 'Application Profile', home_app_profile_path(id: @user.id), class: "nav-link" %>
+          <% end %>
+        </li>
         <% end %>
         <% if @user.role == 'admin' %>
           <li class="nav-item">
@@ -29,18 +35,15 @@
             <%= link_to 'Admin View', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link" %>
           </li>
         <% end %>
-        <li class="nav-item">
-          <% if @user.tab_no != 1 %>
-            <%= link_to 'Application Profile', home_app_profile_path(id: @user.id, res_id: @user.responses.where(profile_response: true)[0].id, nav_tab_no: @user.nav_tab_no), class: "nav-link" %>
-          <% else %>
-            <%= link_to 'Application Profile', home_app_profile_path(id: @user.id), class: "nav-link" %>
-          <% end %>
-        </li>
+
         <li class="nav-item">
           <%= link_to 'Edit Account', edit_user_registration_path, class: "nav-link" %>
         </li>
       </ul>
+
+
       <div class="navbar-nav">
+        <% if !@user.validator.present? %>
         <button type="button" class="btn btn-primary me-2 updates-btn pulse" data-bs-toggle="modal" data-bs-target="#updatesModal">
           Updates
           <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle blink">
@@ -49,7 +52,7 @@
         </button>
 
        <%= link_to 'Instructions', home_instruction_path, class: "btn btn-outline-dark me-2" %>
-
+        <% end %>
         <%= button_to 'Log Out', destroy_user_session_path, method: :delete, class: "btn btn-outline-danger", form: { data: { turbo_confirm: 'Are you sure you want to log out?' } } %>
       </div>
     </div>
