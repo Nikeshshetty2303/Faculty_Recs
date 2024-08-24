@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NITK - Verified Application Forms Summary Sheet</title>
+    <%= wicked_pdf_stylesheet_link_tag 'summary_report' %>
+</head>
+<body>
+    <div class="pdf-container">
+        <header class="pdf-header">
+            <div class="logo-container">
+                <%= image_tag wicked_pdf_asset_base64("NITK_Emblem.png"), class: 'logo' %>
+            </div>
+            <div class="header-text">
+                <h1>NATIONAL INSTITUTE OF TECHNOLOGY KARNATAKA, SURATHKAL</h1>
+                <p><%="#{current_user.validator} – #{form.name}"%></p>
+                <p>Verified Application Forms Summary Sheet</p>
+            </div>
+        </header>
+
+        <main>
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th rowspan="3">Application ID</th>
+                        <th rowspan="3">Name</th>
+                        <th colspan="4">Qualification Group</th>
+                        <th rowspan="3">Experience Type/Ranking of Institute</th>
+                        <th rowspan="3">Credit Points (Applicant)</th>
+                        <th rowspan="3">Credit Points (After Scrutiny)</th>
+                        <th rowspan="3">Major Award / Fellowship</th>
+                        <th colspan="2">Academic Requirements</th>
+                        <th colspan="2">Professional Experience Requirements</th>
+                        <th colspan="2">Credit Points Requirements</th>
+                        <th rowspan="3">Eligible</th>
+                        <th rowspan="3">Remarks</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">UG</th>
+                        <th rowspan="2">PG</th>
+                        <th rowspan="2">PhD</th>
+                        <th rowspan="2">Post-Doc</th>
+                        <th rowspan="2">S/N</th>
+                        <th>Comments</th>
+                        <th rowspan="2">S/N</th>
+                        <th>Comments</th>
+                        <th rowspan="2">S/N</th>
+                        <th>Comments</th>
+                    </tr>
+                    <tr>
+                        <th>(if N)</th>
+                        <th>(if N)</th>
+                        <th>(if N)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% form.responses.where(status: "Freezed").each do |response| %>
+                    <% profile_response = response.user.responses.where(profile_response: true).first %>
+                    <tr>
+                        <td><%= response.app_no.strip if response.app_no.present? %></td>
+                        <% name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }) %>
+                        <td><%= name_answer ? name_answer.content : "Not Entered" %></td>
+                        <td><%= response.undergraduate %></td>
+                        <td><%= response.postgraduate %></td>
+                        <td><%= response.phd %></td>
+                        <td><%= response.postdoc %></td>
+                        <td><%= response.experience_type %></td>
+                        <td><%= response.credit_score %></td>
+                        <td><%= response.validated_credit_score %></td>
+                        <td><%= response.major_awards %></td>
+                        <td><%= response.academic_experience ? 'S' : 'N' %></td>
+                        <td><%= response.academic_experience ? '' : response.acad_exp_comments %></td>
+                        <td><%= response.professional_experience ? 'S' : 'N' %></td>
+                        <td><%= response.professional_experience ? '' : response.prof_exp_comments %></td>
+                        <td><%= response.credit_requirements ? 'S' : 'N' %></td>
+                        <td><%= response.credit_requirements ? '' : response.credit_req_comments %></td>
+                        <td><%= response.eligibility ? 'S' : 'N' %></td>
+                        <td><%= response.remark %></td>
+                    </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>

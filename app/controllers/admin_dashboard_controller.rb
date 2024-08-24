@@ -28,4 +28,19 @@ class AdminDashboardController < ApplicationController
         send_data @response.current_stage.download, filename: "document.pdf", type: "application/pdf", disposition: "inline"
     end
 
+    def view_summary_report
+        @form = Form.find(params[:form_id])
+        respond_to do |format|
+            format.html
+            format.pdf do
+              render pdf: 'Verified Summary Report', # file name
+                     template: 'admin_dashboard/summary_report.html.erb',
+                     layout: 'layouts/pdf.html.erb', # optional, use 'pdf.html' for a simple layout
+                     disposition: 'inline',
+                     locals: {form: @form},
+                    margin: { top: 0, bottom: 0, left: 0, right: 0 } # 'attachment' to download, 'inline' to display in the browser
+            end
+          end
+    end
+
 end
