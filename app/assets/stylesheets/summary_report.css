@@ -58,6 +58,96 @@ body {
     font-weight: bold;
 }
 
+.summary-table th:nth-child(7),
+.summary-table td:nth-child(7) {
+    width: 40px;
+}
+
+.summary-table th:nth-child(8),
+.summary-table td:nth-child(8),
+.summary-table th:nth-child(9),
+.summary-table td:nth-child(9) {
+    width: 50px;
+}
+
+.summary-table th:nth-child(10),
+.summary-table td:nth-child(10),
+.summary-table th:nth-child(18),
+.summary-table td:nth-child(18) {
+    width: 120px;
+}
+
+.compact-summary {
+    margin-top: 20px;
+   
+    padding-top: 10px;
+}
+
+.compact-summary table {
+    width: 100%;
+    font-size: 12px;
+}
+
+.compact-summary td {
+    padding: 5px 10px;
+    text-align: center;
+    border-right: 1px solid #0057b3;
+}
+
+.compact-summary td:last-child {
+    border-right: none;
+}
+
+.column-explanation {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 10px;
+}
+
+.column-explanation th,
+.column-explanation td {
+    border: 1px solid #ddd;
+    padding: 4px;
+    text-align: left;
+}
+
+.column-explanation th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.date-line {
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.signatures {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.signatures th,
+.signatures td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.signatures th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.end-line {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
 @media print {
     body {
         font-size: 8pt;
@@ -83,25 +173,4 @@ body {
     .pdf-header {
         margin-bottom: 15px;
     }
-}
-
-.compact-summary {
-    margin-top: 20px;
-    border-top: 1px solid #0057b3;
-    padding-top: 10px;
-}
-
-.compact-summary table {
-    width: 100%;
-    font-size: 12px;
-}
-
-.compact-summary td {
-    padding: 5px 10px;
-    text-align: center;
-    border-right: 1px solid #0057b3;
-}
-
-.compact-summary td:last-child {
-    border-right: none;
 }

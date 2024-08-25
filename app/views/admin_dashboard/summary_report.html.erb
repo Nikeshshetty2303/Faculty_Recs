@@ -15,7 +15,7 @@
             <div class="header-text">
                 <h1>NATIONAL INSTITUTE OF TECHNOLOGY KARNATAKA, SURATHKAL</h1>
                 <p><%="#{current_user.validator} - #{form.name}"%></p>
-                <p>Verified Application Forms Summary Sheet</p>
+                <p>Verified Application Forms Summary Sheet - </p>
             </div>
         </header>
 
@@ -25,15 +25,15 @@
                     <tr>
                         <th rowspan="3">Application ID</th>
                         <th rowspan="3">Name</th>
-                        <th colspan="4">Qualification Group(G1, G2, G3, G4)</th>
-                        <th rowspan="3">Experience Type/Ranking of Institute</th>
-                        <th rowspan="3">Credit Points (Applicant)</th>
-                        <th rowspan="3">Credit Points (After Scrutiny)</th>
+                        <th colspan="4">Qual (G1-G4)</th>
+                        <th rowspan="3">Exp (E1-E4)</th>
+                        <th rowspan="3">CP-1</th>
+                        <th rowspan="3">CP-2</th>
                         <th rowspan="3">Major Award / Fellowship</th>
                         <th colspan="2">Academic Requirements</th>
                         <th colspan="2">Professional Experience Requirements</th>
                         <th colspan="2">Credit Points Requirements</th>
-                        <th rowspan="3">Eligible</th>
+                        <th rowspan="3">E</th>
                         <th rowspan="3">Remarks</th>
                     </tr>
                     <tr>
@@ -66,8 +66,8 @@
                         <td><%= response.phd %></td>
                         <td><%= response.postdoc %></td>
                         <td><%= response.experience_type %></td>
-                        <td><%= response.credit_score.round(2) %></td>
-                        <td><%= response.validated_credit_score ? response.validated_credit_score.round(2) : response.validated_credit_score %></td>
+                        <td><%= response.credit_score.round(1) %></td>
+                        <td><%= response.validated_credit_score ? response.validated_credit_score.round(1) : response.validated_credit_score %></td>
                         <td><%= response.major_awards %></td>
                         <td><%= response.academic_experience == true ? 'S' : (response.academic_experience == false ? 'N' : '') %></td>
                         <td><%= response.academic_experience == false ? response.acad_exp_comments : '' %></td>
@@ -75,7 +75,7 @@
                         <td><%= response.professional_experience == false ? response.prof_exp_comments : '' %></td>
                         <td><%= response.credit_requirements == true ? 'S' : (response.credit_requirements == false ? 'N' : '') %></td>
                         <td><%= response.credit_requirements == false ? response.credit_req_comments : '' %></td>
-                        <td><%= response.eligibility == true ? 'S' : (response.eligibility == false ? 'N' : '') %></td>
+                        <td><%= response.eligibility == true ? 'Y' : (response.eligibility == false ? 'N' : '') %></td>
                         <td><%= response.remark %></td>
                     </tr>
                     <% end %>
@@ -89,6 +89,57 @@
                         <td>Eligible Applications: <%= form.responses.where(status: "Freezed", eligibility: true).count %></td>
                     </tr>
                 </table>
+            </div>
+
+            <table class="column-explanation">
+                <tr>
+                    <th>Column</th>
+                    <th>Full Name</th>
+                </tr>
+                <tr>
+                    <td>Qual (G1-G4)</td>
+                    <td>Qualification Group (G1, G2, G3, G4)</td>
+                </tr>
+                <tr>
+                    <td>Exp (E1-E4)</td>
+                    <td>Experience Type/Ranking of Institute</td>
+                </tr>
+                <tr>
+                    <td>CP-1</td>
+                    <td>Credit Points (Claimed)</td>
+                </tr>
+                <tr>
+                    <td>CP-2</td>
+                    <td>Credit Points (After Scrutiny)</td>
+                </tr>
+                <tr>
+                    <td>E</td>
+                    <td>Eligible (Y/N)</td>
+                </tr>
+            </table>
+
+            <div class="date-line">
+                <p>Date: _________________</p>
+            </div>
+
+            <table class="signatures">
+                <tr>
+                    <th colspan="3">Names and Signatures of the Department Scrutiny Committee Members:</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <div class="end-line">
+                <p>*****</p>
             </div>
         </main>
     </div>
