@@ -1,3 +1,7 @@
+@page {
+    margin: 1cm;
+}
+
 body {
     font-family: Arial, sans-serif;
     line-height: 1.4;
@@ -8,9 +12,10 @@ body {
 
 .pdf-container {
     width: 100%;
-    margin: 0 auto;
-    padding: 20px;
+    box-sizing: border-box;
+    padding: 1cm;
 }
+
 
 .pdf-header {
     text-align: center;
@@ -79,7 +84,7 @@ body {
 
 .compact-summary {
     margin-top: 20px;
-   
+
     padding-top: 10px;
 }
 
