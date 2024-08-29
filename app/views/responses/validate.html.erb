@@ -84,10 +84,10 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td><%= f.select :undergraduate, options_for_select([['G1'], ['G2'], ['G3'], ['G4']], @responses.undergraduate), {}, class: "form-select", required: true %></td>
-                    <td><%= f.select :postgraduate, options_for_select([['G1'], ['G2'], ['G3'], ['G4']], @responses.postgraduate), {}, class: "form-select", required: true %></td>
-                    <td><%= f.select :phd, options_for_select([['G1'], ['G2'], ['G3'], ['G4']], @responses.phd), {}, class: "form-select", required: true %></td>
-                    <td><%= f.select :postdoc, options_for_select([['G1'], ['G2'], ['G3'], ['G4'], ['None']], @responses.postdoc), {}, class: "form-select", required: true %></td>
+                    <td><%= f.select :undergraduate, options_for_select([['G1'], ['G2'], ['G3'], ['G4'],['Others', 'O']], @responses.undergraduate), {}, class: "form-select", required: true %></td>
+                    <td><%= f.select :postgraduate, options_for_select([['G1'], ['G2'], ['G3'], ['G4'],['Others', 'O']], @responses.postgraduate), {}, class: "form-select", required: true %></td>
+                    <td><%= f.select :phd, options_for_select([['G1'], ['G2'], ['G3'], ['G4'],['Others', 'O']], @responses.phd), {}, class: "form-select", required: true %></td>
+                    <td><%= f.select :postdoc, options_for_select([['G1'], ['G2'], ['G3'], ['G4'],['Others', 'O'], ['None']], @responses.postdoc), {}, class: "form-select", required: true %></td>
                   </tr>
                 </tbody>
               </table>
@@ -97,7 +97,7 @@
             <div class="row mb-3">
               <div class="col-md-6">
                 <%= f.label :experience_type, "Experience Type/Institute Ranking", class: "form-label" %>
-                <%= f.select :experience_type, options_for_select([['E1'], ['E2'], ['E3'], ['E4'], ['None']], @responses.experience_type), {}, class: "form-select", required: true %>
+                <%= f.select :experience_type, options_for_select([['E1'], ['E2'], ['E3'], ['E4'],['E5'], ['E6'], ['Others', 'O'], ['None']], @responses.experience_type), {}, class: "form-select", required: true %>
               </div>
               <div class="col-md-6">
                 <%= f.label :major_awards, "Major Awards / Fellowship", class: "form-label" %>
@@ -107,7 +107,7 @@
 
             <div class="row mb-3">
               <div class="col-md-6">
-                <%= f.label :academic_experience, "Academic Experience", class: "form-label" %>
+                <%= f.label :academic_experience, "Academic Credentials", class: "form-label" %>
                 <%= f.select :academic_experience, options_for_select([['Satisfactory', true], ['Not Satisfactory', false]], @responses.academic_experience), {}, class: "form-select experience-select", id: "academic_experience_select", required: true %>
               </div>
               <div class="col-md-6 comments-field" id="academic_experience_comments" style="display: none;">
