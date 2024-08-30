@@ -96,13 +96,13 @@ class HomeController < ApplicationController
           response.postdoc,
           response.experience_type,
           response.major_awards,
-          response.academic_experience ? "Satisfactory" : "Not Satisfactory",
+          response.academic_experience ? "S" : (response.academic_experience == false ? "N" : ""),
           response.acad_exp_comments,
-          response.professional_experience ? "Satisfactory" : "Not Satisfactory",
+          response.professional_experience ? "S" : (response.professional_experience == false ? "N" : ""),
           response.prof_exp_comments,
-          response.credit_requirements ? "Satisfactory" : "Not Satisfactory",
+          response.credit_requirements ? "S" : (response.credit_requirements == false ? "N" : ""),
           response.credit_req_comments,
-          response.eligibility ? "Yes" : "No",
+          response.eligibility ? "Y" : "N",
           response.remark
         ]
 
