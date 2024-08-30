@@ -35,4 +35,8 @@ class DeveloperController < ApplicationController
             end
           end
       end
+
+    def credit_questions_check
+      @user = current_user
+    end
 end

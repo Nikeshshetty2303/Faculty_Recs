@@ -105,6 +105,7 @@ end
   get 'developer/csv_generator'
   get 'developer/extract_print'
   get 'developer/extractpdf'
+  get 'developer/credit_questions_check'
    resources :credit_questions do
     collection do
       post :import

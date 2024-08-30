@@ -9,7 +9,10 @@
           <%= link_to 'Multi Application User', developer_multiple_app_user_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'CSV Generator', developer_csv_generator_path(userid: @user.id), class: "nav-link active"  %>
+          <%= link_to 'CSV Generator', developer_csv_generator_path(userid: @user.id), class: "nav-link active" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Credit Question Check', developer_credit_questions_check_path(userid: @user.id), class: "nav-link" %>
         </li>
       </ul>
     </div>
