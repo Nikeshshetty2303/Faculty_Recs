@@ -35,7 +35,7 @@
         </thead>
         <tbody>
 
-            <% CreditQuestion.where(title: "Number of new laboratory establishment").each do |credit_question|%>
+            <% CreditQuestion.where(title: "Number  of new laboratory establishment").each do |credit_question|%>
               <% credit_answer = CreditAnswer.where(response_id: @responses.id, credit_question_id: credit_question.id).last %>
               <% if credit_answer.answer !=0 %>
                 <tr>
