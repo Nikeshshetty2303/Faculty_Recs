@@ -49,14 +49,14 @@ class HomeController < ApplicationController
     @responses = Response.joins(form: :department)
                      .where(form: { departments: { title: current_user.validator } }, status: "Freezed")
                      .includes(credit_answers: :credit_question).sort_by { |response| response.app_no.to_s.strip }
-    # Create a new Excel package
+
     package = Axlsx::Package.new
     workbook = package.workbook
 
-    # Add a worksheet to the package
-    workbook.add_worksheet(name: "YourModel Data") do |sheet|
+    workbook.add_worksheet(name: "Credit Data") do |sheet|
       styles = create_styles(workbook)
-      # Add the first header row with the application ID
+
+      # First header row with merged cells for each question
       headers = ["Application ID"] + @credit_questions.map(&:title).flat_map { |title| [title, "", "", ""] } +
       [
         "Undergraduate", "Postgraduate", "PhD", "PostDoc",
@@ -72,16 +72,15 @@ class HomeController < ApplicationController
       @credit_questions.each_with_index do |question, index|
         start_column = index * 4 + 1  # Each question has 4 sub-columns, starting after the Application ID
         end_column = start_column + 3
-        range = "#{Axlsx::col_ref(start_column)}1:#{Axlsx::col_ref(end_column)}1"
-        sheet.merge_cells(range)
+        sheet.merge_cells("#{Axlsx::col_ref(start_column)}1:#{Axlsx::col_ref(end_column)}1")
       end
 
-      # Add the second header row with the sub-column names
+      # Sub-headers
       sub_headers = [""] + @credit_questions.flat_map { ["Count", "Verified Count", "Credit", "Verified Credit"] }
       sheet.add_row sub_headers, style: styles[:sub_header]
 
-      # Add data rows
-      @responses.each do |response|
+      # Data rows
+      @responses.each_with_index do |response, index|
         row_data = [response.app_no] + @credit_questions.flat_map do |question|
           answer = response.credit_answers.find { |a| a.credit_question_id == question.id }
           if answer.present?
@@ -107,40 +106,45 @@ class HomeController < ApplicationController
           response.remark
         ]
 
-        row_style = styles[:even_row]
+        row_style = index.even? ? styles[:even_row] : styles[:odd_row]
         sheet.add_row row_data, style: row_style, types: [:string] * row_data.length
       end
+
+      # Apply column widths
+      sheet.column_widths 15, *([12] * (@credit_questions.count * 4)), *([15] * 14)
     end
 
-    # Send the Excel file as a response
     send_data package.to_stream.read, type: "application/xlsx", filename: "Credit_data_#{current_user.validator}.xlsx"
   end
 
   def create_styles(workbook)
     {
       header: workbook.styles.add_style(
-        bg_color: "4F81BD",
+        bg_color: "4472C4",
         fg_color: "FFFFFF",
         b: true,
-        alignment: { horizontal: :center, vertical: :center, wrap_text: true }
+        alignment: { horizontal: :center, vertical: :center, wrap_text: true },
+        border: { style: :thin, color: "FFFFFF" }
       ),
       sub_header: workbook.styles.add_style(
-        bg_color: "D0D8E8",
+        bg_color: "D9E1F2",
+        fg_color: "44546A",
         b: true,
-        alignment: { horizontal: :center, vertical: :center, wrap_text: true }
+        alignment: { horizontal: :center, vertical: :center, wrap_text: true },
+        border: { style: :thin, color: "FFFFFF" }
       ),
       even_row: workbook.styles.add_style(
-        bg_color: "E9EDF4",
-        alignment: { horizontal: :left, vertical: :center, wrap_text: true }
+        bg_color: "F2F2F2",
+        alignment: { horizontal: :left, vertical: :center, wrap_text: true },
+        border: { style: :thin, color: "E6E6E6" }
       ),
       odd_row: workbook.styles.add_style(
         bg_color: "FFFFFF",
-        alignment: { horizontal: :left, vertical: :center, wrap_text: true }
+        alignment: { horizontal: :left, vertical: :center, wrap_text: true },
+        border: { style: :thin, color: "E6E6E6" }
       )
     }
-  end
-
-  # respond_to do |format|
+  end  # respond_to do |format|
   #     format.html
   #     format.pdf do
   #       render pdf: 'Pet Medical Report', # file name
