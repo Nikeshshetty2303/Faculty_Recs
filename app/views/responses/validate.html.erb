@@ -55,7 +55,7 @@
           <div class="photo-container">
             <div class="profile-photo">
               <% if @user_photo_base64 %>
-                <%= image_tag "data:image/#{@user.photo.content_type};base64,#{@user_photo_base64}", class: 'user-photo img-fluid' %>
+                <%= image_tag "data:image/#{@res_user.photo.content_type};base64,#{@user_photo_base64}", class: 'user-photo img-fluid' %>
               <% else %>
                 <div class="photo-placeholder">
                   <span>No photo available</span>
