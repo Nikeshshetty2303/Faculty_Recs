@@ -30,7 +30,7 @@
             </div>
             <div class="detail-row">
               <% name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }) %>
-              <p><span>Candidate Name:</span> <strong><%= name_answer ? name_answer.content : "Not Entered" %></strong></p>
+              <p><span>Candidate Name:</span> <%= name_answer ? name_answer.content : "Not Entered" %></p>
             </div>
             <div class="detail-row">
               <% pwd_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Are you a PWD candidate" }) %>
@@ -54,7 +54,7 @@
           <h2 class="card-title">Profile Photo</h2>
           <div class="photo-container">
             <% if @user_photo_base64 %>
-              <%= image_tag "data:image/#{@user.photo.content_type};base64,#{@user_photo_base64}", class: 'user-photo img-fluid' %>
+              <%= image_tag "data:image/#{@res_user.photo.content_type};base64,#{@user_photo_base64}", class: 'user-photo img-fluid' %>
             <% else %>
               <div class="photo-placeholder">
                 <span>No photo available</span>
@@ -65,7 +65,6 @@
       </section>
     </div>
   </div>
-  
   <div class="credit-container">
     <div class="table-responsive">
       <table class="table table-bordered table credit-table">
