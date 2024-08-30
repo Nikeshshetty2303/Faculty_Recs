@@ -10,6 +10,7 @@
 
 <div class="container mt-4">
   <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
+  <%= link_to "Download Credit Data", home_export_to_excel_path, format: :xlsx, class: "btn btn-outline-primary mb-3" %>
 
   <% app_group.each do |form, responses| %>
     <div class="card mb-4 shadow-sm">
