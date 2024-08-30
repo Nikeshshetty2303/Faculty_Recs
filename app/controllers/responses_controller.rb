@@ -6,7 +6,7 @@ class ResponsesController < ApplicationController
 
     @responses = Response.joins(form: :department)
                      .where(form: { departments: { title: current_user.validator } }, status: "Freezed")
-                     .includes(credit_answers: :credit_question)
+                     .includes(credit_answers: :credit_question).sort_by { |response| response.app_no.to_s.strip }
     # Create a new Excel package
     package = Axlsx::Package.new
     workbook = package.workbook
