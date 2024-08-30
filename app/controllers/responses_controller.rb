@@ -3,8 +3,10 @@ class ResponsesController < ApplicationController
 
   def export_to_excel
     @credit_questions = CreditQuestion.where(isheader: nil)
-    @responses = Response.includes(credit_answers: :credit_question).where(status: "Freezed")
 
+    @responses = Response.joins(form: :department)
+                     .where(form: { departments: { title: current_user.validator } }, status: "Freezed")
+                     .includes(credit_answers: :credit_question)
     # Create a new Excel package
     package = Axlsx::Package.new
     workbook = package.workbook
