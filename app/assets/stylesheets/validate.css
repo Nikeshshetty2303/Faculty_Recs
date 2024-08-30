@@ -228,15 +228,14 @@
 }
 
 .job-details .detail-row p {
-
-  margin-right: 0rem;
-  color: gray;
+  margin-bottom: 0;
+  color: rgb(143, 141, 141)
 }
 
 .job-details .detail-row span {
   font-weight: bold;
   margin-right: 0.5rem;
-  color: rgb(93, 92, 92);
+  color: rgb(85, 85, 85)
 }
 
 .profile-section .card-body {
