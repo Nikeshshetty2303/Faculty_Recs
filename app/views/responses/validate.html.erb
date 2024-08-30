@@ -34,6 +34,7 @@
               </td>
             </tr>
             <% credit_section.credit_questions.each do |credit_question| %>
+            <%if credit_question.isheader != true && credit_question.header == nil%>
               <% credit_answer = CreditAnswer.where(response_id: @responses.id, credit_section_id: credit_section.id, credit_question_id: credit_question.id).last %>
               <% if credit_answer %>
                 <tr>
@@ -47,17 +48,34 @@
                     <input type="number" class="form-control verified-credit" data-answer-id="<%= credit_answer.id %>" value="<%= credit_answer.verified_credit %>" readonly>
                   </td>
                 </tr>
-              <% else %>
-              <tr>
-                  <td><%= credit_question.title %></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
               <% end %>
+              <%else %>
+                  <%if credit_question.isheader == true%>
+                    <tr>
+                      <td><%= credit_question.title %></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <%credit_question.sub_questions.each do |sub_question|%>
+                      <% credit_answer = CreditAnswer.where(response_id: @responses.id, credit_section_id: credit_section.id, credit_question_id: sub_question.id).last %>
+                      <tr>
+                        <td><%= sub_question.title %></td>
+                        <td><%= credit_answer.answer %></td>
+                        <td><%= credit_answer.credit %></td>
+                        <td>
+                          <input type="number" class="form-control verified-count" data-answer-id="<%= credit_answer.id %>" value="<%= credit_answer.verified_count %>">
+                        </td>
+                        <td>
+                          <input type="number" class="form-control verified-credit" data-answer-id="<%= credit_answer.id %>" value="<%= credit_answer.verified_credit %>" readonly>
+                        </td>
+                      </tr>
+                    <%end%>
+                    <%end%>
+                  <%end%>
+                <%end%>
             <% end %>
-          <% end %>
         </tbody>
       </table>
     </div>
