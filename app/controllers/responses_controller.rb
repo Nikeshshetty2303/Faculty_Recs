@@ -39,6 +39,23 @@ class ResponsesController < ApplicationController
             ["", "", "", ""]
           end
         end
+        row_data += [
+          response.undergraduate,
+          response.postgraduate,
+          response.phd,
+          response.postdoc,
+          response.experience_type,
+          response.major_awards,
+          response.academic_experience ? "Satisfactory" : "Not Satisfactory",
+          response.acad_exp_comments,
+          response.professional_experience ? "Satisfactory" : "Not Satisfactory",
+          response.prof_exp_comments,
+          response.credit_requirements ? "Satisfactory" : "Not Satisfactory",
+          response.credit_req_comments,
+          response.eligibility ? "Yes" : "No",
+          response.remark
+        ]
+
         sheet.add_row row_data
       end
     end
