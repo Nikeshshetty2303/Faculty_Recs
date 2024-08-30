@@ -14,7 +14,15 @@ class ResponsesController < ApplicationController
     # Add a worksheet to the package
     workbook.add_worksheet(name: "YourModel Data") do |sheet|
       # Add the first header row with the application ID
-      headers = ["Application ID"] + @credit_questions.map(&:title).flat_map { |title| [title, "", "", ""] }
+      headers = ["Application ID"] + @credit_questions.map(&:title).flat_map { |title| [title, "", "", ""] } +
+      [
+        "Undergraduate", "Postgraduate", "PhD", "PostDoc",
+        "Experience Type/Institute Ranking", "Major Awards / Fellowship",
+        "Academic Credentials", "Academic Credentials Comments",
+        "Professional Experience", "Professional Experience Comments",
+        "Credit Requirements", "Credit Requirements Comments",
+        "Eligibility", "Remark"
+      ]
       sheet.add_row headers
 
       # Merge the cells for each question's sub-columns in the first header row
