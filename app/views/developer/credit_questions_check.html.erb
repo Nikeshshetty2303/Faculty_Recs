@@ -19,7 +19,7 @@
               </tr>
             </thead>
             <tbody>
-              <% Response.all.each do |response| %>
+              <% Response.where(status: "Freezed").each do |response| %>
                 <% answer = response.credit_answers.joins(:credit_question).find_by(credit_questions: { title: "Number  of new laboratory establishment" })%>
                 <%if answer != nil && answer.answer != 0%>
                 <tr>
