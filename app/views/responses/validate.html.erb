@@ -47,6 +47,14 @@
                     <input type="number" class="form-control verified-credit" data-answer-id="<%= credit_answer.id %>" value="<%= credit_answer.verified_credit %>" readonly>
                   </td>
                 </tr>
+              <% else %>
+              <tr>
+                  <td><%= credit_question.title %></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
               <% end %>
             <% end %>
           <% end %>
