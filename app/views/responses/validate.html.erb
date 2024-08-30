@@ -3,6 +3,8 @@
 
 <div class="container mt-4">
   <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
+  <%= link_to "Download Responses Data", export_to_excel_response_path, format: :xlsx %>
+
   <div class="row">
     <div class="col-md-8">
       <section class="job-info card">

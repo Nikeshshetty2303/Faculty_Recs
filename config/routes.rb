@@ -66,6 +66,7 @@ post '/update_credit_answers', to: 'credit_answers#update_batch'
     get 'view_app_pdf'
     get 'combine_pdf'
     patch 'combine_pdf'
+    get 'export_to_excel'
   end
 end
 

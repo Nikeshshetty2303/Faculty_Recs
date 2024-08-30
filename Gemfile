@@ -92,3 +92,8 @@ gem 'cancancan'
 
 gem 'combine_pdf'
 
+gem 'write_xlsx'
+
+gem 'axlsx'
+
+gem 'axlsx_rails'
