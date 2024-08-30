@@ -16,6 +16,11 @@ class ResponsesController < ApplicationController
   def validate
     @user = User.find(current_user.id)
     @responses = Response.find(params[:id])
+    if @user.photo.attached?
+      @user_photo_base64 = Base64.strict_encode64(@user.photo.download)
+    else
+      @user_photo_base64 = nil
+    end
   end
 
   def my_credit
