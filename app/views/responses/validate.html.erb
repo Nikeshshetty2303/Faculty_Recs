@@ -3,9 +3,9 @@
 
 <div class="container mt-4">
   <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
-  <div class="row">
+<div class="row candidate-info-row">
     <div class="col-md-8">
-      <section class="job-info card">
+      <section class="job-info card h-100">
         <div class="card-body">
           <h2 class="card-title">Candidate Details</h2>
           <div class="job-details">
@@ -49,13 +49,13 @@
     </div>
 
     <div class="col-md-4">
-      <section class="profile-section card">
-        <div class="card-body">
+      <section class="profile-section card h-100">
+        <div class="card-body d-flex flex-column">
           <h2 class="card-title">Profile and Signature</h2>
-          <div class="photo-container">
+          <div class="photo-container flex-grow-1 d-flex align-items-center justify-content-center">
             <div class="profile-photo">
               <% if @user_photo_base64 %>
-                <%= image_tag "data:image/#{@res_user.photo.content_type};base64,#{@user_photo_base64}", class: 'user-photo img-fluid' %>
+                <%= image_tag "data:image/#{@user.photo.content_type};base64,#{@user_photo_base64}", class: 'user-photo img-fluid' %>
               <% else %>
                 <div class="photo-placeholder">
                   <span>No photo available</span>
