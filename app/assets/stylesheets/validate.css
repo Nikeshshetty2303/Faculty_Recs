@@ -208,3 +208,55 @@
   color: #fff;
 }
 
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.card-title {
+  color: #333;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.job-details .detail-row {
+  margin-bottom: 0.5rem;
+}
+
+.job-details .detail-row p {
+  margin-bottom: 0;
+}
+
+.job-details .detail-row span {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.profile-photo {
+  text-align: center;
+}
+
+.user-photo {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.photo-placeholder {
+  background-color: #f8f9fa;
+  border: 1px dashed #ced4da;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+@media (max-width: 767.98px) {
+  .col-md-8, .col-md-4 {
+    margin-bottom: 1rem;
+  }
+}

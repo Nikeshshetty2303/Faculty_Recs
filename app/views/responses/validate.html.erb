@@ -3,6 +3,70 @@
 
 <div class="container mt-4">
   <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
+  <div class="row">
+    <div class="col-md-8">
+      <section class="job-info card">
+        <div class="card-body">
+          <h2 class="card-title">Candidate Details</h2>
+          <div class="job-details">
+            <% profile_response = @responses.user.responses.where(profile_response: true).first %>
+            <div class="detail-row">
+              <p><span>Application No.:</span> <strong><%= @responses.app_no%></strong></p>
+            </div>
+            <div class="detail-row">
+              <% dob_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Date of Birth (DD-MM-YYYY)" }) %>
+              <p>
+                <span>DOB:</span>
+                <strong>
+                  <%= if dob_answer.try(:content).present?
+                        dob = Date.parse(dob_answer.content)
+                        dob.strftime("%d-%m-%Y")
+                      else
+                        "Not Entered"
+                      end
+                  %>
+                </strong>
+              </p>
+            </div>
+            <div class="detail-row">
+              <% name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }) %>
+              <p><span>Candidate Name:</span> <strong><%= name_answer ? name_answer.content : "Not Entered" %></strong></p>
+            </div>
+            <div class="detail-row">
+              <% pwd_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Are you a PWD candidate" }) %>
+              <p><span>PWD:</span> <strong><%= pwd_answer ? pwd_answer.content : "Not Entered" %></strong></p>
+            </div>
+            <div class="detail-row">
+              <% cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: " Category" }) %>
+              <p><span>Category:</span> <strong><%= cat_answer ? cat_answer.content : "Not Entered" %></strong></p>
+            </div>
+            <div class="detail-row">
+              <p><span>Credit Points (Claimed):</span> <strong><%= @responses.credit_score.round(2) %></strong></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="col-md-4">
+      <section class="profile-section card">
+        <div class="card-body">
+          <h2 class="card-title">Profile and Signature</h2>
+          <div class="photo-container">
+            <div class="profile-photo">
+              <% if @user_photo_base64 %>
+                <%= image_tag "data:image/#{@user.photo.content_type};base64,#{@user_photo_base64}", class: 'user-photo img-fluid' %>
+              <% else %>
+                <div class="photo-placeholder">
+                  <span>No photo available</span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
 
   <div class="credit-container">
     <div class="table-responsive">
