@@ -208,20 +208,11 @@
   color: #fff;
 }
 
-.candidate-info-row {
-  display: flex;
-  flex-wrap: wrap;
-}
-
 .card {
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   margin-bottom: 20px;
-}
-
-.card-body {
-  height: 100%;
 }
 
 .card-title {
@@ -248,48 +239,46 @@
 .profile-section .card-body {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .photo-container {
-  flex-grow: 1;
+  width: 100%;
+  max-width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
 
-.profile-photo {
-  text-align: center;
-  max-height: 100%;
-  max-width: 100%;
-}
-
 .user-photo {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 8px;
 }
 
 .photo-placeholder {
+  width: 100%;
+  height: 100%;
   background-color: #f8f9fa;
   border: 1px dashed #ced4da;
   border-radius: 8px;
-  padding: 2rem;
-  text-align: center;
-  color: #6c757d;
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #6c757d;
+  text-align: center;
 }
 
 @media (max-width: 767.98px) {
-  .candidate-info-row {
-    flex-direction: column;
-  }
   .col-md-8, .col-md-4 {
     margin-bottom: 1rem;
+  }
+
+  .photo-container {
+    max-width: 150px;
+    height: 150px;
   }
 }
