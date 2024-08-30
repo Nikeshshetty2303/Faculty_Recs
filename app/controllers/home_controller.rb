@@ -84,7 +84,7 @@ class HomeController < ApplicationController
         row_data = [response.app_no] + @credit_questions.flat_map do |question|
           answer = response.credit_answers.find { |a| a.credit_question_id == question.id }
           if answer.present?
-            [answer.answer, answer.verified_count, answer.credit, answer.verified_credit]
+            [answer.answer.round(1), answer.verified_count.round(1), answer.credit.round(1), answer.verified_credit.round(1)]
           else
             ["", "", "", ""]
           end
