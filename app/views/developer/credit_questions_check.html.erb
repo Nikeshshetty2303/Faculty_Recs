@@ -1,52 +1,41 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
-<%= stylesheet_link_tag 'allresponses' %>
 
-<div class="container mt-3">
-  <div class="row">
-    <div class="col-md-12">
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <%= link_to 'Multi Application User', developer_multiple_app_user_path(userid: @user.id), class: "nav-link" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to 'CSV Generator', developer_csv_generator_path(userid: @user.id), class: "nav-link" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to 'Credit Question Check', developer_credit_questions_check_path(userid: @user.id), class: "nav-link active" %>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
 <div class="container mt-4">
   <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
 
-  <div class="credit-container">
-    <div class="table-responsive">
-      <table class="table table-bordered table credit-table">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Question</th>
-            <th scope="col">Response</th>
-            <th scope="col">Credit</th>
-            <th scope="col">Verified Count</th>
-            <th scope="col">Verified Credit</th>
-          </tr>
-        </thead>
-        <tbody>
 
-            <% CreditQuestion.where(title: "Number  of new laboratory establishment").each do |credit_question|%>
-              <% credit_answer = CreditAnswer.where(response_id: @responses.id, credit_question_id: credit_question.id).last %>
-              <% if credit_answer.answer !=0 %>
+    <div class="card mb-4 shadow-sm">
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Application ID</th>
+                <th scope="col">Credit Score</th>
+                <th scope="col">Validate Credits</th>
+                <th scope="col">Verified Credits</th>
+                <th scope="col">Eligibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% Response.all.each do |response| %>
+                <% answer = response.credit_answers.joins(:credit_question).find_by(credit_questions: { title: "Number  of new laboratory establishment" })%>
+                <%if answer != nil && answer.content != 0%>
                 <tr>
-                  <td><%= credit_question.title %></td>
-                  <td><%= credit_answer.answer %></td>
-                  <td><%= credit_answer.credit %></td>
-                </tr>
-              <% end %>
-              <%end%>
+                  <td><%= response.app_no.strip if response.app_no.present? %></td>
+                  <td><%= response.credit_score.round(1) %></td>
+                  <td><%= link_to "View Response", validate_response_path(id: response.id), class: 'btn btn-outline-secondary btn-sm' %></td>
+                  <td><%= response.validated_credit_score ? response.validated_credit_score.round(1) : response.validated_credit_score %></td>
 
-        </tbody>
-      </table>
+                  <td><%=answer%> </td>
+                </tr>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
+
+</div>
