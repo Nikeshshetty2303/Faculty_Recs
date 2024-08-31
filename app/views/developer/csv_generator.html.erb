@@ -51,7 +51,10 @@
         </tr>
       </thead>
       <tbody>
-        <% Response.where(status: 'Freezed').all.each do |response| %>
+        <% Response.all
+           .select { |response| response.status == "Freezed" }
+           .sort_by { |response| response.app_no.to_s.strip }
+           .each do |response| %>
           <% if response.form.present? %>
             <tr class="response-row" data-status="<%= response.status %>">
               <% @pres_user = response.user%>
