@@ -44,11 +44,13 @@ class HomeController < ApplicationController
   end
 
   def export_to_excel
+    @credit_sections = CreditSection.all
     @credit_questions = CreditQuestion.where(isheader: nil)
 
     @responses = Response.joins(form: :department)
                      .where(form: { departments: { title: current_user.validator } }, status: "Freezed")
-                     .includes(credit_answers: :credit_question).sort_by { |response| response.app_no.to_s.strip }
+                     .includes(credit_answers: :credit_question)
+                     .sort_by { |response| response.app_no.to_s.strip }
 
     package = Axlsx::Package.new
     workbook = package.workbook
@@ -56,9 +58,30 @@ class HomeController < ApplicationController
     workbook.add_worksheet(name: "Credit Data") do |sheet|
       styles = create_styles(workbook)
 
-      # First header row with merged cells for each question
-      headers = ["Application ID"] + @credit_questions.map(&:title).flat_map { |title| [title, "", "", ""] } +
-      [
+      # First row: Section headers
+      sections = [""] + @credit_sections.flat_map do |section|
+        question_count = section.credit_questions.where(isheader: nil).count
+        [section.title] + Array.new((question_count * 4) - 1, "")
+      end
+      sheet.add_row sections, style: styles[:header]
+
+      # Merge cells for section headers
+      start_column = 1 # Start after Application ID
+      @credit_sections.each do |section|
+        question_count = section.credit_questions.where(isheader: nil).count
+        end_column = start_column + (question_count * 4) - 1
+        sheet.merge_cells("#{Axlsx::col_ref(start_column)}1:#{Axlsx::col_ref(end_column)}1")
+        start_column = end_column + 1
+      end
+
+      # Second row: Question headers
+      headers = ["Application ID"]
+      @credit_sections.each do |section|
+        section.credit_questions.where(isheader: nil).each do |question|
+          headers += [question.title, "", "", ""]
+        end
+      end
+      headers += [
         "Undergraduate", "Postgraduate", "PhD", "PostDoc",
         "Experience Type/Institute Ranking", "Major Awards / Fellowship",
         "Academic Credentials", "Academic Credentials Comments",
@@ -68,27 +91,40 @@ class HomeController < ApplicationController
       ]
       sheet.add_row headers, style: styles[:header]
 
-      # Merge the cells for each question's sub-columns in the first header row
-      @credit_questions.each_with_index do |question, index|
-        start_column = index * 4 + 1  # Each question has 4 sub-columns, starting after the Application ID
-        end_column = start_column + 3
-        sheet.merge_cells("#{Axlsx::col_ref(start_column)}1:#{Axlsx::col_ref(end_column)}1")
+      # Merge cells for question headers
+      start_column = 1 # Start after Application ID
+      @credit_sections.each do |section|
+        section.credit_questions.where(isheader: nil).each do |question|
+          end_column = start_column + 3
+          sheet.merge_cells("#{Axlsx::col_ref(start_column)}2:#{Axlsx::col_ref(end_column)}2")
+          start_column = end_column + 1
+        end
       end
 
-      # Sub-headers
-      sub_headers = [""] + @credit_questions.flat_map { ["Count", "Verified Count", "Credit", "Verified Credit"] }
+      # Third row: Sub-headers
+      sub_headers = [""] + @credit_sections.flat_map do |section|
+        section.credit_questions.where(isheader: nil).map do |question|
+          ["Count", "Verified Count", "Credit", "Verified Credit"]
+        end
+      end.flatten
+      sub_headers += [""] * 14 # For the static headers
       sheet.add_row sub_headers, style: styles[:sub_header]
 
       # Data rows
       @responses.each_with_index do |response, index|
-        row_data = [response.app_no] + @credit_questions.flat_map do |question|
-          answer = response.credit_answers.find { |a| a.credit_question_id == question.id }
-          if answer.present?
-            [answer.answer.round(1), answer.verified_count.round(1), answer.credit.round(1), answer.verified_credit.round(1)]
-          else
-            ["", "", "", ""]
+        row_data = [response.app_no]
+
+        @credit_sections.each do |section|
+          section.credit_questions.where(isheader: nil).each do |question|
+            answer = response.credit_answers.find { |a| a.credit_question_id == question.id }
+            if answer.present?
+              row_data += [answer.answer.round(1), answer.verified_count.round(1), answer.credit.round(1), answer.verified_credit.round(1)]
+            else
+              row_data += ["", "", "", ""]
+            end
           end
         end
+
         row_data += [
           response.undergraduate,
           response.postgraduate,
@@ -111,7 +147,8 @@ class HomeController < ApplicationController
       end
 
       # Apply column widths
-      sheet.column_widths 15, *([12] * (@credit_questions.count * 4)), *([15] * 14)
+      total_question_count = @credit_sections.sum { |section| section.credit_questions.where(isheader: nil).count }
+      sheet.column_widths 15, *([12] * (total_question_count * 4)), *([15] * 14)
     end
 
     send_data package.to_stream.read, type: "application/xlsx", filename: "Credit_data_#{current_user.validator}.xlsx"
