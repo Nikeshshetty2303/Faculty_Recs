@@ -118,9 +118,14 @@ class HomeController < ApplicationController
           section.credit_questions.where(isheader: nil).each do |question|
             answer = response.credit_answers.find { |a| a.credit_question_id == question.id }
             if answer.present?
-              row_data += [answer.answer.round(1), answer.verified_count.round(1), answer.credit.round(1), answer.verified_credit.round(1)]
+              row_data += [
+                answer.answer.to_f,
+                answer.verified_count.to_f,
+                answer.credit.to_f,
+                answer.verified_credit.to_f
+              ]
             else
-              row_data += ["", "", "", ""]
+              row_data += [nil, nil, nil, nil]
             end
           end
         end
@@ -143,7 +148,13 @@ class HomeController < ApplicationController
         ]
 
         row_style = index.even? ? styles[:even_row] : styles[:odd_row]
-        sheet.add_row row_data, style: row_style, types: [:string] * row_data.length
+
+        # Specify types for each cell
+        types = [:string] # For Application ID
+        types += ([:float] * (@credit_questions.count * 4)) # For all numeric fields
+        types += ([:string] * 14) # For the remaining fields
+
+        sheet.add_row row_data, style: row_style, types: types
       end
 
       # Apply column widths
