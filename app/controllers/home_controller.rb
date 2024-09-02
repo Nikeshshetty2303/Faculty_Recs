@@ -82,11 +82,11 @@ class HomeController < ApplicationController
         end
       end
       headers += [
-        "Undergraduate", "Postgraduate", "PhD", "PostDoc",
+        "Undergraduate", "Postgraduate", "PhD",
         "Experience Type/Institute Ranking", "Major Awards / Fellowship",
         "Academic Credentials", "Academic Credentials Comments",
         "Professional Experience", "Professional Experience Comments",
-        "Credit Requirements", "Credit Requirements Comments",
+        "Credit Requirements", "Credit Requirements Comments","Specialization",
         "Eligibility", "Remark"
       ]
       sheet.add_row headers, style: styles[:header]
@@ -134,7 +134,6 @@ class HomeController < ApplicationController
           response.undergraduate,
           response.postgraduate,
           response.phd,
-          response.postdoc,
           response.experience_type,
           response.major_awards,
           response.academic_experience ? "S" : (response.academic_experience == false ? "N" : ""),
@@ -142,8 +141,9 @@ class HomeController < ApplicationController
           response.professional_experience ? "S" : (response.professional_experience == false ? "N" : ""),
           response.prof_exp_comments,
           response.credit_requirements ? "S" : (response.credit_requirements == false ? "N" : ""),
+          response.specialization ? "S" : (response.specialization ==false ? "N" : ""),
           response.credit_req_comments,
-          response.eligibility ? "Y" : "N",
+          response.eligibility,
           response.remark
         ]
 

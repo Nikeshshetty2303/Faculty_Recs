@@ -25,7 +25,7 @@
                     <tr>
                         <th rowspan="3">Application ID</th>
                         <th rowspan="3">Name</th>
-                        <th colspan="4">Qual (G1-G4)</th>
+                        <th colspan="3">Qual (G1-G4)</th>
                         <th rowspan="3">Exp (E1-E6)</th>
                         <th rowspan="3">CP-1</th>
                         <th rowspan="3">CP-2</th>
@@ -33,6 +33,7 @@
                         <th colspan="2">Academic Credentials</th>
                         <th colspan="2">Professional Experience Requirements</th>
                         <th colspan="2">Credit Points Requirements</th>
+                        <th rowspan="3">SP</th>
                         <th rowspan="3">E</th>
                         <th rowspan="3">Remarks</th>
                     </tr>
@@ -40,7 +41,6 @@
                         <th rowspan="2">UG</th>
                         <th rowspan="2">PG</th>
                         <th rowspan="2">PhD</th>
-                        <th rowspan="2">Post-Doc</th>
                         <th rowspan="3">(S/N)</th>
                         <th>Comments</th>
                         <th rowspan="3">(S/N)</th>
@@ -64,7 +64,6 @@
                         <td><%= response.undergraduate %></td>
                         <td><%= response.postgraduate %></td>
                         <td><%= response.phd %></td>
-                        <td><%= response.postdoc %></td>
                         <td><%= response.experience_type %></td>
                         <td><%= response.credit_score.round(1) %></td>
                         <td><%= response.validated_credit_score ? response.validated_credit_score.round(1) : response.validated_credit_score %></td>
@@ -75,7 +74,8 @@
                         <td><%= response.professional_experience == false ? response.prof_exp_comments : '' %></td>
                         <td><%= response.credit_requirements == true ? 'S' : (response.credit_requirements == false ? 'N' : '') %></td>
                         <td><%= response.credit_requirements == false ? response.credit_req_comments : '' %></td>
-                        <td><%= response.eligibility == true ? 'Y' : (response.eligibility == false ? 'N' : '') %></td>
+                        <td><%= response.specialization == true ? 'S' : (response.specialization == false ? 'N' : '') %></td>
+                        <td><%= response.eligibility%></td>
                         <td><%= response.remark %></td>
                     </tr>
                     <% end %>
@@ -119,6 +119,14 @@
                 <tr>
                     <td>O</td>
                     <td>Others</td>
+                </tr>
+                <tr>
+                    <td>TDB</td>
+                    <td>To be Decided</td>
+                </tr>
+                <tr>
+                    <td>SP</td>
+                    <td>Specialization</td>
                 </tr>
             </table>
 
