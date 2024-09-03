@@ -86,7 +86,7 @@
                 <table>
                     <tr>
                         <td>Total Applications: <%= form.responses.where(status: "Freezed").count %></td>
-                        <td>Eligible Applications: <%= form.responses.where(status: "Freezed", eligibility: true).count %></td>
+                        <td>Eligible Applications: <%= form.responses.where(status: "Freezed", eligibility: ["1", 'Yes']).count %></td>
                     </tr>
                 </table>
             </div>
