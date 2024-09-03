@@ -75,7 +75,7 @@
                         <td><%= response.credit_requirements == true ? 'S' : (response.credit_requirements == false ? 'N' : '') %></td>
                         <td><%= response.credit_requirements == false ? response.credit_req_comments : '' %></td>
                         <td><%= response.specialization == true ? 'S' : (response.specialization == false ? 'N' : '') %></td>
-                        <td><%= response.eligibility == "1" ? "Eligible" : (response.eligibility == 'Yes' ? "Eligible" : (response.eligibility == 'TBD' ? "To Be Decided" : 'Not Eligible')) %></td>
+                        <td><%= response.eligibility == "1" ? "Y" : (response.eligibility == 'Yes' ? "Y" : (response.eligibility == 'TBD' ? "TBD" : 'N')) %></td>
                         <td><%= response.remark %></td>
                     </tr>
                     <% end %>
