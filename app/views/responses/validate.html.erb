@@ -235,8 +235,8 @@
 <%= f.label :eligibility, class: "form-label" %>
 <%= f.select :eligibility,
     options_for_select([
-      ['Yes', 'Yes', {'data-match': ['Yes', '1']}],
-      ['No', 'No', {'data-match': ['No', '0']}],
+      ['Yes', 'Yes', {'data-match': ['Yes', "1"]}],
+      ['No', 'No', {'data-match': ['No', "0"]}],
       ['To be Decided', 'TBD']
     ], selected: [@responses.eligibility, @responses.eligibility&.to_s]),
     {},
