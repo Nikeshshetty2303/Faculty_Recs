@@ -232,17 +232,24 @@
             </div>
             <div class="row mb-3">
               <div class="col-md-6">
-<%= f.label :eligibility, class: "form-label" %>
-<%= f.select :eligibility,
-    options_for_select([
-      ['Yes', 'Yes', {'data-match': ['Yes', "1"]}],
-      ['No', 'No', {'data-match': ['No', "0"]}],
-      ['To be Decided', 'TBD']
-    ], selected: [@responses.eligibility, @responses.eligibility&.to_s]),
-    {},
-    class: "form-select",
-    required: true
-%>
+                <% selected_value = case @responses.eligibility.to_s
+                  when '1', 'Yes' then 'Yes'
+                  when '0', 'No' then 'No'
+                  when 'TBD' then 'TBD'
+                  else nil
+                  end %>
+
+                <%= f.label :eligibility, class: "form-label" %>
+                <%= f.select :eligibility,
+                    options_for_select([
+                      ['Yes', 'Yes'],
+                      ['No', 'No'],
+                      ['To be Decided', 'TBD']
+                    ], selected: selected_value),
+                    {},
+                    class: "form-select",
+                    required: true
+                %>
             </div>
               <div class="col-md-6">
                 <%= f.label :remark, "Add Remarks", class: "form-label" %>
