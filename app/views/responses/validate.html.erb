@@ -232,9 +232,18 @@
             </div>
             <div class="row mb-3">
               <div class="col-md-6">
-                <%= f.label :eligibility, class: "form-label" %>
-                <%= f.select :eligibility, options_for_select([['Yes'], ['No'], ['To be Decided', 'TBD']], @responses.eligibility), {}, class: "form-select" , required: true %>
-              </div>
+<%= f.label :eligibility, class: "form-label" %>
+<%= f.select :eligibility,
+    options_for_select([
+      ['Yes', 'Yes', {'data-match': ['Yes', '1']}],
+      ['No', 'No', {'data-match': ['No', '0']}],
+      ['To be Decided', 'TBD']
+    ], selected: [@responses.eligibility, @responses.eligibility&.to_s]),
+    {},
+    class: "form-select",
+    required: true
+%>
+            </div>
               <div class="col-md-6">
                 <%= f.label :remark, "Add Remarks", class: "form-label" %>
                 <%= f.text_area :remark, class: "form-control", rows: 3 , required: true %>
