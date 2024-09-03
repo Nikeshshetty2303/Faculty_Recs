@@ -143,7 +143,7 @@ class HomeController < ApplicationController
           response.credit_requirements ? "S" : (response.credit_requirements == false ? "N" : ""),
           response.specialization ? "S" : (response.specialization ==false ? "N" : ""),
           response.credit_req_comments,
-          response.eligibility == "1" ? "Eligible" : (response.eligibility == 'Yes' ? "Y" : (response.eligibility == 'TBD' ? 'TBD' : 'N')),
+          response.eligibility == "1" ? "Y" : (response.eligibility == 'Yes' ? "Y" : (response.eligibility == 'TBD' ? 'TBD' : 'N')),
           response.remark
         ]
 
