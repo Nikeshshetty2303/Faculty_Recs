@@ -82,11 +82,11 @@ class HomeController < ApplicationController
         end
       end
       headers += [
-        "Undergraduate", "Postgraduate", "PhD",
+        "Undergraduate", "Postgraduate", "PhD", "PostDoc",
         "Experience Type/Institute Ranking", "Major Awards / Fellowship",
         "Academic Credentials", "Academic Credentials Comments",
         "Professional Experience", "Professional Experience Comments",
-        "Credit Requirements", "Credit Requirements Comments","Specialization",
+        "Credit Requirements", "Credit Requirements Comments",
         "Eligibility", "Remark"
       ]
       sheet.add_row headers, style: styles[:header]

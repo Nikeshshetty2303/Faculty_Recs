@@ -148,7 +148,7 @@
     <span id="totalValidatedCredit">0</span>
   </div>
 
-  <button id="updateAllBtn" class="btn btn-outline-dark mt-3">Update Credits</button>
+  <button id="updateAllBtn" class="btn btn-outline-dark mt-3">Update All</button>
 
   <div class="row mt-5 justify-content-center">
     <div class="col-md-10">
@@ -167,6 +167,7 @@
                     <th>Undergraduate</th>
                     <th>Postgraduate</th>
                     <th>PhD</th>
+                    <th>PostDoc</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -174,6 +175,7 @@
                     <td><%= f.select :undergraduate, options_for_select([['G1'], ['G2'], ['G3'], ['G4'],['Others', 'O']], @responses.undergraduate), {}, class: "form-select", required: true %></td>
                     <td><%= f.select :postgraduate, options_for_select([['G1'], ['G2'], ['G3'], ['G4'],['Others', 'O']], @responses.postgraduate), {}, class: "form-select", required: true %></td>
                     <td><%= f.select :phd, options_for_select([['G1'], ['G2'], ['G3'], ['G4'],['Others', 'O']], @responses.phd), {}, class: "form-select", required: true %></td>
+                    <td><%= f.select :postdoc, options_for_select([['G1'], ['G2'], ['G3'], ['G4'],['Others', 'O'], ['None']], @responses.postdoc), {}, class: "form-select", required: true %></td>
                   </tr>
                 </tbody>
               </table>
@@ -183,7 +185,7 @@
             <div class="row mb-3">
               <div class="col-md-6">
                 <%= f.label :experience_type, "Experience Type/Institute Ranking", class: "form-label" %>
-                <%= f.text_area :experience_type, class: "form-control", rows: 3, required: true %>
+                <%= f.select :experience_type, options_for_select([['E1'], ['E2'], ['E3'], ['E4'],['E5'], ['E6'], ['Others', 'O'], ['None']], @responses.experience_type), {}, class: "form-select", required: true %>
               </div>
 
               <div class="col-md-6">
@@ -224,18 +226,12 @@
                 <%= f.text_area :credit_req_comments, class: "form-control", rows: 3 %>
               </div>
             </div>
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <%= f.label :specialization, "Specialization in the required domain", class: "form-label" %>
-                <%= f.select :specialization, options_for_select([['Yes', true], ['No', false]], @responses.specialization), {}, class: "form-select experience-select" , required: true %>
-            </div>
-            </div>
+
             <div class="row mb-3">
               <div class="col-md-6">
                 <% selected_value = case @responses.eligibility.to_s
                   when '1', 'Yes' then 'Yes'
                   when '0', 'No' then 'No'
-                  when 'TBD' then 'TBD'
                   else nil
                   end %>
 
@@ -243,8 +239,7 @@
                 <%= f.select :eligibility,
                     options_for_select([
                       ['Yes', 'Yes'],
-                      ['No', 'No'],
-                      ['To be Decided', 'TBD']
+                      ['No', 'No']
                     ], selected: selected_value),
                     {},
                     class: "form-select",
