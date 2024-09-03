@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_admin
-    unless current_user&.role == 'admin' || current_user&.validator? || devise_controller? || controller_name == 'home'&& action_name == 'deadline' || current_user&.role == 'admin' && controller_name == 'developer'
+    unless current_user&.role == 'admin' || devise_controller? || controller_name == 'home'&& action_name == 'deadline' || current_user&.role == 'admin' && controller_name == 'developer'
       if(current_user&.role != 'admin')
           sign_out(current_user)
       end
