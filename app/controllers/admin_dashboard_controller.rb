@@ -47,7 +47,7 @@ class AdminDashboardController < ApplicationController
       @response = Response.find(params[:id])
       @user = User.find(params[:userid])
       @app_response = Response.where(user_id: @user.id, profile_response: true).last
-      
+
       respond_to do |format|
           format.html
           format.pdf do
@@ -59,6 +59,10 @@ class AdminDashboardController < ApplicationController
                   margin: { top: 0, bottom: 0, left: 0, right: 0 } # 'attachment' to download, 'inline' to display in the browser
           end
         end
+    end
+
+    def extract_portal
+      @user = current_user
     end
 
 end

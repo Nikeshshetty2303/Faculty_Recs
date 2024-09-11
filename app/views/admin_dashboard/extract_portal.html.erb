@@ -1,0 +1,84 @@
+<!-- HTML (ERB) -->
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%= stylesheet_link_tag 'allresponses' %>
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <%= link_to 'Users', admin_dashboard_all_users_path(userid: @user.id), class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Responses', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Statistics', admin_dashboard_statistics_path(userid: @user.id), class: "nav-link" %>
+        </li>
+         <li class="nav-item">
+          <%= link_to 'Application Extracts', admin_dashboard_extract_portal_path(userid: @user.id), class: "nav-link active" %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+      <div class="search-container">
+        <input type="text" class="form-control" id="searchBar" placeholder="Search for departments...">
+        <i class="fas fa-search"></i>
+      </div>
+    </div>
+  </div>
+  <div class="row" id="departmentCards">
+    <% Department.where.not(title: "CS").each do |department| %>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 department-card" data-bs-toggle="modal" data-bs-target="#modal<%= department.id %>">
+          <div class="card-body">
+            <h5 class="card-title"><%= department.title %></h5>
+            <p class="card-text">Click to view extracts</p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% Department.where.not(title: "CS").each do |department| %>
+  <div class="modal fade" id="modal<%= department.id %>" tabindex="-1" aria-labelledby="modalLabel<%= department.id %>" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel<%= department.id %>"><%= department.title %> Extracts</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <% Form.where(department_id: department.id).each do |form| %>
+            <div class="d-grid gap-2 mb-2">
+              <%= link_to "#{form.role} Report", admin_dashboard_view_summary_report_path(form_id: form.id, format: :pdf), class: 'btn btn-outline-primary', target: '_blank' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let searchBar = document.getElementById('searchBar');
+    let departmentCards = document.querySelectorAll('.department-card');
+
+    searchBar.addEventListener('input', function() {
+      let searchTerm = this.value.toLowerCase();
+      departmentCards.forEach(function(card) {
+        let departmentName = card.querySelector('.card-title').textContent.toLowerCase();
+        if (departmentName.includes(searchTerm)) {
+          card.closest('.col-md-4').style.display = '';
+        } else {
+          card.closest('.col-md-4').style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
