@@ -76,6 +76,7 @@ class AdminDashboardController < ApplicationController
         styles = create_styles(workbook)
 
         headers = ["Application ID"]
+        headers += ["Name"]
         headers += [
           "Undergraduate", "Postgraduate", "PhD", "PostDoc",
           "Experience Type/Institute Ranking", "Major Awards / Fellowship",
@@ -92,6 +93,10 @@ class AdminDashboardController < ApplicationController
         # Data rows
         @responses.each_with_index do |response, index|
           row_data = [response.app_no]
+
+          profile_response = response.user.responses.where(profile_response: true).first
+          name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" })
+          row_data += [name_answer ? name_answer.content : "Not Entered"]
 
           row_data += [
             response.undergraduate,
