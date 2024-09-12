@@ -53,14 +53,24 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <% Form.where(department_id: department.id).each do |form| %>
-            <div class="d-grid gap-2 mb-2">
-              <%= link_to "#{form.role} Report.pdf", admin_dashboard_view_summary_report_path(form_id: form.id, format: :pdf), class: 'btn btn-outline-primary', target: '_blank' %>
-            </div>
-            <div class="d-grid gap-2 mb-2">
-              <%= link_to "#{form.role} Report.csv", admin_dashboard_view_summary_report_csv_path(form_id: form.id, format: :xlsx), class: 'btn btn-outline-primary', target: '_blank' %>
-            </div>
-          <% end %>
+          <div class="btn-group w-100 mb-3" role="group" aria-label="Format selection">
+            <button type="button" class="btn btn-outline-primary active" data-format="pdf">PDF</button>
+            <button type="button" class="btn btn-outline-primary" data-format="excel">Excel</button>
+          </div>
+          <div id="pdfLinks<%= department.id %>" class="format-links">
+            <% Form.where(department_id: department.id).each do |form| %>
+              <div class="d-grid gap-2 mb-2">
+                <%= link_to "#{form.role} Report.pdf", admin_dashboard_view_summary_report_path(form_id: form.id, format: :pdf), class: 'btn btn-outline-primary', target: '_blank' %>
+              </div>
+            <% end %>
+          </div>
+          <div id="excelLinks<%= department.id %>" class="format-links" style="display: none;">
+            <% Form.where(department_id: department.id).each do |form| %>
+              <div class="d-grid gap-2 mb-2">
+                <%= link_to "#{form.role} Report.xlsx", admin_dashboard_view_summary_report_csv_path(form_id: form.id, format: :xlsx), class: 'btn btn-outline-primary', target: '_blank' %>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>
@@ -81,6 +91,29 @@
         } else {
           card.closest('.col-md-4').style.display = 'none';
         }
+      });
+    });
+
+    // Format selection functionality
+    document.querySelectorAll('.modal').forEach(function(modal) {
+      let pdfLinks = modal.querySelector('[id^="pdfLinks"]');
+      let excelLinks = modal.querySelector('[id^="excelLinks"]');
+      let formatButtons = modal.querySelectorAll('.btn-group [data-format]');
+
+      formatButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          let format = this.getAttribute('data-format');
+          formatButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+
+          if (format === 'pdf') {
+            pdfLinks.style.display = 'block';
+            excelLinks.style.display = 'none';
+          } else {
+            pdfLinks.style.display = 'none';
+            excelLinks.style.display = 'block';
+          }
+        });
       });
     });
   });

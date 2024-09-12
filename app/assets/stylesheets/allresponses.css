@@ -168,7 +168,7 @@
     font-weight: bold;
   }
 
-  
+
 
   .btn-outline-primary {
     border-color: #007bff;
@@ -202,4 +202,21 @@
     .col-md-4 {
       margin-bottom: 20px;
     }
+  }
+
+  .btn-group .btn {
+    flex: 1;
+  }
+
+  .btn-group .btn.active {
+    background-color: #007bff9d;
+    color: #fff;
+  }
+
+  .format-links {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .format-links:not(:first-child) {
+    margin-top: 1rem;
   }
