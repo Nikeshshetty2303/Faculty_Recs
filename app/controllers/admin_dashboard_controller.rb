@@ -67,7 +67,7 @@ class AdminDashboardController < ApplicationController
 
     def view_summary_report_csv
       @form = Form.find(params[:form_id])
-      @responses = @form.responses
+      @responses = @form.responses.where(status: "Freezed")
 
       package = Axlsx::Package.new
       workbook = package.workbook
