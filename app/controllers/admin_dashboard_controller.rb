@@ -75,7 +75,6 @@ class AdminDashboardController < ApplicationController
       workbook.add_worksheet(name: "Summary Report") do |sheet|
         styles = create_styles(workbook)
 
-        # Second row: Question headers
         headers = ["Application ID"]
         headers += [
           "Undergraduate", "Postgraduate", "PhD", "PostDoc",
@@ -86,6 +85,9 @@ class AdminDashboardController < ApplicationController
           "Eligibility", "Remark"
         ]
         sheet.add_row headers, style: styles[:header]
+
+        # Initialize an array to store the maximum width of each column
+        max_widths = headers.map { |header| [header.length, 10].max }
 
         # Data rows
         @responses.each_with_index do |response, index|
@@ -108,14 +110,20 @@ class AdminDashboardController < ApplicationController
             response.remark
           ]
 
+          # Update max_widths based on the content of each cell
+          row_data.each_with_index do |cell_value, col_index|
+            cell_width = cell_value.to_s.length
+            max_widths[col_index] = [max_widths[col_index], cell_width].max
+          end
+
           row_style = index.even? ? styles[:even_row] : styles[:odd_row]
           sheet.add_row row_data, style: row_style
         end
 
-        # # Apply column widths
-        # total_question_count = @credit_sections.sum { |section| section.credit_questions.where(isheader: nil).count }
-        # sheet.column_widths 15, *([12] * (total_question_count * 4)), *([15] * 14)
+        # Set column widths
+        sheet.column_widths(*max_widths.map { |width| [width + 2, 50].min })
       end
+
       send_data package.to_stream.read, type: "application/xlsx", filename: "#{@form.department.title}_#{@form.role}_report.xlsx"
     end
 
