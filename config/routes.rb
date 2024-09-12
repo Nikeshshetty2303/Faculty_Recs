@@ -89,6 +89,7 @@ end
    get 'admin_dashboard/extract_print'
    get 'admin_dashboard/extractpdf'
    get 'admin_dashboard/extract_portal'
+  get 'admin_dashboard/view_summary_report_csv'
 
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
    get 'home/edit_app_profile'

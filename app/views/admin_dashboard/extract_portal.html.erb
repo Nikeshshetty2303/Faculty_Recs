@@ -55,7 +55,10 @@
         <div class="modal-body">
           <% Form.where(department_id: department.id).each do |form| %>
             <div class="d-grid gap-2 mb-2">
-              <%= link_to "#{form.role} Report", admin_dashboard_view_summary_report_path(form_id: form.id, format: :pdf), class: 'btn btn-outline-primary', target: '_blank' %>
+              <%= link_to "#{form.role} Report.pdf", admin_dashboard_view_summary_report_path(form_id: form.id, format: :pdf), class: 'btn btn-outline-primary', target: '_blank' %>
+            </div>
+            <div class="d-grid gap-2 mb-2">
+              <%= link_to "#{form.role} Report.csv", admin_dashboard_view_summary_report_csv_path(form_id: form.id, format: :xlsx), class: 'btn btn-outline-primary', target: '_blank' %>
             </div>
           <% end %>
         </div>
