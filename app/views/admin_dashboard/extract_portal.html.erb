@@ -31,7 +31,7 @@
     </div>
   </div>
   <div class="row" id="departmentCards">
-    <% Department.where.not(title: "CS").each do |department| %>
+    <% Department.all.each do |department| %>
       <div class="col-md-4 mb-4">
         <div class="card h-100 department-card" data-bs-toggle="modal" data-bs-target="#modal<%= department.id %>">
           <div class="card-body">
