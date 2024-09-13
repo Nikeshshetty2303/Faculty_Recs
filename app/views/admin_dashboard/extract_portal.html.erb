@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<% Department.where.not(title: "CS").each do |department| %>
+<% Department.all.each do |department| %>
   <div class="modal fade" id="modal<%= department.id %>" tabindex="-1" aria-labelledby="modalLabel<%= department.id %>" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
