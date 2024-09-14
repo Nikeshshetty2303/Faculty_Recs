@@ -79,7 +79,7 @@ class AdminDashboardController < ApplicationController
         headers += ["Name"]
         headers += [
           "Undergraduate", "Postgraduate", "PhD", "PostDoc",
-          "Experience Type/Institute Ranking", "Major Awards / Fellowship",
+          "Experience Type/Institute Ranking", "Credit Points (Claimed)", "Credit Points (After Scrutiny)", "Major Awards / Fellowship",
           "Academic Credentials", "Academic Credentials Comments",
           "Professional Experience", "Professional Experience Comments",
           "Credit Requirements", "Credit Requirements Comments",
@@ -104,6 +104,8 @@ class AdminDashboardController < ApplicationController
             response.phd,
             response.postdoc,
             response.experience_type,
+            response.credit_score.round(1),
+            response.validated_credit_score ? response.validated_credit_score.round(1) : response.validated_credit_score,
             response.major_awards,
             response.academic_experience ? "S" : (response.academic_experience == false ? "N" : ""),
             response.acad_exp_comments,
