@@ -37,6 +37,7 @@ class HomeController < ApplicationController
   def validate
     @user = User.find(current_user.id)
     @response = Response.all
+    @status = false
   end
 
   def deadline
