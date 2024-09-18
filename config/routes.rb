@@ -79,6 +79,7 @@ end
 
    get 'home/index'
    get 'home/validate'
+   get 'home/all_responses'
    get 'home/app_profile'
    get 'admin_dashboard/all_responses'
    get 'admin_dashboard/all_users'

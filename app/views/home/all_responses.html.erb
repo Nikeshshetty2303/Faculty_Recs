@@ -1,0 +1,133 @@
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%= stylesheet_link_tag 'allresponses' %>
+
+<%app_group = Hash.new { |h, k| h[k] = [] } %>
+<% Response.all
+           .select { |response| response.form.present? && response.form.department.title == @user.validator}
+           .sort_by { |response| response.app_no.to_s.strip }
+           .each do |response| %>
+  <% app_group[response.form] << response %>
+
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <%= link_to 'Validation', home_validate_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Responses', home_all_responses_path, class: "nav-link active" %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-12 mb-3">
+      <label for="searchBar" class="form-label">Search:</label>
+      <input type="text" class="form-control" id="searchBar" placeholder="Search for content...">
+    </div>
+
+    <div class="col-md-4">
+      <label for="statusFilter" class="form-label">Filter by Status:</label>
+      <select class="form-select" id="statusFilter">
+        <option value="">All</option>
+        <option value="Freezed">Freezed</option>
+        <option value="Free">Free</option>
+      </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <span id="departmentCount" class="badge bg-secondary">Number of Responses: <span id="rowCount">0</span></span>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Old Application ID</th>
+          <th scope="col">Application ID</th>
+          <th scope="col">Credits (Applicant)</th>
+          <th scope="col">Application</th>
+          <th scope="col">Summary</th>
+          <th scope="col">Combined pdf</th>
+          <th scope="col">Created At</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Response.where(for).each do |response| %>
+          <% if response.form.present? %>
+            <tr class="response-row" data-status="<%= response.status %>">
+              <% present_response_id = response.id %>
+              <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
+              <% count_below_responses = below_responses.count %>
+              <% role = response.form.role %>
+              <% dept = response.form.department.title %>
+              <td><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
+              <td class="application-id"><%= response.app_no%></td>
+              <td><%= response.credit_score.round(2) %></td>
+              <td>
+                <% if response.status == "Freezed" %>
+                  <%= link_to "View Application", view_app_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm' %>
+                <% else %>
+                  <%= link_to "View Application", print_response_path(id: response.id, userid: response.user.id, format: :pdf), class: 'btn btn-outline-secondary btn-sm' %>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to "View Extract", admin_dashboard_extract_print_path(id: response.id, userid: response.user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
+              </td>
+              <td><%= link_to "View Combined PDFs", view_combined_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm' %></td>
+              <td><%= response.created_at.strftime('%B %d, %Y %H:%M') %></td>
+              <td><%= response.status %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let departmentFilter = document.getElementById('departmentFilter');
+    let statusFilter = document.getElementById('statusFilter');
+    let searchBar = document.getElementById('searchBar');
+    let rowCountSpan = document.getElementById('rowCount');
+
+    function updateRowVisibility() {
+      let selectedDepartment = departmentFilter.value.toLowerCase();
+      let selectedStatus = statusFilter.value;
+      let searchTerm = searchBar.value.toLowerCase();
+      let rows = document.querySelectorAll('.response-row');
+      let count = 0;
+
+      rows.forEach(function (row) {
+        let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
+        let rowStatus = row.dataset.status;
+        let rowContent = row.textContent.toLowerCase();
+
+        let departmentMatch = selectedDepartment === '' || applicationId.includes(selectedDepartment);
+        let statusMatch = selectedStatus === '' || rowStatus === selectedStatus;
+        let searchMatch = searchTerm === '' || rowContent.includes(searchTerm);
+
+        if (departmentMatch && statusMatch && searchMatch) {
+          row.style.display = '';
+          count++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      rowCountSpan.textContent = count;
+    }
+
+    departmentFilter.addEventListener('change', updateRowVisibility);
+    statusFilter.addEventListener('change', updateRowVisibility);
+    searchBar.addEventListener('input', updateRowVisibility);
+
+    // Initial update on page load
+    updateRowVisibility();
+  });
+</script>
