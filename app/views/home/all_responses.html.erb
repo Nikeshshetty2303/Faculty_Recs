@@ -63,7 +63,18 @@
             <% responses.each do |response| %>
                 <% if response.form.present? %>
                     <tr class="response-row" data-status="<%= response.status %>">
-                    <td class="application-id"><%= response.app_no%></td>
+                    <% present_response_id = response.id %>
+                    <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
+                    <% count_below_responses = below_responses.count %>
+                    <% role = response.form.role %>
+                    <% dept = response.form.department.title %>
+
+                    <%if response.app_no == "Freezed"%>
+                        <td class="application-id"><%= response.app_no%></td>
+                    <%else%>
+                        <td><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
+                    <%end%>
+
                     <td><%= response.credit_score.round(2) %></td>
                     <td>
                         <% if response.status == "Freezed" %>
