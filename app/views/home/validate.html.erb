@@ -1,5 +1,5 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
-
+<%= stylesheet_link_tag 'allresponses' %>
 <%app_group = Hash.new { |h, k| h[k] = [] } %>
 <% Response.all
            .select { |response| response.form.present? && response.form.department.title == @user.validator && response.status == "Freezed" }
@@ -7,6 +7,23 @@
            .each do |response| %>
   <% app_group[response.form] << response %>
 <%end%>
+
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <%= link_to 'Validation', home_validate_path, class: "nav-link active" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Responses', home_all_responses_path, class: "nav-link" %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 <%if @except == @user.validator%>
 <div class="container mt-4">
   <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>

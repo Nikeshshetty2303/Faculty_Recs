@@ -54,7 +54,6 @@
     <table class="table table-bordered table-striped table-hover">
       <thead class="table-dark">
         <tr>
-          <th scope="col">Old Application ID</th>
           <th scope="col">Application ID</th>
           <th scope="col">Credits (Applicant)</th>
           <th scope="col">Application</th>
@@ -68,12 +67,6 @@
         <% Response.all.each do |response| %>
           <% if response.form.present? %>
             <tr class="response-row" data-status="<%= response.status %>">
-              <% present_response_id = response.id %>
-              <% below_responses = Response.where(profile_response: true).where("id < ?", present_response_id) %>
-              <% count_below_responses = below_responses.count %>
-              <% role = response.form.role %>
-              <% dept = response.form.department.title %>
-              <td><%= "#{role}#{dept}#{1000 + response.id - count_below_responses}" %></td>
               <td class="application-id"><%= response.app_no%></td>
               <td><%= response.credit_score.round(2) %></td>
               <td>
@@ -86,7 +79,11 @@
               <td>
                 <%= link_to "View Extract", admin_dashboard_extract_print_path(id: response.id, userid: response.user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
               </td>
-              <td><%= link_to "View Combined PDFs", view_combined_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm' %></td>
+                <% if response.status == "Freezed" %>
+                  <td><%= link_to "View Combined PDFs", view_combined_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm' %></td>
+                <%else%>
+                  <td><%= link_to "View Combined PDFs", view_combined_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm disabled' %></td>
+                <%end%>
               <td><%= response.created_at.strftime('%B %d, %Y %H:%M') %></td>
               <td><%= response.status %></td>
             </tr>
