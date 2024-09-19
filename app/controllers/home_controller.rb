@@ -38,7 +38,7 @@ class HomeController < ApplicationController
     @user = User.find(current_user.id)
     @response = Response.all
     @status = false
-    @except = ["EC", "CV", "CS", "MI"]
+    @except = ["MA", "CV"]
   end
 
   def all_responses
