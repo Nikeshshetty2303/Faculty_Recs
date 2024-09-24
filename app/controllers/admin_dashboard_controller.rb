@@ -207,7 +207,7 @@ class AdminDashboardController < ApplicationController
         sheet.column_widths 20, 10, 10, 10, 10, 15, 10
       end
 
-      send_data package.to_stream.read, type: "application/xlsx", filename: "#{department.title}_summary_report.xlsx"
+      send_data package.to_stream.read, type: "application/xlsx", filename: "#{department.title}_applications.xlsx"
     end
 
 
