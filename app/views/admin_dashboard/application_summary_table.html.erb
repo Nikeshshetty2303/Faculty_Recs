@@ -99,6 +99,8 @@
     </div>
   </div>
 </div>
+
+
 <div class="container mt-4">
   <div class="row mb-4">
     <div class="col-md-6 offset-md-3">
@@ -113,9 +115,12 @@
       <div class="col-md-4 mb-4">
         <div class="card h-100 department-card" data-department-id="<%= department.id %>">
           <div class="card-body">
+            <%total_dept_app = Response.joins(form: :department)
+                          .where(status: "Freezed")
+                          .where(departments: { id: department.id })%>
             <h5 class="card-title"><%= department.title %></h5>
             <p class="card-text">Click to view details</p>
-            <p class="card-text">Total Applications: <span class="total-applications">Loading...</span></p>
+            <p class="card-text">Total Applications: <span class="total-applications"><%=total_dept_app.count%></span></p>
           </div>
         </div>
       </div>
