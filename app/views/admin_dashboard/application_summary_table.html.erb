@@ -1,25 +1,17 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
-<%
-  responses = Response.all
-                      .select { |response| response.form.present? && response.form.department.title == @user.validator && response.status == "Freezed" }
-                      .sort_by { |response| response.app_no.to_s.strip }
+<%app_group = Hash.new { |h, k| h[k] = [] } %>
+<% Response.all
+           .select { |response| response.form.present? && response.form.department.title == @user.validator && response.status == "Freezed" }
+           .sort_by { |response| response.app_no.to_s.strip }
+           .each do |response| %>
+  <% app_group[response.form] << response %>
+<%end%>
 
-  app_group = responses.group_by(&:form)
-  dept_total = responses.count
-
-  category_counts = Hash.new { |h, k| h[k] = Hash.new(0) }
-
-  responses.each do |response|
-    profile_response = response.user.responses.where(profile_response: true).first
-    if profile_response
-      cat = profile_response.answers.joins(:question).find_by(questions: { title: "Category" })
-      if cat.present?
-        category_counts[response.form][cat.content] += 1
-      end
-    end
-  end
-%>
+<%dept_total =0%>
+<% app_group.each do |form, responses| %>
+<% dept_total = responses.count + dept_total%>
+<%end%>
 
 <style>
   .btn-group .btn.active {
@@ -34,6 +26,7 @@
   }
 </style>
 
+
 <div class="container mt-3">
   <div class="row">
     <div class="col-md-12">
@@ -42,57 +35,80 @@
           <%= link_to 'Users', admin_dashboard_all_users_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'Responses', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link" %>
+          <%= link_to 'Responses', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link active" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'Statistics', admin_dashboard_statistics_path(userid: @user.id), class: "nav-link" %>
+          <%= link_to 'Statistics', admin_dashboard_statistics_path(userid: @user.id), class: "nav-link " %>
         </li>
         <li class="nav-item">
-          <%= link_to 'Application Extracts', admin_dashboard_extract_portal_path(userid: @user.id), class: "nav-link" %>
+          <%= link_to 'Application Extracts', admin_dashboard_extract_portal_path(userid: @user.id), class: "nav-link " %>
         </li>
-        <li class="nav-item">
-          <%= link_to 'Applications Table', admin_dashboard_application_summary_table_path(userid: @user.id), class: "nav-link active" %>
+         <li class="nav-item">
+          <%= link_to 'Applications Table', admin_dashboard_application_summary_table_path(userid: @user.id), class: "nav-link" %>
         </li>
       </ul>
     </div>
   </div>
 </div>
 
+
 <div class="container mt-4">
   <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
   <%= link_to "Download Credit Data", home_export_to_excel_path, format: :xlsx, class: "btn btn-outline-primary mb-3" %>
 
-  <div class="card mb-4 shadow-sm">
-    <div class="card-header bg-light">
-      <h5 class="mb-0">Total Application in <%= @user.validator %> Department: <%= dept_total %></h5>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Category</th>
-              <th scope="col">GEN</th>
-              <th scope="col">SC</th>
-              <th scope="col">ST</th>
-              <th scope="col">OBC</th>
-              <th scope="col">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% app_group.each do |form, form_responses| %>
+
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">Total Application in <%@user.validator%> Department: <%dept_total%></h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
               <tr>
-                <td><%= form.role %></td>
-                <td><%= category_counts[form]["GEN"] %></td>
-                <td><%= category_counts[form]["SC"] %></td>
-                <td><%= category_counts[form]["ST"] %></td>
-                <td><%= category_counts[form]["OBC"] %></td>
-                <td><%= form_responses.count %></td>
+                <th scope="col">Category </th>
+                <th scope="col">GEN</th>
+                <th scope="col">SC</th>
+                <th scope="col">ST</th>
+                <th scope="col">OBC</th>
+                <th scope="col">Total</th>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+            <% app_group.each do |form, responses| %>
+                <tr>
+                  <% gen =0%>
+                  <%sc =0%>
+                  <%st =0%>
+                  <%obc=0%>
+                  <td><%= form.role %></td>
+                    <% responses.each do |response|%>
+                      <% profile_response = response.user.responses.where(profile_response: true).first %>
+                      <% cat = profile_response.answers.joins(:question).find_by(questions: { title: "Category" }) %>
+                        <% if cat.present?%>
+                          <% if cat.content == "GEN"%>
+                              <% gen = gen + 1%>
+                            <%elsif cat.content == "SC"%>
+                              <%sc = sc + 1%>
+                            <%elsif cat.content == "ST"%>
+                              <%st = st + 1%>
+                            <%elsif cat.content == "OBC"%>
+                              <%obc = obc + 1%>
+                          <%end%>
+                        <%end %>
+                    <%end%>
+                  <td><%= gen %></td>
+                  <td><%= sc %></td>
+                  <td><%= st %></td>
+                  <td><%= obc %></td>
+                  <td><%= responses.count %></td>
+                </tr>
+                <%end%>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
+
+</div>
 </div>
