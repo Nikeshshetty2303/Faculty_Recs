@@ -1,17 +1,14 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
-<%app_group = Hash.new { |h, k| h[k] = [] } %>
-<% Response.all
-           .select { |response| response.form.present? && response.form.department.title == @user.validator && response.status == "Freezed" }
-           .sort_by { |response| response.app_no.to_s.strip }
-           .each do |response| %>
-  <% app_group[response.form] << response %>
-<%end%>
+<%
+  app_group = Response.joins(form: :department)
+                      .where(status: "Freezed")
+                      .where(departments: { title: @user.validator })
+                      .group_by(&:form)
+                      .transform_values { |responses| responses.sort_by { |r| r.app_no.to_s.strip } }
 
-<%dept_total =0%>
-<% app_group.each do |form, responses| %>
-<% dept_total = responses.count + dept_total%>
-<%end%>
+  dept_total = app_group.values.sum(&:size)
+%>
 
 <style>
   .btn-group .btn.active {
@@ -34,7 +31,7 @@
           <%= link_to 'Users', admin_dashboard_all_users_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'Responses', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link active" %>
+          <%= link_to 'Responses', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
           <%= link_to 'Statistics', admin_dashboard_statistics_path(userid: @user.id), class: "nav-link " %>
@@ -42,8 +39,8 @@
         <li class="nav-item">
           <%= link_to 'Application Extracts', admin_dashboard_extract_portal_path(userid: @user.id), class: "nav-link " %>
         </li>
-         <li class="nav-item">
-          <%= link_to 'Applications Table', admin_dashboard_application_summary_table_path(userid: @user.id), class: "nav-link" %>
+        <li class="nav-item">
+          <%= link_to 'Applications Table', admin_dashboard_application_summary_table_path(userid: @user.id), class: "nav-link active" %>
         </li>
       </ul>
     </div>
@@ -52,7 +49,7 @@
 
 <div class="container mt-4">
   <%= link_to "Go Back", :back, class: "btn btn-light mb-3" %>
-  <%= link_to "Download Credit Data", home_export_to_excel_path, format: :xlsx, class: "btn btn-outline-primary mb-3" %>
+  <%= link_to "Download Credit Data", home_export_to_excel_path(format: :xlsx), class: "btn btn-outline-primary mb-3" %>
 
   <div class="card mb-4 shadow-sm">
     <div class="card-header bg-light">
@@ -73,35 +70,19 @@
           </thead>
           <tbody>
           <% app_group.each do |form, responses| %>
+            <% categories = responses.each_with_object(Hash.new(0)) do |response, counts|
+                 profile_response = response.user.responses.find_by(profile_response: true)
+                 if profile_response
+                   cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: " Category" })
+                   counts[cat_answer&.content] += 1 if cat_answer
+                 end
+               end %>
             <tr>
-              <% gen = 0 %>
-              <% sc = 0 %>
-              <% st = 0 %>
-              <% obc = 0 %>
               <td><%= form.role %></td>
-              <% responses.each do |response| %>
-                <% profile_response = response.user.responses.find_by(profile_response: true) %>
-                <% if profile_response %>
-                  <% cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: " Category" }) %>
-                  <% if cat_answer %>
-                  <%="inside"%>
-                    <% case cat_answer.content %>
-                    <% when "GEN" %>
-                      <% gen += 1 %>
-                    <% when "SC" %>
-                      <% sc += 1 %>
-                    <% when "ST" %>
-                      <% st += 1 %>
-                    <% when "OBC" %>
-                      <% obc += 1 %>
-                    <% end %>
-                  <% end %>
-                <% end %>
-              <% end %>
-              <td><%= gen %></td>
-              <td><%= sc %></td>
-              <td><%= st %></td>
-              <td><%= obc %></td>
+              <td><%= categories["GEN"] %></td>
+              <td><%= categories["SC"] %></td>
+              <td><%= categories["ST"] %></td>
+              <td><%= categories["OBC"] %></td>
               <td><%= responses.count %></td>
             </tr>
           <% end %>
