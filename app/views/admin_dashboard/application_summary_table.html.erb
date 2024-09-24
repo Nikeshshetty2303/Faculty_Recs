@@ -86,6 +86,7 @@
                       <% profile_response = response.user.responses.where(profile_response: true).first %>
                       <% cat = profile_response.answers.joins(:question).find_by(questions: { title: "Category" }) %>
                         <% if cat.present?%>
+                          <%="hereee"%>
                           <% if cat.content == "GEN"%>
                               <% gen = gen + 1%>
                             <%elsif cat.content == "SC"%>
