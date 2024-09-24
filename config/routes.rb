@@ -90,9 +90,10 @@ end
    get 'admin_dashboard/extract_print'
    get 'admin_dashboard/extractpdf'
    get 'admin_dashboard/extract_portal'
-  get 'admin_dashboard/view_summary_report_csv'
+   get 'admin_dashboard/view_summary_report_csv'
    get 'admin_dashboard/application_summary_table'
    get 'admin_dashboard/department_data/:id', to: 'admin_dashboard#department_data'
+   get 'admin_dashboard/export_department_excel/:id', to: 'admin_dashboard#export_department_excel', as: 'admin_dashboard_export_department_excel'
 
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
    get 'home/edit_app_profile'

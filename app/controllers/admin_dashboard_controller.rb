@@ -137,6 +137,80 @@ class AdminDashboardController < ApplicationController
       send_data package.to_stream.read, type: "application/xlsx", filename: "#{@form.department.title}_#{@form.role}_report.xlsx"
     end
 
+    def export_department_excel
+      department = Department.find(params[:id])
+
+      app_group = Response.joins(form: :department)
+                          .where(status: "Freezed")
+                          .where(departments: { id: department.id })
+                          .group_by(&:form)
+                          .transform_values { |responses| responses.sort_by { |r| r.app_no.to_s.strip } }
+
+      forms_data = app_group.map do |form, responses|
+        categories = responses.each_with_object(Hash.new(0)) do |response, counts|
+          profile_response = response.user.responses.find_by(profile_response: true)
+          if profile_response
+            cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: " Category" })
+            counts[cat_answer&.content] += 1 if cat_answer
+          end
+        end
+
+        {
+          role: form.role,
+          gen: categories["GEN"],
+          sc: categories["SC"],
+          st: categories["ST"],
+          obc: categories["OBC"],
+          not_entered: responses.count - categories.values.sum,
+          total: responses.count
+        }
+      end
+
+      package = Axlsx::Package.new
+      workbook = package.workbook
+
+      workbook.add_worksheet(name: "Department Summary") do |sheet|
+        styles = create_styles(workbook)
+
+        # Add headers
+        headers = ["Role", "GEN", "SC", "ST", "OBC", "Not Entered", "Total"]
+        sheet.add_row headers, style: styles[:header]
+
+        # Add data rows
+        forms_data.each_with_index do |form_data, index|
+          row_data = [
+            form_data[:role],
+            form_data[:gen],
+            form_data[:sc],
+            form_data[:st],
+            form_data[:obc],
+            form_data[:not_entered],
+            form_data[:total]
+          ]
+          row_style = index.even? ? styles[:even_row] : styles[:odd_row]
+          sheet.add_row row_data, style: row_style
+        end
+
+        # Add total row
+        total_row = [
+          "Total",
+          forms_data.sum { |form| form[:gen] },
+          forms_data.sum { |form| form[:sc] },
+          forms_data.sum { |form| form[:st] },
+          forms_data.sum { |form| form[:obc] },
+          forms_data.sum { |form| form[:not_entered] },
+          forms_data.sum { |form| form[:total] }
+        ]
+        sheet.add_row total_row, style: styles[:sub_header]
+
+        # Set column widths
+        sheet.column_widths 20, 10, 10, 10, 10, 15, 10
+      end
+
+      send_data package.to_stream.read, type: "application/xlsx", filename: "#{department.title}_summary_report.xlsx"
+    end
+
+
     def create_styles(workbook)
       {
         header: workbook.styles.add_style(
@@ -165,6 +239,8 @@ class AdminDashboardController < ApplicationController
         )
       }
     end
+
+
 
     def application_summary_table
       @user = current_user
