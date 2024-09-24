@@ -11,7 +11,70 @@
     background-color: #007bff;
     border-color: #007bff;
   }
+
+  .search-container {
+    position: relative;
+  }
+
+  .search-container i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .department-card {
+    cursor: pointer;
+  }
+
+  .toggle-switch {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 34px;
+  }
+
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
 </style>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="container mt-3">
   <div class="row">
@@ -24,10 +87,10 @@
           <%= link_to 'Responses', admin_dashboard_all_responses_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'Statistics', admin_dashboard_statistics_path(userid: @user.id), class: "nav-link " %>
+          <%= link_to 'Statistics', admin_dashboard_statistics_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'Application Extracts', admin_dashboard_extract_portal_path(userid: @user.id), class: "nav-link " %>
+          <%= link_to 'Application Extracts', admin_dashboard_extract_portal_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
           <%= link_to 'Applications Table', admin_dashboard_application_summary_table_path(userid: @user.id), class: "nav-link active" %>
@@ -36,7 +99,6 @@
     </div>
   </div>
 </div>
-
 <div class="container mt-4">
   <div class="row mb-4">
     <div class="col-md-6 offset-md-3">
@@ -52,7 +114,7 @@
         <div class="card h-100 department-card" data-bs-toggle="modal" data-bs-target="#modal<%= department.id %>">
           <div class="card-body">
             <h5 class="card-title"><%= department.title %></h5>
-            <p class="card-text">Click to view extracts</p>
+            <p class="card-text">Click to view details</p>
             <%
               app_group = Response.joins(form: :department)
                                   .where(status: "Freezed")
@@ -62,85 +124,108 @@
 
               dept_total = app_group.values.sum(&:size)
             %>
+            <p class="card-text">Total Applications: <%= dept_total %></p>
           </div>
         </div>
       </div>
 
-      <!-- Modal -->
+      <!-- Modal for each department -->
       <div class="modal fade" id="modal<%= department.id %>" tabindex="-1" aria-labelledby="modalLabel<%= department.id %>" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="modalLabel<%= department.id %>">Applications Summary for <%= department.title %></h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <h5 class="modal-title" id="modalLabel<%= department.id %>"><%= department.title %> Department Details</h5>
+              <div class="ms-auto">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="viewToggle<%= department.id %>">
+                  <span class="slider"></span>
+                </label>
+                <span id="viewLabel<%= department.id %>">Table View</span>
+                
+              </div>
+              <button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <div class="table-responsive">
-                <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">Category</th>
-                      <th scope="col">GEN</th>
-                      <th scope="col">SC</th>
-                      <th scope="col">ST</th>
-                      <th scope="col">OBC</th>
-                      <th scope="col">Not Entered</th>
-                      <th scope="col">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  <%
-                    total_gen = 0
-                    total_sc = 0
-                    total_st = 0
-                    total_obc = 0
-                    total_not_entered = 0
-                    total_all = 0
-                  %>
-                  <% app_group.each do |form, responses| %>
-                    <% categories = responses.each_with_object(Hash.new(0)) do |response, counts|
-                         profile_response = response.user.responses.find_by(profile_response: true)
-                         if profile_response
-                           cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: " Category" })
-                           counts[cat_answer&.content] += 1 if cat_answer
-                         end
-                       end %>
+              <div id="tableView<%= department.id %>">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">Category</th>
+                        <th scope="col">GEN</th>
+                        <th scope="col">SC</th>
+                        <th scope="col">ST</th>
+                        <th scope="col">OBC</th>
+                        <th scope="col">Not Entered</th>
+                        <th scope="col">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
                     <%
-                      gen = categories["GEN"]
-                      sc = categories["SC"]
-                      st = categories["ST"]
-                      obc = categories["OBC"]
-                      not_entered = responses.count - gen - sc - st - obc
-                      row_total = responses.count
-
-                      total_gen += gen
-                      total_sc += sc
-                      total_st += st
-                      total_obc += obc
-                      total_not_entered += not_entered
-                      total_all += row_total
+                      total_gen = 0
+                      total_sc = 0
+                      total_st = 0
+                      total_obc = 0
+                      total_not_entered = 0
+                      total_all = 0
                     %>
-                    <tr>
-                      <td><%= form.role %></td>
-                      <td><%= gen %></td>
-                      <td><%= sc %></td>
-                      <td><%= st %></td>
-                      <td><%= obc %></td>
-                      <td><%= not_entered %></td>
-                      <td><%= row_total %></td>
+                    <% app_group.each do |form, responses| %>
+                      <% categories = responses.each_with_object(Hash.new(0)) do |response, counts|
+                           profile_response = response.user.responses.find_by(profile_response: true)
+                           if profile_response
+                             cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: " Category" })
+                             counts[cat_answer&.content] += 1 if cat_answer
+                           end
+                         end %>
+                      <%
+                        gen = categories["GEN"]
+                        sc = categories["SC"]
+                        st = categories["ST"]
+                        obc = categories["OBC"]
+                        not_entered = responses.count - gen - sc - st - obc
+                        row_total = responses.count
+
+                        total_gen += gen
+                        total_sc += sc
+                        total_st += st
+                        total_obc += obc
+                        total_not_entered += not_entered
+                        total_all += row_total
+                      %>
+                      <tr>
+                        <td><%= form.role %></td>
+                        <td><%= gen %></td>
+                        <td><%= sc %></td>
+                        <td><%= st %></td>
+                        <td><%= obc %></td>
+                        <td><%= not_entered %></td>
+                        <td><%= row_total %></td>
+                      </tr>
+                    <% end %>
+                    <tr class="font-weight-bold">
+                      <td>Total</td>
+                      <td><%= total_gen %></td>
+                      <td><%= total_sc %></td>
+                      <td><%= total_st %></td>
+                      <td><%= total_obc %></td>
+                      <td><%= total_not_entered %></td>
+                      <td><%= total_all %></td>
                     </tr>
-                  <% end %>
-                  <tr class="font-weight-bold">
-                    <td>Total</td>
-                    <td><%= total_gen %></td>
-                    <td><%= total_sc %></td>
-                    <td><%= total_st %></td>
-                    <td><%= total_obc %></td>
-                    <td><%= total_not_entered %></td>
-                    <td><%= total_all %></td>
-                  </tr>
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div id="graphView<%= department.id %>" style="display: none;">
+                <canvas id="departmentChart<%= department.id %>"></canvas>
+              </div>
+               <!-- Add this div to store the data -->
+              <div id="chartData<%= department.id %>"
+                  data-gen="<%= total_gen %>"
+                  data-sc="<%= total_sc %>"
+                  data-st="<%= total_st %>"
+                  data-obc="<%= total_obc %>"
+                  data-not-entered="<%= total_not_entered %>"
+                  style="display: none;">
               </div>
             </div>
             <div class="modal-footer">
@@ -169,5 +254,76 @@
         }
       });
     });
+
+    // Toggle switch functionality and chart creation
+    <% Department.all.each do |department| %>
+      (function() {
+        const toggle = document.getElementById('viewToggle<%= department.id %>');
+        const label = document.getElementById('viewLabel<%= department.id %>');
+        const tableView = document.getElementById('tableView<%= department.id %>');
+        const graphView = document.getElementById('graphView<%= department.id %>');
+        const chartData = document.getElementById('chartData<%= department.id %>');
+        let chart;
+
+        toggle.addEventListener('change', function() {
+          if (this.checked) {
+            label.textContent = 'Graph View';
+            tableView.style.display = 'none';
+            graphView.style.display = 'block';
+            if (!chart) {
+              createChart();
+            }
+          } else {
+            label.textContent = 'Table View';
+            tableView.style.display = 'block';
+            graphView.style.display = 'none';
+          }
+        });
+
+        function createChart() {
+          const ctx = document.getElementById('departmentChart<%= department.id %>').getContext('2d');
+          const data = [
+            parseInt(chartData.dataset.gen),
+            parseInt(chartData.dataset.sc),
+            parseInt(chartData.dataset.st),
+            parseInt(chartData.dataset.obc),
+            parseInt(chartData.dataset.notEntered)
+          ];
+          chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['GEN', 'SC', 'ST', 'OBC', 'Not Entered'],
+              datasets: [{
+                label: 'Applications by Category',
+                data: data,
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.5)',
+                  'rgba(54, 162, 235, 0.5)',
+                  'rgba(255, 206, 86, 0.5)',
+                  'rgba(75, 192, 192, 0.5)',
+                  'rgba(153, 102, 255, 0.5)'
+                ],
+                borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+      })();
+    <% end %>
   });
 </script>
