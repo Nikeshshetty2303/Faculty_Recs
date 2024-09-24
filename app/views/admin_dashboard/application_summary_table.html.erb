@@ -1,79 +1,19 @@
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 
 <style>
-  .btn-group .btn.active {
-    background-color: #007bffd1;
-    color: #fff;
-  }
-
-  .nav-tabs .nav-link.active {
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-  }
-
-  .search-container {
-    position: relative;
-  }
-
-  .search-container i {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .department-card {
-    cursor: pointer;
-  }
-
-  .toggle-switch {
-    display: inline-block;
-    position: relative;
-    width: 60px;
-    height: 34px;
-  }
-
-  .toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 34px;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-  }
-
-  input:checked + .slider {
-    background-color: #2196F3;
-  }
-
-  input:checked + .slider:before {
-    transform: translateX(26px);
-  }
+  .btn-group .btn.active { background-color: #007bffd1; color: #fff; }
+  .nav-tabs .nav-link.active { color: #fff; background-color: #007bff; border-color: #007bff; }
+  .search-container { position: relative; }
+  .search-container i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); }
+  .department-card { cursor: pointer; }
+  .toggle-switch { display: inline-block; position: relative; width: 60px; height: 34px; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+  .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+  input:checked + .slider { background-color: #2196F3; }
+  input:checked + .slider:before { transform: translateX(26px); }
 </style>
 
-<!-- Include Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="container mt-3">
@@ -99,6 +39,7 @@
     </div>
   </div>
 </div>
+
 <div class="container mt-4">
   <div class="row mb-4">
     <div class="col-md-6 offset-md-3">
@@ -108,28 +49,26 @@
       </div>
     </div>
   </div>
+
   <div class="row" id="departmentCards">
-    <% Department.all.each do |department| %>
+    <% Department.includes(forms: { responses: :user }).each do |department| %>
+      <%
+        app_group = department.forms.map do |form|
+          responses = form.responses.select { |r| r.status == "Freezed" }
+          [form, responses.sort_by { |r| r.app_no.to_s.strip }]
+        end.to_h
+        dept_total = app_group.values.sum(&:size)
+      %>
       <div class="col-md-4 mb-4">
         <div class="card h-100 department-card" data-bs-toggle="modal" data-bs-target="#modal<%= department.id %>">
           <div class="card-body">
             <h5 class="card-title"><%= department.title %></h5>
             <p class="card-text">Click to view details</p>
-            <%
-              app_group = Response.joins(form: :department)
-                                  .where(status: "Freezed")
-                                  .where(departments: { title: department.title })
-                                  .group_by(&:form)
-                                  .transform_values { |responses| responses.sort_by { |r| r.app_no.to_s.strip } }
-
-              dept_total = app_group.values.sum(&:size)
-            %>
             <p class="card-text">Total Applications: <%= dept_total %></p>
           </div>
         </div>
       </div>
 
-      <!-- Modal for each department -->
       <div class="modal fade" id="modal<%= department.id %>" tabindex="-1" aria-labelledby="modalLabel<%= department.id %>" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -141,7 +80,6 @@
                   <span class="slider"></span>
                 </label>
                 <span id="viewLabel<%= department.id %>">Table View</span>
-                
               </div>
               <button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -162,36 +100,30 @@
                     </thead>
                     <tbody>
                     <%
-                      total_gen = 0
-                      total_sc = 0
-                      total_st = 0
-                      total_obc = 0
-                      total_not_entered = 0
-                      total_all = 0
-                    %>
-                    <% app_group.each do |form, responses| %>
-                      <% categories = responses.each_with_object(Hash.new(0)) do |response, counts|
-                           profile_response = response.user.responses.find_by(profile_response: true)
-                           if profile_response
-                             cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: " Category" })
-                             counts[cat_answer&.content] += 1 if cat_answer
-                           end
-                         end %>
-                      <%
+                      totals = { gen: 0, sc: 0, st: 0, obc: 0, not_entered: 0, all: 0 }
+                      app_group.each do |form, responses|
+                        categories = responses.each_with_object(Hash.new(0)) do |response, counts|
+                          profile_response = response.user.responses.find { |r| r.profile_response }
+                          if profile_response
+                            cat_answer = profile_response.answers.find { |a| a.question.title == " Category" }
+                            counts[cat_answer&.content] += 1 if cat_answer
+                          end
+                        end
+
                         gen = categories["GEN"]
                         sc = categories["SC"]
                         st = categories["ST"]
                         obc = categories["OBC"]
-                        not_entered = responses.count - gen - sc - st - obc
-                        row_total = responses.count
+                        not_entered = responses.size - gen - sc - st - obc
+                        row_total = responses.size
 
-                        total_gen += gen
-                        total_sc += sc
-                        total_st += st
-                        total_obc += obc
-                        total_not_entered += not_entered
-                        total_all += row_total
-                      %>
+                        totals[:gen] += gen
+                        totals[:sc] += sc
+                        totals[:st] += st
+                        totals[:obc] += obc
+                        totals[:not_entered] += not_entered
+                        totals[:all] += row_total
+                    %>
                       <tr>
                         <td><%= form.role %></td>
                         <td><%= gen %></td>
@@ -204,12 +136,12 @@
                     <% end %>
                     <tr class="font-weight-bold">
                       <td>Total</td>
-                      <td><%= total_gen %></td>
-                      <td><%= total_sc %></td>
-                      <td><%= total_st %></td>
-                      <td><%= total_obc %></td>
-                      <td><%= total_not_entered %></td>
-                      <td><%= total_all %></td>
+                      <td><%= totals[:gen] %></td>
+                      <td><%= totals[:sc] %></td>
+                      <td><%= totals[:st] %></td>
+                      <td><%= totals[:obc] %></td>
+                      <td><%= totals[:not_entered] %></td>
+                      <td><%= totals[:all] %></td>
                     </tr>
                     </tbody>
                   </table>
@@ -218,13 +150,12 @@
               <div id="graphView<%= department.id %>" style="display: none;">
                 <canvas id="departmentChart<%= department.id %>"></canvas>
               </div>
-               <!-- Add this div to store the data -->
               <div id="chartData<%= department.id %>"
-                  data-gen="<%= total_gen %>"
-                  data-sc="<%= total_sc %>"
-                  data-st="<%= total_st %>"
-                  data-obc="<%= total_obc %>"
-                  data-not-entered="<%= total_not_entered %>"
+                  data-gen="<%= totals[:gen] %>"
+                  data-sc="<%= totals[:sc] %>"
+                  data-st="<%= totals[:st] %>"
+                  data-obc="<%= totals[:obc] %>"
+                  data-not-entered="<%= totals[:not_entered] %>"
                   style="display: none;">
               </div>
             </div>
@@ -239,91 +170,85 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    let searchBar = document.getElementById('searchBar');
-    let departmentCards = document.querySelectorAll('.department-card');
+document.addEventListener('DOMContentLoaded', function () {
+  const searchBar = document.getElementById('searchBar');
+  const departmentCards = document.querySelectorAll('.department-card');
 
-    searchBar.addEventListener('input', function() {
-      let searchTerm = this.value.toLowerCase();
-      departmentCards.forEach(function(card) {
-        let departmentName = card.querySelector('.card-title').textContent.toLowerCase();
-        if (departmentName.includes(searchTerm)) {
-          card.closest('.col-md-4').style.display = '';
-        } else {
-          card.closest('.col-md-4').style.display = 'none';
-        }
-      });
+  searchBar.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    departmentCards.forEach(function(card) {
+      const departmentName = card.querySelector('.card-title').textContent.toLowerCase();
+      card.closest('.col-md-4').style.display = departmentName.includes(searchTerm) ? '' : 'none';
     });
-
-    // Toggle switch functionality and chart creation
-    <% Department.all.each do |department| %>
-      (function() {
-        const toggle = document.getElementById('viewToggle<%= department.id %>');
-        const label = document.getElementById('viewLabel<%= department.id %>');
-        const tableView = document.getElementById('tableView<%= department.id %>');
-        const graphView = document.getElementById('graphView<%= department.id %>');
-        const chartData = document.getElementById('chartData<%= department.id %>');
-        let chart;
-
-        toggle.addEventListener('change', function() {
-          if (this.checked) {
-            label.textContent = 'Graph View';
-            tableView.style.display = 'none';
-            graphView.style.display = 'block';
-            if (!chart) {
-              createChart();
-            }
-          } else {
-            label.textContent = 'Table View';
-            tableView.style.display = 'block';
-            graphView.style.display = 'none';
-          }
-        });
-
-        function createChart() {
-          const ctx = document.getElementById('departmentChart<%= department.id %>').getContext('2d');
-          const data = [
-            parseInt(chartData.dataset.gen),
-            parseInt(chartData.dataset.sc),
-            parseInt(chartData.dataset.st),
-            parseInt(chartData.dataset.obc),
-            parseInt(chartData.dataset.notEntered)
-          ];
-          chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: ['GEN', 'SC', 'ST', 'OBC', 'Not Entered'],
-              datasets: [{
-                label: 'Applications by Category',
-                data: data,
-                backgroundColor: [
-                  'rgba(255, 99, 132, 0.5)',
-                  'rgba(54, 162, 235, 0.5)',
-                  'rgba(255, 206, 86, 0.5)',
-                  'rgba(75, 192, 192, 0.5)',
-                  'rgba(153, 102, 255, 0.5)'
-                ],
-                borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)'
-                ],
-                borderWidth: 1
-              }]
-            },
-            options: {
-              responsive: true,
-              scales: {
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          });
-        }
-      })();
-    <% end %>
   });
+
+  document.querySelectorAll('[id^="viewToggle"]').forEach(toggle => {
+    const departmentId = toggle.id.replace('viewToggle', '');
+    const label = document.getElementById(`viewLabel${departmentId}`);
+    const tableView = document.getElementById(`tableView${departmentId}`);
+    const graphView = document.getElementById(`graphView${departmentId}`);
+    const chartData = document.getElementById(`chartData${departmentId}`);
+    let chart;
+
+    toggle.addEventListener('change', function() {
+      if (this.checked) {
+        label.textContent = 'Graph View';
+        tableView.style.display = 'none';
+        graphView.style.display = 'block';
+        if (!chart) {
+          createChart(departmentId, chartData);
+        }
+      } else {
+        label.textContent = 'Table View';
+        tableView.style.display = 'block';
+        graphView.style.display = 'none';
+      }
+    });
+  });
+
+  function createChart(departmentId, chartData) {
+    const ctx = document.getElementById(`departmentChart${departmentId}`).getContext('2d');
+    const data = [
+      parseInt(chartData.dataset.gen),
+      parseInt(chartData.dataset.sc),
+      parseInt(chartData.dataset.st),
+      parseInt(chartData.dataset.obc),
+      parseInt(chartData.dataset.notEntered)
+    ];
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['GEN', 'SC', 'ST', 'OBC', 'Not Entered'],
+        datasets: [{
+          label: 'Applications by Category',
+          data: data,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.5)',
+            'rgba(255, 206, 86, 0.5)',
+            'rgba(75, 192, 192, 0.5)',
+            'rgba(153, 102, 255, 0.5)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+});
 </script>
