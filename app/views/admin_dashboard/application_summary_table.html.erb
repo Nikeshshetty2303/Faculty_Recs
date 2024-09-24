@@ -70,6 +70,14 @@
             </tr>
           </thead>
           <tbody>
+          <%
+            total_gen = 0
+            total_sc = 0
+            total_st = 0
+            total_obc = 0
+            total_not_entered = 0
+            total_all = 0
+          %>
           <% app_group.each do |form, responses| %>
             <% categories = responses.each_with_object(Hash.new(0)) do |response, counts|
                  profile_response = response.user.responses.find_by(profile_response: true)
@@ -78,16 +86,40 @@
                    counts[cat_answer&.content] += 1 if cat_answer
                  end
                end %>
+            <%
+              gen = categories["GEN"]
+              sc = categories["SC"]
+              st = categories["ST"]
+              obc = categories["OBC"]
+              not_entered = responses.count - gen - sc - st - obc
+              row_total = responses.count
+
+              total_gen += gen
+              total_sc += sc
+              total_st += st
+              total_obc += obc
+              total_not_entered += not_entered
+              total_all += row_total
+            %>
             <tr>
               <td><%= form.role %></td>
-              <td><%= categories["GEN"] %></td>
-              <td><%= categories["SC"] %></td>
-              <td><%= categories["ST"] %></td>
-              <td><%= categories["OBC"] %></td>
-              <td><%= responses.count - categories["GEN"] -  categories["SC"] - categories["ST"] - categories["OBC"]%>
-              <td><%= responses.count %></td>
+              <td><%= gen %></td>
+              <td><%= sc %></td>
+              <td><%= st %></td>
+              <td><%= obc %></td>
+              <td><%= not_entered %></td>
+              <td><%= row_total %></td>
             </tr>
           <% end %>
+          <tr class="font-weight-bold">
+            <td>Total</td>
+            <td><%= total_gen %></td>
+            <td><%= total_sc %></td>
+            <td><%= total_st %></td>
+            <td><%= total_obc %></td>
+            <td><%= total_not_entered %></td>
+            <td><%= total_all %></td>
+          </tr>
           </tbody>
         </table>
       </div>
