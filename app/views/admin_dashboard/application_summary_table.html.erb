@@ -65,6 +65,7 @@
               <th scope="col">SC</th>
               <th scope="col">ST</th>
               <th scope="col">OBC</th>
+              <th scope="col">Not Entered</th>
               <th scope="col">Total</th>
             </tr>
           </thead>
@@ -83,6 +84,7 @@
               <td><%= categories["SC"] %></td>
               <td><%= categories["ST"] %></td>
               <td><%= categories["OBC"] %></td>
+              <td><%= responses.count - categories["GEN"] -  categories["SC"] - categories["ST"] - categories["OBC"]%>
               <td><%= responses.count %></td>
             </tr>
           <% end %>
