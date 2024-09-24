@@ -71,6 +71,21 @@
   input:checked + .slider:before {
     transform: translateX(26px);
   }
+
+    .loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 </style>
 
 <!-- Include Chart.js -->
@@ -144,9 +159,12 @@
         <button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div id="tableView"></div>
-        <div id="graphView" style="display: none;">
-          <canvas id="departmentChart"></canvas>
+        <div id="loader" class="loader" style="display: none;"></div>
+        <div id="modalContent" style="display: none;">
+          <div id="tableView"></div>
+          <div id="graphView" style="display: none;">
+            <canvas id="departmentChart"></canvas>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -182,14 +200,30 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function loadDepartmentData(departmentId) {
+    showLoader();
     fetch(`/admin_dashboard/department_data/${departmentId}`)
       .then(response => response.json())
       .then(data => {
         updateModalContent(data);
+        hideLoader();
         modal.show();
       })
-      .catch(error => console.error('Error:', error));
+      .catch(error => {
+        console.error('Error:', error);
+        hideLoader();
+      });
   }
+
+  function showLoader() {
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('modalContent').style.display = 'none';
+  }
+
+  function hideLoader() {
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('modalContent').style.display = 'block';
+  }
+
 
   function updateModalContent(data) {
     document.getElementById('departmentModalLabel').textContent = `${data.department_title} Department Details`;
