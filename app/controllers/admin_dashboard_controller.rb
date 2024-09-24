@@ -166,4 +166,8 @@ class AdminDashboardController < ApplicationController
       }
     end
 
+    def application_summary_table
+      @user = current_user
+    end
+
 end
