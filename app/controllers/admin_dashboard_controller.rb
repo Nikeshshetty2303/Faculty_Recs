@@ -170,4 +170,54 @@ class AdminDashboardController < ApplicationController
       @user = current_user
     end
 
+    def department_data
+      department = Department.find(params[:id])
+
+      app_group = Response.joins(form: :department)
+                          .where(status: "Freezed")
+                          .where(departments: { id: department.id })
+                          .group_by(&:form)
+                          .transform_values { |responses| responses.sort_by { |r| r.app_no.to_s.strip } }
+
+      forms_data = app_group.map do |form, responses|
+        categories = responses.each_with_object(Hash.new(0)) do |response, counts|
+          profile_response = response.user.responses.find_by(profile_response: true)
+          if profile_response
+            cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: " Category" })
+            counts[cat_answer&.content] += 1 if cat_answer
+          end
+        end
+
+        gen = categories["GEN"]
+        sc = categories["SC"]
+        st = categories["ST"]
+        obc = categories["OBC"]
+        not_entered = responses.count - gen - sc - st - obc
+
+        {
+          role: form.role,
+          gen: gen,
+          sc: sc,
+          st: st,
+          obc: obc,
+          not_entered: not_entered,
+          total: responses.count
+        }
+      end
+
+      total_applications = forms_data.sum { |form| form[:total] }
+
+      render json: {
+        department_id: department.id,
+        department_title: department.title,
+        forms: forms_data,
+        total_gen: forms_data.sum { |form| form[:gen] },
+        total_sc: forms_data.sum { |form| form[:sc] },
+        total_st: forms_data.sum { |form| form[:st] },
+        total_obc: forms_data.sum { |form| form[:obc] },
+        total_not_entered: forms_data.sum { |form| form[:not_entered] },
+        total_applications: total_applications
+      }
+    end
+
 end

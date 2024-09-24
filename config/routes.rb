@@ -92,6 +92,7 @@ end
    get 'admin_dashboard/extract_portal'
   get 'admin_dashboard/view_summary_report_csv'
    get 'admin_dashboard/application_summary_table'
+   get 'admin_dashboard/department_data/:id', to: 'admin_dashboard#department_data'
 
    post 'responses/printshow.pdf', to: 'responses#print', format: 'pdf'
    get 'home/edit_app_profile'
