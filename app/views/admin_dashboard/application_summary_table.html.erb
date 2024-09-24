@@ -61,18 +61,21 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="departmentModalLabel">Department Details</h5>
-        <div class="ms-auto">
-          <button id="exportExcel" class="btn btn-success me-2">Export to Excel</button>
-          <label class="toggle-switch">
-            <input type="checkbox" id="viewToggle">
-            <span class="slider"></span>
-          </label>
-          <span id="viewLabel">Table View</span>
+        <div class="ms-auto d-flex align-items-center">
+          <button id="exportExcel" class="btn btn-outline-primary me-2 btn-sm">Export to Excel</button>
+          <div class="form-check form-switch me-2">
+            <input class="form-check-input" type="checkbox" id="viewToggle">
+            <label class="form-check-label" for="viewToggle" id="viewLabel">Table View</label>
+          </div>
         </div>
         <button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div id="loader" class="loader" style="display: none;"></div>
+        <div id="loader" class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
         <div id="modalContent" style="display: none;">
           <div id="tableView"></div>
           <div id="graphView" style="display: none;">
@@ -137,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('modalContent').style.display = 'block';
   }
 
-    // Add event listener for the export button
+  // Add event listener for the export button
   document.getElementById('exportExcel').addEventListener('click', function() {
     if (currentDepartmentId) {
       window.location.href = `/admin_dashboard/export_department_excel/${currentDepartmentId}`;
