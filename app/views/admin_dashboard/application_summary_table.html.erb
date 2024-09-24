@@ -195,18 +195,18 @@ document.addEventListener('DOMContentLoaded', function () {
   departmentCards.forEach(card => {
     card.addEventListener('click', function() {
       currentDepartmentId = this.dataset.departmentId;
+      showLoader();
+      modal.show();
       loadDepartmentData(currentDepartmentId);
     });
   });
 
   function loadDepartmentData(departmentId) {
-    showLoader();
     fetch(`/admin_dashboard/department_data/${departmentId}`)
       .then(response => response.json())
       .then(data => {
         updateModalContent(data);
         hideLoader();
-        modal.show();
       })
       .catch(error => {
         console.error('Error:', error);
@@ -223,7 +223,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('loader').style.display = 'none';
     document.getElementById('modalContent').style.display = 'block';
   }
-
 
   function updateModalContent(data) {
     document.getElementById('departmentModalLabel').textContent = `${data.department_title} Department Details`;
