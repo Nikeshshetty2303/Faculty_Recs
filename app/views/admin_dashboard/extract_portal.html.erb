@@ -1,6 +1,7 @@
 <!-- HTML (ERB) -->
 <%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
 <%= stylesheet_link_tag 'allresponses' %>
+
 <div class="container mt-3">
   <div class="row">
     <div class="col-md-12">
@@ -17,10 +18,14 @@
          <li class="nav-item">
           <%= link_to 'Application Extracts', admin_dashboard_extract_portal_path(userid: @user.id), class: "nav-link active" %>
         </li>
+        <li class="nav-item">
+          <%= link_to 'Applications Table', admin_dashboard_application_summary_table_path(userid: @user.id), class: "nav-link" %>
+        </li>
       </ul>
     </div>
   </div>
 </div>
+
 <div class="container mt-4">
   <div class="row mb-4">
     <div class="col-md-6 offset-md-3">
