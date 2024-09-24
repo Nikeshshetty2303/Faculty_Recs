@@ -83,10 +83,10 @@
             <% app_group.each do |form, form_responses| %>
               <tr>
                 <td><%= form.role %></td>
-                <td><%= category_counts[form]['GEN'] %></td>
-                <td><%= category_counts[form]['SC'] %></td>
-                <td><%= category_counts[form]['ST'] %></td>
-                <td><%= category_counts[form]['OBC'] %></td>
+                <td><%= category_counts[form]["GEN"] %></td>
+                <td><%= category_counts[form]["SC"] %></td>
+                <td><%= category_counts[form]["ST"] %></td>
+                <td><%= category_counts[form]["OBC"] %></td>
                 <td><%= form_responses.count %></td>
               </tr>
             <% end %>
