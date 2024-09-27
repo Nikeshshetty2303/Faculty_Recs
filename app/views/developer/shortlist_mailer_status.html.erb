@@ -9,7 +9,7 @@
           <%= link_to 'Multi Application User', developer_multiple_app_user_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'CSV Generator', developer_csv_generator_path(userid: @user.id), class: "nav-link active" %>
+          <%= link_to 'CSV Generator', developer_csv_generator_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
           <%= link_to 'Credit Question Check', developer_credit_questions_check_path(userid: @user.id), class: "nav-link" %>
@@ -18,7 +18,7 @@
           <%= link_to 'Mailer Portal', developer_mailer_portal_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'Shortlist Mailer Status', developer_shortlist_mailer_status_path(userid: @user.id), class: "nav-link" %>
+          <%= link_to 'Shortlist Mailer Status', developer_shortlist_mailer_status_path(userid: @user.id), class: "nav-link active" %>
         </li>
       </ul>
     </div>
@@ -50,40 +50,18 @@
       <thead class="table-dark">
         <tr>
           <th scope="col">Application ID</th>
-          <th scope="col">Name</th>
-          <th scope="col">Category</th>
-          <th scope="col">PWD candidate</th>
-          <th scope="col">UTR Number</th>
         </tr>
       </thead>
       <tbody>
-        <% Response.all
-           .select { |response| response.status == "Freezed" }
-           .sort_by { |response| response.app_no.to_s.strip }
-           .each do |response| %>
-          <% if response.form.present? %>
+        <% Response.where(shortlist_mail_status: true).each do |response| %>
             <tr class="response-row" data-status="<%= response.status %>">
-              <% @pres_user = response.user%>
-              <% profile_response = @pres_user.responses.where(profile_response: true).first %>
-              <% name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }) %>
-              <% cat_answer = profile_response.answers.joins(:question).find_by(questions: { title: " Category" }) %>
-              <% pwd_answer =  profile_response.answers.joins(:question).find_by(questions: { title: "Are you a PWD candidate" }) %>
-              <% utr_number = response.answers.joins(:question).find_by("TRIM(questions.title) = ?", "UTR") %>
               <td class="application-id"><%= response.app_no%></td>
-              <td><%= name_answer ? name_answer.content : "Not Entered" %></td>
-              <td><%= cat_answer ? cat_answer.content : "Not Entered" %></td>
-              <td><%= pwd_answer ? pwd_answer.content : "Not Entered" %></td>
-              <td><%= utr_number ? utr_number.content : "NA" %></td>
             </tr>
-          <% end %>
         <% end %>
       </tbody>
     </table>
   </div>
 
-  <div class="mt-3">
-    <button id="generateCSV" class="btn btn-primary">Generate CSV</button>
-  </div>
 </div>
 
 <script>

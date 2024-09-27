@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Selection Interview Call Letter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #005a87;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .date-time {
+            display: block;
+        }
+        .note {
+            font-style: italic;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Faculty Selection Interview Call Letter</h1>
+
+        <p>Dear Applicant,</p>
+
+        <p><strong>Sub:</strong> Selection/Interview for Faculty Positions under Four-Tier Flexible Faculty Structure</p>
+        <p><strong>Ref:</strong> Your Application against Advertisement No. 5210-Advt./Faculty-NITK-Estt./2024/B1 dated 27.07.2024 </p>
+
+        <p>This is with reference to your application for the post of <%= @form.name %> in the Department of <%= @dept.full_name %> of this Institute. You are hereby informed that the selections for the above post will be done, following a three-step process as detailed below:</p>
+
+        <p><em>Applicable to all the candidates shortlisted for this round of selections in the various Departments/School, as notified on the Institute website</em></p>
+
+        <table>
+            <tr>
+                <th></th>
+                <th>STEP-I</th>
+                <th>STEP-II</th>
+                <th>STEP-III</th>
+            </tr>
+            <tr>
+                <th></th>
+                <td>Document Verification</td>
+                <td>Technical Presentation</td>
+                <td>Personal Interview</td>
+            </tr>
+             <tr>
+                <th>Reporting Date<br>& Time:</th>
+                <td>
+                    <span class="date-time">Date: <%= @dept.s1_reporting_date %></span>
+                    <span class="date-time">Time: <%= @dept.s1_reporting_time %></span>
+                </td>
+                <td>
+                    <span class="date-time">Date: <%= @dept.s2_reporting_date %></span>
+                    <span class="date-time">Time: <%= @dept.s2_reporting_time %></span>
+                </td>
+                <td>
+                    <span class="date-time">Date and time: <%= @dept.s3_reporting_date_and_time %></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Venue:</th>
+                <td>Main Admin. Building, NITK Surathkal</td>
+                <td>Respective Departments, NITK Surathkal</td>
+                <td>CCMT Hall, Main Admin. Building, NITK Surathkal</td>
+            </tr>
+        </table>
+
+        <h2>Presentation:</h2>
+        <p>Candidates are expected to make a 10-minute technical presentation with maximum 10 PPT slides as follows:</p>
+        <ol>
+            <li>Academic qualifications and work experience</li>
+            <li>Research area and titles of key projects</li>
+            <li>Glimpse of research (any one project): problem, solution, methodology and impact</li>
+            <li>Teaching experience (courses, level)</li>
+            <li>Glimpse of teaching (any UG topic): introduction, theory/ principle and example</li>
+            <li>Key achievements and future plan</li>
+        </ol>
+        <p>Slide aspect ratio: 16:9; font>18 points. The presentation may be followed by Q & A session.</p>
+
+        <p class="note"><strong>Note:</strong> The candidates must come prepared to stay as per the published schedule of the selection process. They will have to make their own arrangements for accommodation. They should report at least half an hour before each stage of selection.</p>
+
+        <h2>Required Documents:</h2>
+        <p>You are requested to bring originals of all the following documents, for verification:</p>
+        <ol>
+            <li>All your academic certificates, testimonials, and a valid ID proof.</li>
+            <li>Certificates in support of all your claims such as sanctioned research projects, guiding doctoral research, experience certificates from your former/current employers (towards your claim for experience), etc., as stated in your application.</li>
+            <li>Reprints of the best three journal publications authored by you.</li>
+            <li>Category certificates of SC/ST/OBC-NCL/PwD/EWS (wherever applicable) issued by the competent authority. If the above certificate is issued in languages other than English/Hindi, a translated copy in English/Hindi, duly self-attested, is a must.</li>
+            <li>Certificate from your present employer (if applicable) indicating your designation, nature of appointment (permanent/ temporary/ad-hoc), and scale of pay, along with the latest pay certificate.</li>
+            <li>If you are employed in a Govt/Quasi-Govt/PSUs and your application is not been forwarded through your present employer, you must bring a NO OBJECTION CERTIFICATE (NOC) from your employer. Similarly, if you have not produced the VIGILANCE CLEARANCE CERTIFICATE with the application, you need to produce the same during the interview.</li>
+        </ol>
+
+        <p>SC/ST/PwD candidates called for the selection process shall be reimbursed as per GOI norms. Canvassing, in any form, by or on behalf of a candidate will lead to his/her disqualification. Request for change of date/venue/time shall not be entertained. The number of posts advertised is tentative and subject to change. The Institute reserves the right to fill up or not to fill any of the posts advertised. A print-out of this interview call letter shall be produced at the time of attending the selection process.</p>
+
+        <p>A line of confirmation about your willingness to attend the interview may be communicated by email to <%= mail_to "facrecruit@nitk.edu.in" %>.</p>
+
+        <p>Please visit our website at <%= link_to "www.nitk.ac.in", "http://www.nitk.ac.in" %> for any further information.</p>
+
+        <p class="footer">We wish you all the best!</p>
+    </div>
+</body>
+</html>

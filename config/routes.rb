@@ -113,6 +113,10 @@ end
   get 'developer/extract_print'
   get 'developer/extractpdf'
   get 'developer/credit_questions_check'
+  get 'developer/mailer_portal'
+  post 'developer/application_shortlist_mailer'
+  post 'developer/application_referee_mailer'
+  get 'developer/shortlist_mailer_status'
    resources :credit_questions do
     collection do
       post :import

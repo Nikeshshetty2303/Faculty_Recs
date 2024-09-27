@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_09_02_170829) do
+ActiveRecord::Schema.define(version: 2024_09_27_090227) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -98,6 +98,11 @@ ActiveRecord::Schema.define(version: 2024_09_02_170829) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "full_name"
+    t.string "s1_reporting_date"
+    t.string "s1_reporting_time"
+    t.string "s2_reporting_date"
+    t.string "s2_reporting_time"
+    t.string "s3_reporting_date_and_time"
   end
 
   create_table "file_uploads", force: :cascade do |t|
@@ -196,6 +201,7 @@ ActiveRecord::Schema.define(version: 2024_09_02_170829) do
     t.string "prof_exp_comments"
     t.string "credit_req_comments"
     t.boolean "specialization"
+    t.boolean "shortlist_mail_status"
     t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
   end
