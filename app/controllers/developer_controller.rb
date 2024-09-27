@@ -45,36 +45,41 @@ class DeveloperController < ApplicationController
     end
 
     def application_shortlist_mailer
-      if params[:app_nos].present?
-        app_nos = params[:app_nos].split(',').map(&:strip)
-        successful_apps = []
-        failed_apps = []
+      if params[:email].present?
+          @user = User.find_by(email: params[:email])
+          ApplicationShortlistMailer.with(user_id: @user.id, form_id: 1, dept_id: 2).applicant.deliver_now
+      else
+        if params[:app_nos].present?
+          app_nos = params[:app_nos].split(',').map(&:strip)
+          successful_apps = []
+          failed_apps = []
 
-        app_nos.each do |app_no|
-          response = Response.find_by(app_no: app_no)
-          if response
-            begin
-              department = response.form.department
-              form = response.form
-              ApplicationShortlistMailer.with(user_id: response.user.id, form_id: form.id, dept_id: department.id).applicant.deliver_now
-              response.update(shortlist_mail_status: true)
-              successful_apps << app_no
-            rescue => e
-              response.update(shortlist_mail_status: false)
+          app_nos.each do |app_no|
+            response = Response.find_by(app_no: app_no)
+            if response
+              begin
+                department = response.form.department
+                form = response.form
+                ApplicationShortlistMailer.with(user_id: response.user.id, form_id: form.id, dept_id: department.id).applicant.deliver_now
+                response.update(shortlist_mail_status: true)
+                successful_apps << app_no
+              rescue => e
+                response.update(shortlist_mail_status: false)
+                failed_apps << app_no
+              end
+            else
               failed_apps << app_no
             end
-          else
-            failed_apps << app_no
           end
-        end
 
-        if failed_apps.empty?
-          flash[:success] = "Emails sent successfully to all applicants."
+          if failed_apps.empty?
+            flash[:success] = "Emails sent successfully to all applicants."
+          else
+            flash[:warning] = "Emails sent successfully to some applicants. Failed for: #{failed_apps.join(', ')}"
+          end
         else
-          flash[:warning] = "Emails sent successfully to some applicants. Failed for: #{failed_apps.join(', ')}"
+          flash[:error] = "No application numbers provided."
         end
-      else
-        flash[:error] = "No application numbers provided."
       end
       redirect_to developer_mailer_portal_path
     end

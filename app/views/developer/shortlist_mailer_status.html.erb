@@ -40,51 +40,72 @@
         <% end %>
       </select>
     </div>
+    <div class="col-md-4">
+      <label for="statusFilter" class="form-label">Filter by Status:</label>
+      <select class="form-select" id="statusFilter">
+        <option value="">All Statuses</option>
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select>
+    </div>
     <div class="col-md-4 d-flex align-items-end">
       <span id="departmentCount" class="badge bg-secondary">Number of Responses: <span id="rowCount">0</span></span>
     </div>
   </div>
 
   <div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover">
+    <table class="table table-bordered table-hover">
       <thead class="table-dark">
         <tr>
           <th scope="col">Application ID</th>
+          <th scope="col">Shortlist Mail Status</th>
         </tr>
       </thead>
       <tbody>
-        <% Response.where(shortlist_mail_status: true).each do |response| %>
-            <tr class="response-row" data-status="<%= response.status %>">
-              <td class="application-id"><%= response.app_no%></td>
+        <% Response.where(shortlist_mail_status: [true, false]).each do |response| %>
+            <tr class="response-row <%= response.shortlist_mail_status ? 'table-success' : 'table-danger' %>" data-status="<%= response.shortlist_mail_status %>">
+              <td class="application-id"><%= response.app_no %></td>
+              <td class="shortlist-status"><%= response.shortlist_mail_status %></td>
             </tr>
         <% end %>
       </tbody>
     </table>
   </div>
-
 </div>
+
+<style>
+  .table-success {
+    background-color: #d4edda !important;
+  }
+  .table-danger {
+    background-color: #f8d7da !important;
+  }
+</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     let departmentFilter = document.getElementById('departmentFilter');
+    let statusFilter = document.getElementById('statusFilter');
     let searchBar = document.getElementById('searchBar');
     let rowCountSpan = document.getElementById('rowCount');
-    let generateCSVButton = document.getElementById('generateCSV');
 
     function updateRowVisibility() {
       let selectedDepartment = departmentFilter.value.toLowerCase();
+      let selectedStatus = statusFilter.value;
       let searchTerm = searchBar.value.toLowerCase();
       let rows = document.querySelectorAll('.response-row');
       let count = 0;
 
       rows.forEach(function (row) {
         let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
+        let status = row.dataset.status;
         let rowContent = row.textContent.toLowerCase();
 
         let departmentMatch = selectedDepartment === '' || applicationId.includes(selectedDepartment);
+        let statusMatch = selectedStatus === '' || status === selectedStatus;
         let searchMatch = searchTerm === '' || rowContent.includes(searchTerm);
 
-        if (departmentMatch && searchMatch) {
+        if (departmentMatch && statusMatch && searchMatch) {
           row.style.display = '';
           count++;
         } else {
@@ -96,30 +117,8 @@
     }
 
     departmentFilter.addEventListener('change', updateRowVisibility);
+    statusFilter.addEventListener('change', updateRowVisibility);
     searchBar.addEventListener('input', updateRowVisibility);
-
-    generateCSVButton.addEventListener('click', function() {
-      let visibleRows = document.querySelectorAll('.response-row:not([style*="display: none"])');
-      let csvContent = "Application ID,Name,Applied position,Category,PWD candidate\n";
-
-      visibleRows.forEach(function(row) {
-        let columns = row.querySelectorAll('td');
-        let rowData = Array.from(columns).map(col => col.textContent.replace(/,/g, "")).join(',');
-        csvContent += rowData + "\n";
-      });
-
-      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      let link = document.createElement("a");
-      if (link.download !== undefined) {
-        let url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", "filtered_data.csv");
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    });
 
     // Initial update on page load
     updateRowVisibility();
