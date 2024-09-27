@@ -14,6 +14,26 @@
             width: 80%;
             margin: 0 auto;
         }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+        .institute-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .institute-address {
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        .letter-details {
+            margin-bottom: 20px;
+        }
         h1 {
             color: #005a87;
         }
@@ -45,7 +65,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>Faculty Selection Interview Call Letter</h1>
+        <div class="header">
+            <%= image_tag "NITK_Emblem.png", alt: "NITK Logo", class: "logo" %>
+            <div class="institute-name">NATIONAL INSTITUTE OF TECHNOLOGY KARNATAKA, SURATHKAL</div>
+            <div class="institute-address">P. O. SRINIVASNAGAR, MANGALURU - 575025, DAKSHINA KANNADA</div>
+        </div>
+
+        <div class="letter-details">
+            <p>No. 5210-Advt./Faculty-NITK-Estt./2024/B1</p>
+            <p>Date: 24 September, 2024</p>
+        </div>
 
         <p>Dear Applicant,</p>
 
