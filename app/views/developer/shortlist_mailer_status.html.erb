@@ -65,6 +65,7 @@
         <% Response.where(shortlist_mail_status: [true, false]).each do |response| %>
             <tr class="response-row <%= response.shortlist_mail_status ? 'table-success' : 'table-danger' %>" data-status="<%= response.shortlist_mail_status %>">
               <td class="application-id"><%= response.app_no %></td>
+              <td class="shortlist-status"><%= response.user.email %></td>
               <td class="shortlist-status"><%= response.shortlist_mail_status %></td>
             </tr>
         <% end %>
