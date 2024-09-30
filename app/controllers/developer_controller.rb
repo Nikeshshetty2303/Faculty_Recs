@@ -116,6 +116,7 @@ class DeveloperController < ApplicationController
                 response.update(referee_mail_status: true)
                 successful_apps << app_no
               rescue => e
+                flash[:warning] = e
                 response.update(referee_mail_status: false)
                 failed_apps << app_no
               end
