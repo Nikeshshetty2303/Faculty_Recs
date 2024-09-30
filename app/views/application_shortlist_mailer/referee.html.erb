@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letter of Reference Request</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .footer {
+      margin-top: 20px;
+      text-align: right;
+    }
+    ul {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>Prof. T. Laxminidhi, Dean (FW)</h2>
+    <p>National Institute of Technology Karnataka, Surathkal, Mangaluru - 575025</p>
+    <p>deanfw@nitk.edu.in</p>
+    <p><em>(An Institute of National Importance, Established under NITSER Act, Government of India)</em></p>
+  </div>
+
+  <p><%= Date.today.strftime('%d{suffix} %B, %Y') %></p>
+
+  <p>To,<br>
+  Prof. <%= @name %><br>
+  <%= @aff %><br>
+  E-Mail: <%= @email %></p>
+
+  <p>Dear Professor,</p>
+
+  <p><strong>Sub: Letter of Reference</strong></p>
+
+  <p>Greetings, and hope you are doing well. May I request you to email me a confidential letter of reference
+  for Dr. <%= @name %>, who has applied for a faculty position at NITK and given your name as a
+  referee. The candidate has been short-listed for the selection committee interviews, which are planned
+  starting from mid-October, 2024.</p>
+
+  <p>As you may be aware, NITK Surathkal is an Institute of National Importance, ranked among the top 20
+  engineering colleges in India (NIRF 2023). It has over 7000 students and 270 faculty members from
+  different parts of India. Faculty are expected to engage in world-class teaching, mentoring, research,
+  innovation and outreach activities, contributing to Institute's growth as well as social impact.</p>
+
+  <p>NITK had recently invited applications from qualified Indian Nationals and Overseas Citizens of India for
+  faculty positions in various disciplines. We are looking for outstanding researchers with high credentials,
+  capability and track record of excellence in the above-mentioned activities.</p>
+
+  <p>In this context, your letter of reference will greatly help us to judge the suitability of the candidate. Please
+  assess the following aspects (both strengths and weaknesses, with brief examples, if possible):</p>
+
+  <ul>
+    <li>Domain Knowledge - breadth & depth; intra-, inter- & trans- disciplinary, etc.</li>
+    <li>Research & Impact - publications, projects, patents, practical application, etc.</li>
+    <li>Teaching Ability - fundamentals, communication skill, handling questions, etc.</li>
+    <li>Attitude & Empathy - open to ideas, collaboration-friendly, understanding, helpful.</li>
+  </ul>
+
+  <p>We understand that you may have a busy schedule, but request you to kindly send the reference letter
+  within 10 days for timely evaluation. Your support in this matter is greatly appreciated. Please feel free
+  to contact me if you have any questions or need clarifications.</p>
+
+  <p>Thank you in advance for your time and consideration.</p>
+
+  <div class="footer">
+    <p>Best Regards,</p>
+    <p>T. Laxminidhi<br>
+    Dean (Faculty Welfare)<br>
+    E-Mail: deanfw@nitk.edu.in<br>
+    M: +91 94805 75653</p>
+  </div>
+</body>
+</html>

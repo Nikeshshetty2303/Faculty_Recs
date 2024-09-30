@@ -85,6 +85,54 @@ class DeveloperController < ApplicationController
     end
 
     def application_referee_mailer
+      if params[:email].present?
+        @user = User.find_by(email: params[:email])
+        ApplicationShortlistMailer.with(user_id: @user.id, form_id: 1, dept_id: 2).applicant.deliver_now
+      else
+        if params[:app_nos].present?
+          app_nos = params[:app_nos].split(',').map(&:strip)
+          successful_apps = []
+          failed_apps = []
+
+          app_nos.each do |app_no|
+            response = Response.find_by(app_no: app_no)
+            if response
+              begin
+                profile_response = user.responses.where(profile_response: true).first
+                name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" })
+                #referee 1:
+                ref1_name = profile_response.answers.joins(:question).find_by(questions: { id: 535 })
+                ref1_email = profile_response.answers.joins(:question).find_by(questions: { id: 536 })
+                ref1_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 537 })
+                ref1_aff = profile_response.answers.joins(:question).find_by(questions: { id: 538 })
+                ApplicationShortlistMailer.with(user_id: response.user.id, can_name_id: name_answer.id, ref_name_id: ref1_name.id, ref_email_id: ref1_email.id,ref_ph_no_id: ref1_ph_no.id, ref_aff_id: ref1_aff.id).referee.deliver_now
+
+                ref2_name = profile_response.answers.joins(:question).find_by(questions: { id: 540 })
+                ref2_email = profile_response.answers.joins(:question).find_by(questions: { id: 541 })
+                ref2_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 542 })
+                ref2_aff = profile_response.answers.joins(:question).find_by(questions: { id: 543 })
+                ApplicationShortlistMailer.with(user_id: response.user.id, can_name_id: name_answer.id, ref_name_id: ref2_name.id, ref_email_id: ref2_email.id,ref_ph_no_id: ref2_ph_no.id, ref_aff_id: ref2_aff.id).referee.deliver_now
+
+                response.update(referee_mail_status: true)
+                successful_apps << app_no
+              rescue => e
+                response.update(referee_mail_status: false)
+                failed_apps << app_no
+              end
+            else
+              failed_apps << app_no
+            end
+          end
+
+          if failed_apps.empty?
+            flash[:success] = "Emails sent successfully to all referee."
+          else
+            flash[:warning] = "Emails sent successfully to some referee. Failed for: #{failed_apps.join(', ')}"
+          end
+        else
+          flash[:error] = "No application numbers provided."
+        end
+      end
       redirect_to developer_mailer_portal_path
     end
 

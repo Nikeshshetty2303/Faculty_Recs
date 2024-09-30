@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_09_27_090227) do
+ActiveRecord::Schema.define(version: 2024_09_30_173019) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -202,6 +202,7 @@ ActiveRecord::Schema.define(version: 2024_09_27_090227) do
     t.string "credit_req_comments"
     t.boolean "specialization"
     t.boolean "shortlist_mail_status"
+    t.boolean "referee_mail_status"
     t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
   end
