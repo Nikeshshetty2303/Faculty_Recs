@@ -19,7 +19,6 @@ class ApplicationShortlistMailer < ApplicationMailer
         @email = Answer.find(params[:ref_email_id])
         @ph_no = Answer.find(params[:ref_ph_no_id])
         @aff = Answer.find(params[:ref_aff_id])
-        flash[:notice] = "HEREE"
         mail(
           from: "facrecruit@nitk.edu.in",
           to: @email.content, # Assuming the email is stored in the 'content' attribute of the Answer
