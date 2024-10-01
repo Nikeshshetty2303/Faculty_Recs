@@ -121,6 +121,7 @@ class DeveloperController < ApplicationController
                 successful_apps << app_no
               rescue StandardError => e
                 Rails.logger.error("Error processing application #{app_no}: #{e.message}")
+                flash[:success] = "Error processing application #{app_no}: #{e.message}"
                 response.update(referee_mail_status: false)
                 failed_apps << app_no
               end
