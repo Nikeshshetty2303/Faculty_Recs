@@ -117,7 +117,7 @@ class DeveloperController < ApplicationController
                   ref_email_id: ref1_email.id,
                   ref_ph_no_id: ref1_ph_no.id,
                   ref_aff_id: ref1_aff.id
-                ).referee.deliver_now
+                ).referee.deliver_later
 
                 response.update(referee_mail_status: true)
                 successful_apps << app_no
