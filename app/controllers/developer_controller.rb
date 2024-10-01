@@ -98,20 +98,29 @@ class DeveloperController < ApplicationController
             response = Response.find_by(app_no: app_no)
             if response
               begin
-                profile_response = response.user.responses.where(profile_response: true).first
+                profile_response = response.user.responses.find_by(profile_response: true)
+                raise StandardError, "Profile response not found" unless profile_response
+
                 name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" })
                 #referee 1:
                 ref1_name = profile_response.answers.joins(:question).find_by(questions: { id: 535 })
                 ref1_email = profile_response.answers.joins(:question).find_by(questions: { id: 536 })
                 ref1_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 537 })
                 ref1_aff = profile_response.answers.joins(:question).find_by(questions: { id: 538 })
-                ApplicationShortlistMailer.with(user_id: response.user.id, can_name_id: name_answer.id, ref_name_id: ref1_name.id, ref_email_id: ref1_email.id,ref_ph_no_id: ref1_ph_no.id, ref_aff_id: ref1_aff.id).referee.deliver_now
 
+                ApplicationShortlistMailer.with(
+                  user_id: response.user.id,
+                  can_name_id: name_answer&.id,
+                  ref_name_id: ref1_name&.id,
+                  ref_email_id: ref1_email&.id,
+                  ref_ph_no_id: ref1_ph_no&.id,
+                  ref_aff_id: ref1_aff&.id
+                ).referee.deliver_now
 
                 response.update(referee_mail_status: true)
                 successful_apps << app_no
-              rescue => e
-                flash[:warning] = e
+              rescue StandardError => e
+                Rails.logger.error("Error processing application #{app_no}: #{e.message}")
                 response.update(referee_mail_status: false)
                 failed_apps << app_no
               end
@@ -121,9 +130,11 @@ class DeveloperController < ApplicationController
           end
 
           if failed_apps.empty?
-            flash[:success] = "Emails sent successfully to all referee."
+            flash[:success] = "Emails sent successfully to all referees."
+          elsif successful_apps.empty?
+            flash[:error] = "Failed to send emails to all referees. Failed for: #{failed_apps.join(', ')}"
           else
-            flash[:warning] = "Emails sent successfully to some referee. Failed for: #{failed_apps.join(', ')}"
+            flash[:warning] = "Emails sent successfully to some referees. Failed for: #{failed_apps.join(', ')}"
           end
         else
           flash[:error] = "No application numbers provided."
