@@ -108,7 +108,7 @@ class DeveloperController < ApplicationController
                 ref1_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 537 })
                 ref1_aff = profile_response.answers.joins(:question).find_by(questions: { id: 538 })
 
-                flash[:dark] = "Test #{ref1_name.content}: #{e.message}"
+                flash[:dark] = "Test #{ref1_name.content}:}"
 
                 ApplicationShortlistMailer.with(
                   user_id: response.user.id,
