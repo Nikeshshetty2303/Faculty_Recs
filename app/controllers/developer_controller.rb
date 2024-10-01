@@ -120,6 +120,7 @@ class DeveloperController < ApplicationController
                 ).referee.deliver_now
 
                 response.update(referee_mail_status: true)
+                flash[:success] = "Candidate Name: #{can_name_id}"
                 successful_apps << app_no
               rescue StandardError => e
                 Rails.logger.error("Error processing application #{app_no}: #{e.message}")
