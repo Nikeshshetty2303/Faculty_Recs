@@ -110,11 +110,11 @@ class DeveloperController < ApplicationController
 
                 ApplicationShortlistMailer.with(
                   user_id: response.user.id,
-                  can_name_id: name_answer&.id,
-                  ref_name_id: ref1_name&.id,
-                  ref_email_id: ref1_email&.id,
-                  ref_ph_no_id: ref1_ph_no&.id,
-                  ref_aff_id: ref1_aff&.id
+                  can_name_id: name_answer.id,
+                  ref_name_id: ref1_name.id,
+                  ref_email_id: ref1_email.id,
+                  ref_ph_no_id: ref1_ph_no.id,
+                  ref_aff_id: ref1_aff.id
                 ).referee.deliver_now
 
                 response.update(referee_mail_status: true)
