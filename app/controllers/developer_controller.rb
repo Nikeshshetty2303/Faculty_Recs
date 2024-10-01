@@ -87,7 +87,7 @@ class DeveloperController < ApplicationController
     def application_referee_mailer
       if params[:email].present?
         @user = User.find_by(email: params[:email])
-        ApplicationShortlistMailer.with(user_id: @user.id, form_id: 1, dept_id: 2).applicant.deliver_now
+        RefereeMailer.with(user_id: @user.id, form_id: 1, dept_id: 2).applicant.deliver_now
       else
         if params[:app_nos].present?
           app_nos = params[:app_nos].split(',').map(&:strip)
@@ -110,7 +110,7 @@ class DeveloperController < ApplicationController
 
                 flash[:dark] = "candidate: #{name_answer.content} with referee, name: #{ref1_name.content}, email: #{ref1_email.content}, no. #{ref1_ph_no.content}, aff: #{ref1_aff.content}"
 
-                ApplicationShortlistMailer.with(
+                RefereeMailer.with(
                   user_id: response.user.id,
                   can_name_id: name_answer.id,
                   ref_name_id: ref1_name.id,
