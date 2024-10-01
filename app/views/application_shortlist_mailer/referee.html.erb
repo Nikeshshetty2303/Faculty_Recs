@@ -37,16 +37,16 @@
   <p><%= Date.today.strftime('%d{suffix} %B, %Y') %></p>
 
   <p>To,<br>
-  Prof. <%= @name %><br>
-  <%= @aff %><br>
-  E-Mail: <%= @email %></p>
+  Prof. <%= @name.content %><br>
+  <%= @aff.content %><br>
+  E-Mail: <%= @email.content %></p>
 
   <p>Dear Professor,</p>
 
   <p><strong>Sub: Letter of Reference</strong></p>
 
   <p>Greetings, and hope you are doing well. May I request you to email me a confidential letter of reference
-  for Dr. <%= @name %>, who has applied for a faculty position at NITK and given your name as a
+  for Dr. <%= @name.content %>, who has applied for a faculty position at NITK and given your name as a
   referee. The candidate has been short-listed for the selection committee interviews, which are planned
   starting from mid-October, 2024.</p>
 
