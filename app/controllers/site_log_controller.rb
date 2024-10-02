@@ -4,7 +4,7 @@ class SiteLogController < ApplicationController
       @query = params[:query]
       @log_type = params[:log_type] || 'regular'
       @time_filter = params[:time_filter] || '1_hour'
-      @length_filter = params[:length_filter] || '50'
+      @length_filter = params[:length_filter] || '5'
       @logs = fetch_logs(@date, @query, @log_type, @time_filter, @length_filter.to_i)
     end
 
@@ -12,18 +12,28 @@ class SiteLogController < ApplicationController
 
     def fetch_logs(date, query, log_type, time_filter, length_filter)
       log_file = Rails.root.join('log', log_filename(log_type))
-      logs = File.readlines(log_file).slice_when { |before, after| after.start_with?("Started") }
-
       start_time = calculate_start_time(date, time_filter)
 
-      logs = logs.select do |log_group|
-        log_time = extract_time(log_group.first)
-        log_time && log_time >= start_time &&
-          log_group.any? { |line| line.include?(date.to_s) } &&
-          (query.blank? || log_group.any? { |line| line.downcase.include?(query.downcase) })
+      logs = []
+      File.open(log_file, 'r') do |file|
+        file.extend(Enumerable)
+        logs = file.reverse_each
+                   .lazy
+                   .slice_before { |line| line.start_with?("Started") }
+                   .select { |log_group| log_matches?(log_group, start_time, date, query) }
+                   .take(length_filter)
+                   .to_a
+                   .reverse
       end
 
-      logs.last(length_filter).map { |log_group| log_group.join }
+      logs.map(&:join)
+    end
+
+    def log_matches?(log_group, start_time, date, query)
+      log_time = extract_time(log_group.first)
+      log_time && log_time >= start_time &&
+        log_group.any? { |line| line.include?(date.to_s) } &&
+        (query.blank? || log_group.any? { |line| line.downcase.include?(query.downcase) })
     end
 
     def log_filename(log_type)

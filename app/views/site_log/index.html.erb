@@ -186,11 +186,11 @@
             <div class="form-group">
                 <label for="length_filter">Number of Entries:</label>
                 <select id="length_filter" name="length_filter">
+                    <option value="5" <%= 'selected' if @length_filter == '5' %>>5</option>
+                    <option value="10" <%= 'selected' if @length_filter == '10' %>>10</option>
+                    <option value="25" <%= 'selected' if @length_filter == '25' %>>25</option>
                     <option value="50" <%= 'selected' if @length_filter == '50' %>>50</option>
                     <option value="100" <%= 'selected' if @length_filter == '100' %>>100</option>
-                    <option value="200" <%= 'selected' if @length_filter == '200' %>>200</option>
-                    <option value="500" <%= 'selected' if @length_filter == '500' %>>500</option>
-                    <option value="1000" <%= 'selected' if @length_filter == '1000' %>>1000</option>
                 </select>
             </div>
             <div class="form-group">
@@ -202,7 +202,7 @@
 
         <div class="logs">
             <div class="log-header">
-                Logs for <%= @date %> (<%= @time_filter.gsub('_', ' ') %>, showing last <%= @length_filter %> entries)
+                Showing <%= @logs.length %> most recent logs for <%= @date %> (<%= @time_filter.gsub('_', ' ') %>)
             </div>
             <% if @logs.any? %>
                 <div class="log-container">
@@ -223,7 +223,7 @@
                 </div>
             <% else %>
                 <div class="no-logs">
-                    No logs found for the selected date, time range, length, and search criteria.
+                    No logs found for the selected criteria.
                 </div>
             <% end %>
         </div>
