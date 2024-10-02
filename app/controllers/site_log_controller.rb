@@ -17,23 +17,32 @@ class SiteLogController < ApplicationController
       logs = []
       File.open(log_file, 'r') do |file|
         file.extend(Enumerable)
-        logs = file.reverse_each
-                   .lazy
-                   .slice_before { |line| line.start_with?("Started") }
-                   .select { |log_group| log_matches?(log_group, start_time, date, query) }
-                   .take(length_filter)
-                   .to_a
-                   .reverse
+        file.reverse_each do |line|
+          break if logs.size >= length_filter
+          next unless line.start_with?("Started")
+
+          log_time = extract_time(line)
+          next unless log_time && log_time >= start_time && line.include?(date.to_s)
+
+          log_group = [line] + read_log_group(file)
+          logs.unshift(log_group.join) if log_group_matches?(log_group, query)
+        end
       end
 
-      logs.map(&:join)
+      logs
     end
 
-    def log_matches?(log_group, start_time, date, query)
-      log_time = extract_time(log_group.first)
-      log_time && log_time >= start_time &&
-        log_group.any? { |line| line.include?(date.to_s) } &&
-        (query.blank? || log_group.any? { |line| line.downcase.include?(query.downcase) })
+    def read_log_group(file)
+      group = []
+      until file.eof? || (line = file.readline).start_with?("Started")
+        group << line
+      end
+      file.pos -= line.length if line&.start_with?("Started")
+      group
+    end
+
+    def log_group_matches?(log_group, query)
+      query.blank? || log_group.any? { |line| line.downcase.include?(query.downcase) }
     end
 
     def log_filename(log_type)
