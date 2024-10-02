@@ -123,6 +123,9 @@ end
     end
   end
 
+  resources :site_log, only: [:index]
+
+
   get '*path', to: 'home#index', via: :all
 
 end

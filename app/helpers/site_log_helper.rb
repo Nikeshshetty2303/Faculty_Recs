@@ -1,0 +1,2 @@
+module SiteLogHelper
+end
