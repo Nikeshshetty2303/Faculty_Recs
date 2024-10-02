@@ -47,7 +47,7 @@ class DeveloperController < ApplicationController
     def application_shortlist_mailer
       if params[:email].present?
           @user = User.find_by(email: params[:email])
-          ApplicationShortlistMailer.with(user_id: @user.id, form_id: 1, dept_id: 2).applicant.deliver_now
+          ApplicationShortlistMailer.with(user_id: @user.id, form_id: 1, dept_id: 2).applicant.deliver_later
       else
         if params[:app_nos].present?
           app_nos = params[:app_nos].split(',').map(&:strip)
@@ -60,7 +60,7 @@ class DeveloperController < ApplicationController
               begin
                 department = response.form.department
                 form = response.form
-                ApplicationShortlistMailer.with(user_id: response.user.id, form_id: form.id, dept_id: department.id).applicant.deliver_now
+                ApplicationShortlistMailer.with(user_id: response.user.id, form_id: form.id, dept_id: department.id).applicant.deliver_later
                 response.update(shortlist_mail_status: true)
                 successful_apps << app_no
               rescue => e
