@@ -4,7 +4,7 @@ class ApplicationShortlistMailer < ApplicationMailer
         @dept = Department.find(params[:dept_id])
         @form = Form.find(params[:form_id])
         mail(
-            from:"facrecruit@nitk.edu.in" ,
+            from:"crfnitk@gmail.com" ,
             to: "#{@user.email}",
             #cc: User.all.pluck(:email),
             #bcc: "ok@gmail",
