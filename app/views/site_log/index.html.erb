@@ -151,6 +151,17 @@
             max-height: 80vh;
             overflow-y: auto;
         }
+        .form-group {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        select {
+            padding: 8px;
+            background-color: #3a3a3a;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: #e0e0e0;
+        }
     </style>
 </head>
 <body>
@@ -163,6 +174,26 @@
                 <input type="date" id="date" name="date" value="<%= @date %>">
             </div>
             <div class="form-group">
+                <label for="time_filter">Time Range:</label>
+                <select id="time_filter" name="time_filter">
+                    <option value="1_hour" <%= 'selected' if @time_filter == '1_hour' %>>Last 1 hour</option>
+                    <option value="6_hours" <%= 'selected' if @time_filter == '6_hours' %>>Last 6 hours</option>
+                    <option value="12_hours" <%= 'selected' if @time_filter == '12_hours' %>>Last 12 hours</option>
+                    <option value="24_hours" <%= 'selected' if @time_filter == '24_hours' %>>Last 24 hours</option>
+                    <option value="all_day" <%= 'selected' if @time_filter == 'all_day' %>>All day</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="length_filter">Number of Entries:</label>
+                <select id="length_filter" name="length_filter">
+                    <option value="50" <%= 'selected' if @length_filter == '50' %>>50</option>
+                    <option value="100" <%= 'selected' if @length_filter == '100' %>>100</option>
+                    <option value="200" <%= 'selected' if @length_filter == '200' %>>200</option>
+                    <option value="500" <%= 'selected' if @length_filter == '500' %>>500</option>
+                    <option value="1000" <%= 'selected' if @length_filter == '1000' %>>1000</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="query">Search:</label>
                 <input type="text" id="query" name="query" value="<%= @query %>" placeholder="Search logs...">
             </div>
@@ -171,7 +202,7 @@
 
         <div class="logs">
             <div class="log-header">
-                Logs for <%= @date %>
+                Logs for <%= @date %> (<%= @time_filter.gsub('_', ' ') %>, showing last <%= @length_filter %> entries)
             </div>
             <% if @logs.any? %>
                 <div class="log-container">
@@ -192,7 +223,7 @@
                 </div>
             <% else %>
                 <div class="no-logs">
-                    No logs found for the selected date and search criteria.
+                    No logs found for the selected date, time range, length, and search criteria.
                 </div>
             <% end %>
         </div>
