@@ -43,16 +43,16 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = { :host => "recruit.nitk.ac.in" }
-  config.read_timeout = 100
+  config.read_timeout = 30
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.default_options = {from: 'facrecruit@nitk.edu.in'}
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
-    port:                 '2525', #465 older one
+    port:                 '465', #465 older one
     :domain =>            'recruit.nitk.ac.in',
     user_name:            'facrecruit@nitk.edu.in',
-    password:            'azxefacnwocfxuys',
+    password:            'uqgxfonwpdjcsfoh',
     authentication:       :plain,
     enable_starttls_auto: true,
     ssl: true
