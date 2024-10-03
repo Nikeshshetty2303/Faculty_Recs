@@ -1,8 +1,5 @@
 require_relative "boot"
 
-# Add resolv-replace before requiring rails/all
-require 'resolv-replace'
-
 require "rails/all"
 
 # Require the gems listed in Gemfile, including any gems
@@ -21,14 +18,5 @@ module FormLogic
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-
-    # Configure custom DNS timeout
-    Resolv::DNS.singleton_class.prepend Module.new {
-      def new(*args)
-        dns = super
-        dns.timeouts = 1000
-        dns
-      end
-    }
   end
 end
