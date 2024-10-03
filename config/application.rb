@@ -26,7 +26,7 @@ module FormLogic
     Resolv::DNS.singleton_class.prepend Module.new {
       def new(*args)
         dns = super
-        dns.timeouts = 30
+        dns.timeouts = 100
         dns
       end
     }
