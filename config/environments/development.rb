@@ -49,7 +49,7 @@ Rails.application.configure do
   config.action_mailer.default_options = {from: 'facrecruit@nitk.edu.in'}
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
-    port:                 '25', #465 older one
+    port:                 '587', #465 older one
     :domain =>            'recruit.nitk.ac.in',
     user_name:            'facrecruit@nitk.edu.in',
     password:            'azxefacnwocfxuys',
