@@ -345,7 +345,5 @@ class AdminDashboardController < ApplicationController
       pdf
     end
 
-    def extract_print
 
-    end
 end
