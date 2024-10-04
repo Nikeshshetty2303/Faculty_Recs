@@ -8,7 +8,7 @@ class RefereeMailer < ApplicationMailer
         @aff = Answer.find(params[:ref_aff_id])
         formatted_email = format_email(@email.content)
         mail(
-          from: "nikeshs129@gmail.com",
+          from: "facrecruit@nitk.edu.in",
           to: formatted_email, # Assuming the email is stored in the 'content' attribute of the Answer
           subject: "Letter of Reference"
         )

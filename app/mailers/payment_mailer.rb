@@ -4,7 +4,7 @@ class PaymentMailer < ApplicationMailer
         @response = Response.find(params[:response_id])
         @form = Form.find(params[:form_id])
         mail(
-                from:"nikeshs129@gmail.com" ,
+                from:"facrecruit@nitk.edu.in" ,
                 to: "#{@user.email}",
                 subject: "Payment Completed"
             )

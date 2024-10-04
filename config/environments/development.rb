@@ -46,13 +46,13 @@ Rails.application.configure do
   config.read_timeout = 30
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_options = {from: 'nikeshs129@gmail.com'}
+  config.action_mailer.default_options = {from: 'facrecruit@nitk.edu.in'}
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
     port:                 '587', #465 older one
     :domain =>            'recruit.nitk.ac.in',
-    user_name:            'nikeshs129@gmail.com',
-    password:            'rliwklqftwchdzpy',
+    user_name:            'facrecruit@nitk.edu.in',
+    password:            'azxefacnwocfxuys',
     authentication:       :plain,
     enable_starttls_auto: true # this enables STARTTLS
     # ssl: true
