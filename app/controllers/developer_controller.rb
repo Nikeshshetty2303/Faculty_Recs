@@ -91,77 +91,93 @@ class DeveloperController < ApplicationController
       if params[:email].present?
         @user = User.find_by(email: params[:email])
         RefereeMailer.with(user_id: @user.id, form_id: 1, dept_id: 2).applicant.deliver_now
-      else
-        if params[:app_nos].present?
-          app_nos = params[:app_nos].split(',').map(&:strip)
-          successful_apps = []
-          failed_apps = []
+      elsif params[:app_nos].present?
+        app_nos = params[:app_nos].split(',').map(&:strip)
+        successful_apps = []
+        failed_apps = []
 
-          app_nos.each do |app_no|
-            response = Response.find_by(app_no: app_no)
-            if response
-              begin
-                profile_response = response.user.responses.find_by(profile_response: true)
-                raise StandardError, "Profile response not found" unless profile_response
+        app_nos.each do |app_no|
+          response = Response.find_by(app_no: app_no)
+          if response
+            begin
+              profile_response = response.user.responses.find_by(profile_response: true)
+              raise StandardError, "Profile response not found" unless profile_response
 
-                name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" })
-                #referee 1:
-                ref1_name = profile_response.answers.joins(:question).find_by(questions: { id: 535 })
-                ref1_email = profile_response.answers.joins(:question).find_by(questions: { id: 536 })
-                ref1_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 537 })
-                ref1_aff = profile_response.answers.joins(:question).find_by(questions: { id: 538 })
+              name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" })
 
-                flash[:dark] = "candidate: #{name_answer.content} with referee, name: #{ref1_name.content}, email: #{ref1_email.content}, no. #{ref1_ph_no.content}, aff: #{ref1_aff.content}"
+              # Referee 1 details
+              ref1_name = profile_response.answers.joins(:question).find_by(questions: { id: 535 })
+              ref1_email = profile_response.answers.joins(:question).find_by(questions: { id: 536 })
+              ref1_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 537 })
+              ref1_aff = profile_response.answers.joins(:question).find_by(questions: { id: 538 })
 
-                ref2_name = profile_response.answers.joins(:question).find_by(questions: { id: 540 })
-                ref2_email = profile_response.answers.joins(:question).find_by(questions: { id: 541 })
-                ref2_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 542 })
-                ref2_aff = profile_response.answers.joins(:question).find_by(questions: { id: 543 })
+              # Referee 2 details
+              ref2_name = profile_response.answers.joins(:question).find_by(questions: { id: 540 })
+              ref2_email = profile_response.answers.joins(:question).find_by(questions: { id: 541 })
+              ref2_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 542 })
+              ref2_aff = profile_response.answers.joins(:question).find_by(questions: { id: 543 })
 
-                RefereeMailer.with(
-                  user_id: response.user.id,
-                  can_name_id: name_answer.id,
-                  ref_name_id: ref1_name.id,
-                  ref_email_id: ref1_email.id,
-                  ref_ph_no_id: ref1_ph_no.id,
-                  ref_aff_id: ref1_aff.id
-                ).referee.deliver_now
+              ref1_status = send_referee_email(response.user.id, name_answer.id, ref1_name.id, ref1_email.id, ref1_ph_no.id, ref1_aff.id, 1)
+              ref2_status = send_referee_email(response.user.id, name_answer.id, ref2_name.id, ref2_email.id, ref2_ph_no.id, ref2_aff.id, 2)
 
-                RefereeMailer.with(
-                  user_id: response.user.id,
-                  can_name_id: name_answer.id,
-                  ref_name_id: ref2_name.id,
-                  ref_email_id: ref2_email.id,
-                  ref_ph_no_id: ref2_ph_no.id,
-                  ref_aff_id: ref2_aff.id
-                ).referee.deliver_now
-
-                response.update(referee_mail_status: true)
-                flash[:success] = "Referee Mail Status: #{response.referee_mail_status}"
+              if ref1_status && ref2_status
+                response.update(referee_mail_status: "both_sent")
+                flash[:success] = "Emails sent successfully to both referees for application #{app_no}."
                 successful_apps << app_no
-              rescue StandardError => e
-                Rails.logger.error("Error processing application #{app_no}: #{e.message}")
-                flash[:success] = "Error processing application #{app_no}: #{e.message}"
-                response.update(referee_mail_status: false)
+              elsif ref1_status
+                response.update(referee_mail_status: "ref1_sent")
+                flash[:warning] = "Email sent successfully to Referee 1, but failed for Referee 2 for application #{app_no}."
+                failed_apps << app_no
+              elsif ref2_status
+                response.update(referee_mail_status: "ref2_sent")
+                flash[:warning] = "Email sent successfully to Referee 2, but failed for Referee 1 for application #{app_no}."
+                failed_apps << app_no
+              else
+                response.update(referee_mail_status: "both_failed")
+                flash[:error] = "Failed to send emails to both referees for application #{app_no}."
                 failed_apps << app_no
               end
-            else
+
+            rescue StandardError => e
+              Rails.logger.error("Error processing application #{app_no}: #{e.message}")
+              flash[:error] = "Error processing application #{app_no}: #{e.message}"
+              response.update(referee_mail_status: "error")
               failed_apps << app_no
             end
-          end
-
-          if failed_apps.empty?
-            flash[:success] = "Emails sent successfully to all referees."
-          elsif successful_apps.empty?
-            flash[:error] = "Failed to send emails to all referees. Failed for: #{failed_apps.join(', ')}"
           else
-            flash[:warning] = "Emails sent successfully to some referees. Failed for: #{failed_apps.join(', ')}"
+            flash[:error] = "Application not found: #{app_no}"
+            failed_apps << app_no
           end
-        else
-          flash[:error] = "No application numbers provided."
         end
+
+        if failed_apps.empty?
+          flash[:success] = "Emails sent successfully to all referees."
+        elsif successful_apps.empty?
+          flash[:error] = "Failed to send emails to all referees. Failed for: #{failed_apps.join(', ')}"
+        else
+          flash[:warning] = "Emails sent successfully to some referees. Failed for: #{failed_apps.join(', ')}"
+        end
+      else
+        flash[:error] = "No application numbers provided."
       end
       redirect_to developer_mailer_portal_path
+    end
+
+    def send_referee_email(user_id, can_name_id, ref_name_id, ref_email_id, ref_ph_no_id, ref_aff_id, referee_number)
+      begin
+        RefereeMailer.with(
+          user_id: user_id,
+          can_name_id: can_name_id,
+          ref_name_id: ref_name_id,
+          ref_email_id: ref_email_id,
+          ref_ph_no_id: ref_ph_no_id,
+          ref_aff_id: ref_aff_id
+        ).referee.deliver_now
+        true
+      rescue StandardError => e
+        Rails.logger.error("Error sending email to Referee #{referee_number}: #{e.message}")
+        false
+      end
     end
 
     def shortlist_mailer_status
