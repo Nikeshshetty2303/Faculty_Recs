@@ -40,6 +40,15 @@
         .content {
             text-align: justify;
         }
+        .date {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .subject {
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0;
+        }
         .footer {
             margin-top: 20px;
             text-align: left;
@@ -66,7 +75,9 @@
     </div>
 
     <div class="content">
-        <p>27<sup>th</sup> September, 2024</p>
+        <div class="date">
+            <p>4<sup>th</sup> October, 2024</p>
+        </div>
 
         <p>To,<br>
         Prof. <%=@name.content %><br>
@@ -75,7 +86,7 @@
 
         <p>Dear Professor,</p>
 
-        <p><strong>Sub: Letter of Reference</strong></p>
+        <p class="subject">Sub: Letter of Reference</p>
 
         <p>Greetings, and hope you are doing well. May I request you to email me a confidential letter of reference
         for Dr. <%=@can_name.content%>, who has applied for a faculty position at NITK and given your name as a
@@ -102,14 +113,14 @@
         </ul>
 
         <p>We understand that you may have a busy schedule, but request you to kindly send the reference letter
-        <strong>within 10 days</strong>  for timely evaluation. Your support in this matter is greatly appreciated. Please feel free
+        <strong>within 10 days</strong> for timely evaluation. Your support in this matter is greatly appreciated. Please feel free
         to contact me if you have any questions or need clarifications.</p>
 
         <p>Thank you in advance for your time and consideration.</p>
 
         <div class="footer">
             <p>Best Regards,</p>
-            <p><strong> T. Laxminidhi</strong> <br>
+            <p><strong>T. Laxminidhi</strong><br>
             Dean (Faculty Welfare)<br>
             E-Mail: deanfw@nitk.edu.in<br>
             M: +91 94805 75653</p>
