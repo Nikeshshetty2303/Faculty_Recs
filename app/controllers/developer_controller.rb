@@ -113,6 +113,11 @@ class DeveloperController < ApplicationController
 
                 flash[:dark] = "candidate: #{name_answer.content} with referee, name: #{ref1_name.content}, email: #{ref1_email.content}, no. #{ref1_ph_no.content}, aff: #{ref1_aff.content}"
 
+                ref2_name = profile_response.answers.joins(:question).find_by(questions: { id: 540 })
+                ref2_email = profile_response.answers.joins(:question).find_by(questions: { id: 541 })
+                ref2_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 542 })
+                ref2_aff = profile_response.answers.joins(:question).find_by(questions: { id: 543 })
+
                 RefereeMailer.with(
                   user_id: response.user.id,
                   can_name_id: name_answer.id,
@@ -120,6 +125,15 @@ class DeveloperController < ApplicationController
                   ref_email_id: ref1_email.id,
                   ref_ph_no_id: ref1_ph_no.id,
                   ref_aff_id: ref1_aff.id
+                ).referee.deliver_now
+
+                RefereeMailer.with(
+                  user_id: response.user.id,
+                  can_name_id: name_answer.id,
+                  ref_name_id: ref2_name.id,
+                  ref_email_id: ref2_email.id,
+                  ref_ph_no_id: ref2_ph_no.id,
+                  ref_aff_id: ref2_aff.id
                 ).referee.deliver_now
 
                 response.update(referee_mail_status: true)
@@ -154,9 +168,13 @@ class DeveloperController < ApplicationController
       @user = current_user
     end
 
+    def referee_mailer_status
+      @user = current_user
+    end
+
     def extract_downloading_portal
       @user = current_user
     end
 
-    
+
 end
