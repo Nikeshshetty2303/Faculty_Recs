@@ -28,6 +28,9 @@
         <li class="nav-item">
           <%= link_to 'Shortlist Mailer Status', developer_shortlist_mailer_status_path(userid: @user.id), class: "nav-link" %>
         </li>
+        <li class="nav-item">
+          <%= link_to 'Referee Mailer Status', developer_referee_mailer_status_path(userid: @user.id), class: "nav-link" %>
+        </li>
          <li class="nav-item">
           <%= link_to 'Download Extract', developer_extract_downloading_portal_path(userid: @user.id), class: "nav-link" %>
         </li>

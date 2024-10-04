@@ -18,7 +18,7 @@
           <%= link_to 'Mailer Portal', developer_mailer_portal_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
-          <%= link_to 'Shortlist Mailer Status', developer_shortlist_mailer_status_path(userid: @user.id), class: "nav-link active" %>
+          <%= link_to 'Shortlist Mailer Status', developer_shortlist_mailer_status_path(userid: @user.id), class: "nav-link" %>
         </li>
         <li class="nav-item">
           <%= link_to 'Referee Mailer Status', developer_referee_mailer_status_path(userid: @user.id), class: "nav-link active" %>
@@ -47,8 +47,11 @@
       <label for="statusFilter" class="form-label">Filter by Status:</label>
       <select class="form-select" id="statusFilter">
         <option value="">All Statuses</option>
-        <option value="true">True</option>
-        <option value="false">False</option>
+        <option value="both_sent">Both Sent</option>
+        <option value="ref1_sent">Referee 1 Sent</option>
+        <option value="ref2_sent">Referee 2 Sent</option>
+        <option value="both_failed">Both Failed</option>
+        <option value="error">Error</option>
       </select>
     </div>
     <div class="col-md-4 d-flex align-items-end">
@@ -62,15 +65,28 @@
         <tr>
           <th scope="col">Application ID</th>
           <th scope="col">Email</th>
-          <th scope="col">Shortlist Mail Status</th>
+          <th scope="col">Referee Mail Status</th>
         </tr>
       </thead>
       <tbody>
-        <% Response.where(shortlist_mail_status: [true, false]).each do |response| %>
-            <tr class="response-row <%= response.shortlist_mail_status ? 'table-success' : 'table-danger' %>" data-status="<%= response.shortlist_mail_status %>">
+        <% Response.where.not(referee_mail_status: nil).each do |response| %>
+            <tr class="response-row <%=
+              case response.referee_mail_status
+              when 'both_sent'
+                'table-success'
+              when 'ref1_sent', 'ref2_sent'
+                'table-warning'
+              when 'both_failed'
+                'table-danger'
+              when 'error'
+                'table-secondary'
+              else
+                ''
+              end
+            %>" data-status="<%= response.referee_mail_status %>">
               <td class="application-id"><%= response.app_no %></td>
-              <td class="shortlist-status"><%= response.user.email %></td>
-              <td class="shortlist-status"><%= response.shortlist_mail_status %></td>
+              <td class="email"><%= response.user.email %></td>
+              <td class="referee-status"><%= response.referee_mail_status %></td>
             </tr>
         <% end %>
       </tbody>
@@ -79,12 +95,10 @@
 </div>
 
 <style>
-  .table-success {
-    background-color: #d4edda !important;
-  }
-  .table-danger {
-    background-color: #f8d7da !important;
-  }
+  .table-success { background-color: #d4edda !important; }
+  .table-warning { background-color: #fff3cd !important; }
+  .table-danger { background-color: #f8d7da !important; }
+  .table-secondary { background-color: #e2e3e5 !important; }
 </style>
 
 <script>
