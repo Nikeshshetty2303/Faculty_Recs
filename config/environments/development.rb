@@ -49,13 +49,13 @@ Rails.application.configure do
   config.action_mailer.default_options = {from: 'nikeshs129@gmail.com'}
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
-    port:                 '465', #465 older one
+    port:                 '587', #465 older one
     :domain =>            'recruit.nitk.ac.in',
     user_name:            'nikeshs129@gmail.com',
     password:            'rliwklqftwchdzpy',
     authentication:       :plain,
-    enable_starttls_auto: true,
-    ssl: true
+    enable_starttls_auto: true # this enables STARTTLS
+    # ssl: true
   }
 
   # Print deprecation notices to the Rails logger.
