@@ -137,7 +137,7 @@ class DeveloperController < ApplicationController
                 ).referee.deliver_now
 
                 response.update(referee_mail_status: true)
-                flash[:success] = "Referee Mail Status: #{referee_mail_status}"
+                flash[:success] = "Referee Mail Status: #{response.referee_mail_status}"
                 successful_apps << app_no
               rescue StandardError => e
                 Rails.logger.error("Error processing application #{app_no}: #{e.message}")
