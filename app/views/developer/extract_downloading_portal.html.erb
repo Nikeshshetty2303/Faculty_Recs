@@ -1,0 +1,196 @@
+<!-- HTML (ERB) -->
+<%= render partial: 'partials/navbar', locals: { user: @user, locale: true } %>
+<%= stylesheet_link_tag 'allresponses' %>
+
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <%= link_to 'Multi Application User', developer_multiple_app_user_path(userid: @user.id), class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'CSV Generator', developer_csv_generator_path(userid: @user.id), class: "nav-link active" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Credit Question Check', developer_credit_questions_check_path(userid: @user.id), class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Mailer Portal', developer_mailer_portal_path(userid: @user.id), class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Shortlist Mailer Status', developer_shortlist_mailer_status_path(userid: @user.id), class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Download Extract', developer_extract_downloading_portal_path(userid: @user.id), class: "nav-link" %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-12 mb-3">
+      <label for="searchBar" class="form-label">Search:</label>
+      <input type="text" class="form-control" id="searchBar" placeholder="Search for content...">
+    </div>
+    <div class="col-md-4">
+      <label for="departmentFilter" class="form-label">Filter by Department:</label>
+      <select class="form-select" id="departmentFilter">
+        <option value="">All Departments</option>
+        <% Department.all.each do |department| %>
+          <option value="<%= department.title %>"><%= department.title %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="statusFilter" class="form-label">Filter by Status:</label>
+      <select class="form-select" id="statusFilter">
+        <option value="">All</option>
+        <option value="Freezed">Freezed</option>
+        <option value="Free">Free</option>
+      </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <span id="departmentCount" class="badge bg-secondary">Number of Responses: <span id="rowCount">0</span></span>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <label for="applicationIds" class="form-label">Application IDs (comma-separated):</label>
+      <input type="text" class="form-control" id="applicationIds" placeholder="Enter Application IDs...">
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <button id="downloadExtracts" class="btn btn-primary">Download Extracts</button>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Application ID</th>
+          <th scope="col">Credits (Applicant)</th>
+          <th scope="col">Application</th>
+          <th scope="col">Summary</th>
+          <th scope="col">Combined pdf</th>
+          <th scope="col">Created At</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Response.all.each do |response| %>
+          <% if response.form.present? %>
+            <tr class="response-row" data-status="<%= response.status %>">
+              <td class="application-id"><%= response.app_no%></td>
+              <td><%= response.credit_score.round(2) %></td>
+              <td>
+                <% if response.status == "Freezed" %>
+                  <%= link_to "View Application", view_app_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm' %>
+                <% else %>
+                  <%= link_to "View Application", print_response_path(id: response.id, userid: response.user.id, format: :pdf), class: 'btn btn-outline-secondary btn-sm' %>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to "View Extract", admin_dashboard_extract_print_path(id: response.id, userid: response.user.id, format: :pdf), class: 'btn btn-outline-success btn-sm' %>
+              </td>
+                <% if response.status == "Freezed" %>
+                  <td><%= link_to "View Combined PDFs", view_combined_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm' %></td>
+                <%else%>
+                  <td><%= link_to "View Combined PDFs", view_combined_pdf_response_path(id: response.id, userid: response.user.id), class: 'btn btn-outline-primary btn-sm disabled' %></td>
+                <%end%>
+              <td><%= response.created_at.strftime('%B %d, %Y %H:%M') %></td>
+              <td><%= response.status %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let departmentFilter = document.getElementById('departmentFilter');
+    let statusFilter = document.getElementById('statusFilter');
+    let searchBar = document.getElementById('searchBar');
+    let rowCountSpan = document.getElementById('rowCount');
+    let applicationIdsInput = document.getElementById('applicationIds');
+    let downloadExtractsButton = document.getElementById('downloadExtracts');
+
+    function updateRowVisibility() {
+      let selectedDepartment = departmentFilter.value.toLowerCase();
+      let selectedStatus = statusFilter.value;
+      let searchTerm = searchBar.value.toLowerCase();
+      let rows = document.querySelectorAll('.response-row');
+      let count = 0;
+
+      rows.forEach(function (row) {
+        let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
+        let rowStatus = row.dataset.status;
+        let rowContent = row.textContent.toLowerCase();
+
+        let departmentMatch = selectedDepartment === '' || applicationId.includes(selectedDepartment);
+        let statusMatch = selectedStatus === '' || rowStatus === selectedStatus;
+        let searchMatch = searchTerm === '' || rowContent.includes(searchTerm);
+
+        if (departmentMatch && statusMatch && searchMatch) {
+          row.style.display = '';
+          count++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      rowCountSpan.textContent = count;
+    }
+
+    departmentFilter.addEventListener('change', updateRowVisibility);
+    statusFilter.addEventListener('change', updateRowVisibility);
+    searchBar.addEventListener('input', updateRowVisibility);
+
+    // Initial update on page load
+    updateRowVisibility();
+
+    // Function to download extracts
+    function downloadExtracts() {
+      let applicationIds = applicationIdsInput.value.split(',').map(id => id.trim());
+      if (applicationIds.length === 0 || applicationIds[0] === '') {
+        alert('Please enter at least one Application ID');
+        return;
+      }
+
+      // Create a form to submit the request
+      let form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '<%= admin_dashboard_bulk_extract_download_path %>'; // You need to define this route
+      form.style.display = 'none';
+
+      // Add CSRF token
+      let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      let csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = 'authenticity_token';
+      csrfInput.value = csrfToken;
+      form.appendChild(csrfInput);
+
+      // Add application IDs to the form
+      applicationIds.forEach(id => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'application_ids[]';
+        input.value = id;
+        form.appendChild(input);
+      });
+
+      // Submit the form
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+    }
+
+    downloadExtractsButton.addEventListener('click', downloadExtracts);
+  });
+</script>

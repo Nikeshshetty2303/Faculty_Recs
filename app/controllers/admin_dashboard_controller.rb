@@ -1,4 +1,7 @@
 class AdminDashboardController < ApplicationController
+    require 'tempfile'
+    require 'zip'
+
     def all_responses
         @user = current_user
     end
@@ -296,4 +299,53 @@ class AdminDashboardController < ApplicationController
       }
     end
 
+    def bulk_extract_download
+      application_ids = params[:application_ids]
+
+      # Find all responses for the given application IDs
+      responses = Response.includes(:user, :form => :department).where(app_no: application_ids)
+
+      # Generate a zip file in memory
+      zip_data = Zip::OutputStream.write_buffer do |zos|
+        responses.each do |response|
+          begin
+            pdf_content = generate_extract_pdf(response)
+            zos.put_next_entry("#{response.app_no}_extract.pdf")
+            zos.write pdf_content
+          rescue => e
+            Rails.logger.error "Error generating PDF for application #{response.app_no}: #{e.message}"
+            # Optionally, you could add an error report to the zip file
+            # zos.put_next_entry("#{response.app_no}_error.txt")
+            # zos.write e.message
+          end
+        end
+      end
+
+      zip_data.rewind
+      send_data(zip_data.read, type: 'application/zip', disposition: 'attachment', filename: 'extracts.zip')
+    end
+
+
+    private
+
+    def generate_extract_pdf(response)
+      @response = response
+      @user = response.user
+      @app_response = Response.where(user_id: @user.id, profile_response: true).last
+
+      pdf = WickedPdf.new.pdf_from_string(
+        render_to_string(
+          template: 'admin_dashboard/extractpdf.html.erb',
+          layout: 'layouts/pdf.html.erb', # optional, use 'pdf.html' for a simple layout
+          disposition: 'inline',
+          locals: { response: @response, user: @user, app_response: @app_response},
+          margin: { top: 0, bottom: 0, left: 0, right: 0 } # 'attachment' to download, 'inline' to display in the browser
+        )
+      )
+      pdf
+    end
+
+    def extract_print
+
+    end
 end

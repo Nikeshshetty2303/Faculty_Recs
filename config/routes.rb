@@ -117,11 +117,15 @@ end
   post 'developer/application_shortlist_mailer'
   post 'developer/application_referee_mailer'
   get 'developer/shortlist_mailer_status'
+  get 'developer/extract_downloading_portal'
+  post 'admin_dashboard/bulk_extract_download', to: 'admin_dashboard#bulk_extract_download'
    resources :credit_questions do
     collection do
       post :import
     end
   end
+
+
 
   resources :site_log, only: [:index]
 

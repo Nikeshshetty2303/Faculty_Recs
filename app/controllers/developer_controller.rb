@@ -1,5 +1,8 @@
 class DeveloperController < ApplicationController
-    def csv_generator
+  require 'tempfile'
+  require 'zip'
+
+  def csv_generator
         @user = current_user
     end
 
@@ -150,4 +153,10 @@ class DeveloperController < ApplicationController
     def shortlist_mailer_status
       @user = current_user
     end
+
+    def extract_downloading_portal
+      @user = current_user
+    end
+
+    
 end
