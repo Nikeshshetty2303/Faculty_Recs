@@ -310,7 +310,7 @@ class AdminDashboardController < ApplicationController
         responses.each do |response|
           begin
             pdf_content = generate_extract_pdf(response)
-            zos.put_next_entry("#{response.app_no}_extract.pdf")
+            zos.put_next_entry("#{response.app_no}.pdf")
             zos.write pdf_content
           rescue => e
             Rails.logger.error "Error generating PDF for application #{response.app_no}: #{e.message}"
