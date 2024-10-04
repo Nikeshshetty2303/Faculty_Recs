@@ -62,16 +62,16 @@
         <p>4<sup>th</sup> October, 2024</p>
 
         <p>To, <br>
-        <% @name %><br>
-        <%@aff%><br>
-        <%@email%></p>
+        <%=@name.content %><br>
+        <%=@aff.content%><br>
+        <%=@email.content%></p>
 
         <p>Dear Professor,</p>
 
         <p><strong>Sub: Letter of Reference</strong></p>
 
         <p>Greetings, and hope you are doing well. May I request you to email me a confidential letter of reference
-        for Dr. <%@can_name%>, who has applied for a faculty position at NITK and given your name as a
+        for Dr. <%=@can_name.content%>, who has applied for a faculty position at NITK and given your name as a
         referee. The candidate has been short-listed for the selection committee interviews, which are planned
         starting from mid-October, 2024.</p>
 
