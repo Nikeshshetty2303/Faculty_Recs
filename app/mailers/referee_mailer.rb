@@ -15,8 +15,8 @@ class RefereeMailer < ApplicationMailer
   end
 
   def format_email(email)
-    # Split the email string by comma to handle multiple email addresses
-    email_addresses = email.split(',')
+    # Split the email string by comma, semicolon, or forward slash to handle multiple email addresses
+    email_addresses = email.split(/[,;\/]/)
 
     # Process each email address
     formatted_emails = email_addresses.map do |single_email|
