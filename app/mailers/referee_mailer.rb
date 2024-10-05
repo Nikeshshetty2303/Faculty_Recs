@@ -1,33 +1,44 @@
 class RefereeMailer < ApplicationMailer
-    def referee
-        @user = User.find(params[:user_id])
-        @can_name = Answer.find(params[:can_name_id])
-        @name = Answer.find(params[:ref_name_id])
-        @email = Answer.find(params[:ref_email_id])
-        @ph_no = Answer.find(params[:ref_ph_no_id])
-        @aff = Answer.find(params[:ref_aff_id])
-        formatted_email = format_email(@email.content)
-        mail(
-          from: "facrecruit@nitk.edu.in",
-          to: formatted_email, # Assuming the email is stored in the 'content' attribute of the Answer
-          subject: "Letter of Reference"
-        )
-    end
+  def referee
+    @user = User.find(params[:user_id])
+    @can_name = Answer.find(params[:can_name_id])
+    @name = Answer.find(params[:ref_name_id])
+    @email = Answer.find(params[:ref_email_id])
+    @ph_no = Answer.find(params[:ref_ph_no_id])
+    @aff = Answer.find(params[:ref_aff_id])
+    formatted_email = format_email(@email.content)
+    mail(
+      from: "facrecruit@nitk.edu.in",
+      to: formatted_email,
+      subject: "Letter of Reference"
+    )
+  end
 
-    def format_email(email)
+  def format_email(email)
+    # Split the email string by comma to handle multiple email addresses
+    email_addresses = email.split(',')
+
+    # Process each email address
+    formatted_emails = email_addresses.map do |single_email|
       # Remove leading/trailing whitespace
-      email = email.strip
+      cleaned_email = single_email.strip
 
       # Remove any extra spaces within the email
-      email = email.gsub(/\s+/, '')
+      cleaned_email = cleaned_email.gsub(/\s+/, '')
 
       # Ensure there's only one @ symbol
-      email = email.gsub(/@+/, '@')
+      cleaned_email = cleaned_email.gsub(/@+/, '@')
 
       # Remove any characters that aren't typically allowed in email addresses
-      email = email.gsub(/[^a-zA-Z0-9.@_+-]/, '')
+      cleaned_email = cleaned_email.gsub(/[^a-zA-Z0-9.@_+-]/, '')
 
-      email
+      cleaned_email
     end
 
+    # Filter out any empty strings and select the first valid email address
+    first_valid_email = formatted_emails.reject(&:empty?).first
+
+    # Return the first valid email address or an empty string if none are valid
+    first_valid_email || ''
+  end
 end
