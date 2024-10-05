@@ -90,8 +90,8 @@
               <td class="application-id"><%= response.app_no %></td>
               <td class="email"><%= response.user.email %></td>
               <td class="referee-status"><%= response.referee_mail_status %></td>
-              <td class="referee-1"><%= ref1_email = profile_response.answers.joins(:question).find_by(questions: { id: 536 })%></td>
-              <td class="referee-2"><%= ref2_email = profile_response.answers.joins(:question).find_by(questions: { id: 541 }) %></td>
+              <td class="referee-1"><%=  profile_response.answers.joins(:question).find_by(questions: { id: 536 }).content%></td>
+              <td class="referee-2"><%= profile_response.answers.joins(:question).find_by(questions: { id: 541 }).content %></td>
             </tr>
         <% end %>
       </tbody>
