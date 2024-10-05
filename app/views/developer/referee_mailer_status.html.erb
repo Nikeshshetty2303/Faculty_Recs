@@ -85,6 +85,7 @@
               else
                 ''
               end
+              <%profile_response = response.user.responses.find_by(profile_response: true)%>
             %>" data-status="<%= response.referee_mail_status %>">
               <td class="application-id"><%= response.app_no %></td>
               <td class="email"><%= response.user.email %></td>
