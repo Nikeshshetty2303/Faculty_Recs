@@ -225,8 +225,8 @@ class DeveloperController < ApplicationController
           ref_ph_no_id: ref_ph_no_id,
           ref_aff_id: ref_aff_id,
           corrected_email: corrected_email
-          flash[:warning] = "Has Come"
         ).referee.deliver_now
+        flash[:warning] = "Has Come"
       else
         RefereeMailer.with(
           user_id: user_id,
