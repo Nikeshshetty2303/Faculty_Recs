@@ -88,9 +88,64 @@ class DeveloperController < ApplicationController
     end
 
     def application_referee_mailer
-      if params[:email].present?
-        @user = User.find_by(email: params[:email])
-        RefereeMailer.with(user_id: @user.id, form_id: 1, dept_id: 2).applicant.deliver_now
+      if params[:email].present? && params[:app_nos].present?
+        @email = params[:email]
+        app_nos = params[:app_nos].split(',').map(&:strip)
+        successful_apps = []
+        failed_apps = []
+
+        app_nos.each do |app_no|
+          response = Response.find_by(app_no: app_no)
+          if response
+            begin
+              profile_response = response.user.responses.find_by(profile_response: true)
+              raise StandardError, "Profile response not found" unless profile_response
+
+              name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" })
+
+              # Referee 1 details
+              ref1_name = profile_response.answers.joins(:question).find_by(questions: { id: 535 })
+              ref1_email = profile_response.answers.joins(:question).find_by(questions: { id: 536 })
+              ref1_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 537 })
+              ref1_aff = profile_response.answers.joins(:question).find_by(questions: { id: 538 })
+              correct_email = @email
+
+              # Referee 2 details
+              ref1_status = send_referee_email(response.user.id, name_answer.id, ref1_name.id, ref1_email.id, ref1_ph_no.id, ref1_aff.id, corrected_email, 1)
+
+              if ref1_status
+                response.update(referee_mail_status: "Sent")
+                flash[:success] = "Emails sent successfully to referee for application #{app_no}."
+                successful_apps << app_no
+              else
+                response.update(referee_mail_status: "Failed")
+                flash[:error] = "Failed to send emails to referee for application #{app_no}."
+                failed_apps << app_no
+              end
+
+            rescue StandardError => e
+              Rails.logger.error("Error processing application #{app_no}: #{e.message}")
+              flash[:error] = "Error processing application #{app_no}: #{e.message}"
+              response.update(referee_mail_status: "error")
+              failed_apps << app_no
+            end
+          else
+            flash[:error] = "Application not found: #{app_no}"
+            failed_apps << app_no
+          end
+        end
+
+        if failed_apps.empty?
+          flash[:success] = "Emails sent successfully to all referees."
+        elsif successful_apps.empty?
+          flash[:error] = "Failed to send emails to all referees. Failed for: #{failed_apps.join(', ')}"
+        else
+          flash[:warning] = "Emails sent successfully to some referees. Failed for: #{failed_apps.join(', ')}"
+        end
+      else
+        flash[:error] = "No application numbers provided."
+      end
+      redirect_to developer_mailer_portal_path
       elsif params[:app_nos].present?
         app_nos = params[:app_nos].split(',').map(&:strip)
         successful_apps = []
@@ -163,8 +218,19 @@ class DeveloperController < ApplicationController
       redirect_to developer_mailer_portal_path
     end
 
-    def send_referee_email(user_id, can_name_id, ref_name_id, ref_email_id, ref_ph_no_id, ref_aff_id, referee_number)
+    def send_referee_email(user_id, can_name_id, ref_name_id, ref_email_id, ref_ph_no_id, ref_aff_id, corrected_email, referee_number)
       begin
+        if(corrected_email.present?)
+        RefereeMailer.with(
+          user_id: user_id,
+          can_name_id: can_name_id,
+          ref_name_id: ref_name_id,
+          ref_email_id: ref_email_id,
+          ref_ph_no_id: ref_ph_no_id,
+          ref_aff_id: ref_aff_id,
+          corrected_email: corrected_email
+        ).referee.deliver_now
+      else
         RefereeMailer.with(
           user_id: user_id,
           can_name_id: can_name_id,
@@ -173,6 +239,7 @@ class DeveloperController < ApplicationController
           ref_ph_no_id: ref_ph_no_id,
           ref_aff_id: ref_aff_id
         ).referee.deliver_now
+      end
         true
       rescue StandardError => e
         Rails.logger.error("Error sending email to Referee #{referee_number}: #{e.message}")

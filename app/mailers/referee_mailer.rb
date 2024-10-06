@@ -6,7 +6,11 @@ class RefereeMailer < ApplicationMailer
     @email = Answer.find(params[:ref_email_id])
     @ph_no = Answer.find(params[:ref_ph_no_id])
     @aff = Answer.find(params[:ref_aff_id])
-    formatted_email = format_email(@email.content)
+    if(params[:corrected_email].present?)
+      formatted_email = format_email(params[:corrected_email])
+    else
+      formatted_email = format_email(@email.content)
+    end
     mail(
       from: "facrecruit@nitk.edu.in",
       to: formatted_email,
@@ -36,7 +40,7 @@ class RefereeMailer < ApplicationMailer
     end
 
     # Filter out any empty strings and select the first valid email address
-    first_valid_email = formatted_emails.reject(&:empty?).first
+    first_valid_email = formatted_emails.reject(&:empty?).second
 
     # Return the first valid email address or an empty string if none are valid
     first_valid_email || ''
