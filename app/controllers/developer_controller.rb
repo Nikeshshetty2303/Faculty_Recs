@@ -239,6 +239,7 @@ class DeveloperController < ApplicationController
         true
       rescue StandardError => e
         Rails.logger.error("Error sending email to Referee #{referee_number}: #{e.message}")
+        flash[:warning] = "Error sending email to Referee #{referee_number}: #{e.message}"
         false
       end
     end
