@@ -88,7 +88,7 @@ class DeveloperController < ApplicationController
     end
 
     def application_referee_mailer
-      if params[:email].present?z
+      if params[:email].present?
         @user = User.find_by(email: params[:email])
         RefereeMailer.with(user_id: @user.id, form_id: 1, dept_id: 2).applicant.deliver_now
       elsif params[:app_nos].present?
