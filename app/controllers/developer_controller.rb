@@ -110,7 +110,6 @@ class DeveloperController < ApplicationController
               ref1_aff = profile_response.answers.joins(:question).find_by(questions: { id: 538 })
               correct_email = @email
 
-              # Referee 2 details
               ref1_status = send_referee_email(response.user.id, name_answer.id, ref1_name.id, ref1_email.id, ref1_ph_no.id, ref1_aff.id, corrected_email, 1)
 
               if ref1_status
@@ -142,10 +141,7 @@ class DeveloperController < ApplicationController
         else
           flash[:warning] = "Emails sent successfully to some referees. Failed for: #{failed_apps.join(', ')}"
         end
-      else
-        flash[:error] = "No application numbers provided."
-      end
-      redirect_to developer_mailer_portal_path
+        
       elsif params[:app_nos].present?
         app_nos = params[:app_nos].split(',').map(&:strip)
         successful_apps = []
