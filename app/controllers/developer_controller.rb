@@ -108,17 +108,15 @@ class DeveloperController < ApplicationController
               ref1_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 537 })
               ref1_aff = profile_response.answers.joins(:question).find_by(questions: { id: 538 })
 
-              correct_email = params[:email] ||
+              correct_email = params[:email]
 
               ref1_status = send_referee_email(response.user.id, name_answer.id, ref1_name.id, ref1_email.id, ref1_ph_no.id, ref1_aff.id, correct_email, 1)
 
               if ref1_status
                 response.update(referee_mail_status: "both_sent")
-                flash[:success] = "Emails sent successfully to referee for application #{app_no} and email #{}."
                 successful_apps << app_no
               else
                 response.update(referee_mail_status: "both_failed")
-                flash[:error] = "Failed to send emails to referee for application #{app_no} and email #{}."
                 failed_apps << app_no
               end
 
