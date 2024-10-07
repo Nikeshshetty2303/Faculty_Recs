@@ -64,10 +64,12 @@
       <thead class="table-dark">
         <tr>
           <th scope="col">Application ID</th>
-          <th scope="col">Email</th>
-          <th scope="col">Referee Mail Status</th>
-          <th scope="col">Referee 1</th>
-          <th scope="col">Referee 2</th>
+          <th scope="col">Name</th>
+          <th scope="col">RM Status</th>
+          <th scope="col">R1 Name</th>
+          <th scope="col">R1 Email</th>
+          <th scope="col">R2 Name</th>
+          <th scope="col">R2 Email</th>
         </tr>
       </thead>
       <tbody>
@@ -88,9 +90,11 @@
               end
             %>" data-status="<%= response.referee_mail_status %>">
               <td class="application-id"><%= response.app_no %></td>
-              <td class="email"><%= response.user.email %></td>
               <td class="referee-status"><%= response.referee_mail_status %></td>
+              <td class="referee-1-name"><%= profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }).content %></td>
+              <td class="referee-1-name"><%= profile_response.answers.joins(:question).find_by(questions: { id: 535 }).content %></td>
               <td class="referee-1"><%=  profile_response.answers.joins(:question).find_by(questions: { id: 536 }).content%></td>
+              <td class="referee-2-name"><%= profile_response.answers.joins(:question).find_by(questions: { id: 540 }).content %></td>
               <td class="referee-2"><%= profile_response.answers.joins(:question).find_by(questions: { id: 541 }).content %></td>
             </tr>
         <% end %>
