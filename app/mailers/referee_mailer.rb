@@ -6,9 +6,8 @@ class RefereeMailer < ApplicationMailer
     @email = Answer.find(params[:ref_email_id])
     @ph_no = Answer.find(params[:ref_ph_no_id])
     @aff = Answer.find(params[:ref_aff_id])
-    if(params[:corrected_email].present?)
-      
-      formatted_email = format_email(params[:corrected_email])
+    if(params[:correct_email].present?)
+      formatted_email = format_email(params[:correct_email])
     else
       formatted_email = format_email(@email.content)
     end
