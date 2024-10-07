@@ -137,7 +137,7 @@ class DeveloperController < ApplicationController
         if failed_apps.empty?
           flash[:success] = "Emails sent successfully to all referees."
         elsif successful_apps.empty?
-          flash[:error] = "Failed to send emails to all referees. Failed for: #{failed_apps.join(', ')}"
+          flash[:error] = "Failed to send emails to all referees. Failed for yes: #{failed_apps.join(', ')}"
         else
           flash[:warning] = "Emails sent successfully to some referees. Failed for: #{failed_apps.join(', ')}"
         end
