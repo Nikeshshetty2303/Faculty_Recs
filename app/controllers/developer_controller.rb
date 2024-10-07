@@ -101,12 +101,12 @@ class DeveloperController < ApplicationController
               name_answer = profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" })
 
               # Referee 1 details
-              ref1_name = profile_response.answers.joins(:question).find_by(questions: { id: 535 })
-              ref1_email = profile_response.answers.joins(:question).find_by(questions: { id: 536 })
-              ref1_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 537 })
-              ref1_aff = profile_response.answers.joins(:question).find_by(questions: { id: 538 })
+              ref2_name = profile_response.answers.joins(:question).find_by(questions: { id: 540 })
+              ref2_email = profile_response.answers.joins(:question).find_by(questions: { id: 541 })
+              ref2_ph_no = profile_response.answers.joins(:question).find_by(questions: { id: 542 })
+              ref2_aff = profile_response.answers.joins(:question).find_by(questions: { id: 543 })
 
-              ref1_status = send_referee_email(response.user.id, name_answer.id, ref1_name.id, ref1_email.id, ref1_ph_no.id, ref1_aff.id, params[:email], 1)
+              ref2_status = send_referee_email(response.user.id, name_answer.id, ref2_name.id, ref2_email.id, ref2_ph_no.id, ref2_aff.id,params[:email], 2)
 
               if ref1_status
                 response.update(referee_mail_status: "both_sent")
@@ -130,7 +130,7 @@ class DeveloperController < ApplicationController
         if failed_apps.empty?
           flash[:success] = "Emails sent successfully to all referees."
         elsif successful_apps.empty?
-          
+
         else
           flash[:warning] = "Emails sent successfully to some referees. Failed for: #{failed_apps.join(', ')}"
         end
