@@ -8,7 +8,7 @@ class RefereeMailer < ApplicationMailer
     @aff = Answer.find(params[:ref_aff_id])
     if params[:correct_email].present?
       flash[:notice] = "AM HEREE"
-      formatted_email = format_email(params[:correct_email])
+      formatted_email = format_email(correct_email)
     else
       formatted_email = format_email(@email.content)
     end
