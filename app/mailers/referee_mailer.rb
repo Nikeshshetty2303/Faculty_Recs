@@ -40,7 +40,7 @@ class RefereeMailer < ApplicationMailer
     end
 
     # Filter out any empty strings and select the first valid email address
-    first_valid_email = formatted_emails.reject(&:empty?).second
+    first_valid_email = formatted_emails.reject(&:empty?).first
 
     # Return the first valid email address or an empty string if none are valid
     first_valid_email || ''
