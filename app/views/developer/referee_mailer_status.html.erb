@@ -119,79 +119,82 @@
   .table-danger { background-color: #f8d7da !important; }
   .table-secondary { background-color: #e2e3e5 !important; }
 </style>
-
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    let departmentFilter = document.getElementById('departmentFilter');
-    let statusFilter = document.getElementById('statusFilter');
-    let searchBar = document.getElementById('searchBar');
-    let rowCountSpan = document.getElementById('rowCount');
-    let downloadCsvButton = document.getElementById('downloadCsv');
+document.addEventListener('DOMContentLoaded', function () {
+  let departmentFilter = document.getElementById('departmentFilter');
+  let statusFilter = document.getElementById('statusFilter');
+  let searchBar = document.getElementById('searchBar');
+  let rowCountSpan = document.getElementById('rowCount');
+  let downloadCsvButton = document.getElementById('downloadCsv');
 
-    function updateRowVisibility() {
-      let selectedDepartment = departmentFilter.value.toLowerCase();
-      let selectedStatus = statusFilter.value;
-      let searchTerm = searchBar.value.toLowerCase();
-      let rows = document.querySelectorAll('.response-row');
-      let count = 0;
+  function updateRowVisibility() {
+    let selectedDepartment = departmentFilter.value.toLowerCase();
+    let selectedStatus = statusFilter.value;
+    let searchTerm = searchBar.value.toLowerCase();
+    let rows = document.querySelectorAll('.response-row');
+    let count = 0;
 
-      rows.forEach(function (row) {
-        let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
-        let status = row.dataset.status;
-        let rowContent = row.textContent.toLowerCase();
+    rows.forEach(function (row) {
+      let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
+      let status = row.dataset.status;
+      let rowContent = row.textContent.toLowerCase();
 
-        let departmentMatch = selectedDepartment === '' || applicationId.includes(selectedDepartment);
-        let statusMatch = selectedStatus === '' || status === selectedStatus;
-        let searchMatch = searchTerm === '' || rowContent.includes(searchTerm);
+      let departmentMatch = selectedDepartment === '' || applicationId.includes(selectedDepartment);
+      let statusMatch = selectedStatus === '' || status === selectedStatus;
+      let searchMatch = searchTerm === '' || rowContent.includes(searchTerm);
 
-        if (departmentMatch && statusMatch && searchMatch) {
-          row.style.display = '';
-          count++;
-        } else {
-          row.style.display = 'none';
-        }
-      });
-
-      rowCountSpan.textContent = count;
-    }
-
-    function downloadCsv() {
-      let rows = Array.from(document.querySelectorAll('.response-row')).filter(row => row.style.display !== 'none');
-
-      // Sort rows by application number
-      rows.sort((a, b) => {
-        let aAppNo = a.querySelector('.application-id').textContent.trim();
-        let bAppNo = b.querySelector('.application-id').textContent.trim();
-        return aAppNo.localeCompare(bAppNo, undefined, { numeric: true, sensitivity: 'base' });
-      });
-
-      let csvContent = "Application ID,Name,R1 Name,R1 Email,R1 Ph Number,R1 Affiliation,R2 Name,R2 Email,R2 Ph Number,R2 Affiliation\n";
-
-      rows.forEach(function(row) {
-        let columns = row.querySelectorAll('td');
-        let rowData = Array.from(columns).map(column => '"' + column.textContent.replace(/"/g, '""') + '"');
-        csvContent += rowData.join(',') + "\n";
-      });
-
-      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      let link = document.createElement("a");
-      if (link.download !== undefined) {
-        let url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", "referee_mailer_status.csv");
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+      if (departmentMatch && statusMatch && searchMatch) {
+        row.style.display = '';
+        count++;
+      } else {
+        row.style.display = 'none';
       }
+    });
+
+    rowCountSpan.textContent = count;
+  }
+
+  function downloadCsv() {
+    let rows = Array.from(document.querySelectorAll('.response-row')).filter(row => row.style.display !== 'none');
+
+    // Sort rows by application number
+    rows.sort((a, b) => {
+      let aAppNo = a.querySelector('.application-id').textContent.trim();
+      let bAppNo = b.querySelector('.application-id').textContent.trim();
+      return aAppNo.localeCompare(bAppNo, undefined, { numeric: true, sensitivity: 'base' });
+    });
+
+    let csvContent = "Application ID,Name,R1 Name,R1 Email,R1 Ph Number,R1 Affiliation,R2 Name,R2 Email,R2 Ph Number,R2 Affiliation\n";
+
+    rows.forEach(function(row) {
+      let columns = row.querySelectorAll('td');
+      let rowData = Array.from(columns).map(column => {
+        // Ensure all fields are treated as text by wrapping in quotes and escaping existing quotes
+        let cellContent = column.textContent.trim().replace(/"/g, '""');
+        return `"${cellContent}"`;
+      });
+      csvContent += rowData.join(',') + "\n";
+    });
+
+    let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    let link = document.createElement("a");
+    if (link.download !== undefined) {
+      let url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "referee_mailer_status.csv");
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
+  }
 
-    departmentFilter.addEventListener('change', updateRowVisibility);
-    statusFilter.addEventListener('change', updateRowVisibility);
-    searchBar.addEventListener('input', updateRowVisibility);
-    downloadCsvButton.addEventListener('click', downloadCsv);
+  departmentFilter.addEventListener('change', updateRowVisibility);
+  statusFilter.addEventListener('change', updateRowVisibility);
+  searchBar.addEventListener('input', updateRowVisibility);
+  downloadCsvButton.addEventListener('click', downloadCsv);
 
-    // Initial update on page load
-    updateRowVisibility();
-  });
+  // Initial update on page load
+  updateRowVisibility();
+});
 </script>
