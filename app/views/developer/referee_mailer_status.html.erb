@@ -65,11 +65,14 @@
         <tr>
           <th scope="col">Application ID</th>
           <th scope="col">Name</th>
-          <th scope="col">RM Status</th>
           <th scope="col">R1 Name</th>
           <th scope="col">R1 Email</th>
+          <th scope="col">R1 Ph Number</th>
+          <th scope="col">R1 Affiliation</th>
           <th scope="col">R2 Name</th>
           <th scope="col">R2 Email</th>
+          <th scope="col">R2 Ph Number</th>
+          <th scope="col">R2 Affiliation</th>
         </tr>
       </thead>
       <tbody>
@@ -90,17 +93,25 @@
               end
             %>" data-status="<%= response.referee_mail_status %>">
               <td class="application-id"><%= response.app_no %></td>
-              <td class="referee-status"><%= response.referee_mail_status %></td>
-              <td class="referee-1-name"><%= profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }).content %></td>
+              <td class="cand-name"><%= profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }).content %></td>
               <td class="referee-1-name"><%= profile_response.answers.joins(:question).find_by(questions: { id: 535 }).content %></td>
-              <td class="referee-1"><%=  profile_response.answers.joins(:question).find_by(questions: { id: 536 }).content%></td>
+              <td class="referee-1-email"><%=  profile_response.answers.joins(:question).find_by(questions: { id: 536 }).content%></td>
+              <td class="referee-1-ph-no"><%=  profile_response.answers.joins(:question).find_by(questions: { id: 537 }).content%></td>
+              <td class="referee-1-aff"><%=  profile_response.answers.joins(:question).find_by(questions: { id: 538 }).content%></td>
               <td class="referee-2-name"><%= profile_response.answers.joins(:question).find_by(questions: { id: 540 }).content %></td>
-              <td class="referee-2"><%= profile_response.answers.joins(:question).find_by(questions: { id: 541 }).content %></td>
+              <td class="referee-2-email"><%=  profile_response.answers.joins(:question).find_by(questions: { id: 541 }).content%></td>
+              <td class="referee-2-ph-no"><%=  profile_response.answers.joins(:question).find_by(questions: { id: 542 }).content%></td>
+              <td class="referee-2-aff"><%=  profile_response.answers.joins(:question).find_by(questions: { id: 543 }).content%></td>
             </tr>
         <% end %>
       </tbody>
     </table>
   </div>
+
+   <div class="mt-3">
+    <button id="downloadCsv" class="btn btn-primary">Download CSV</button>
+  </div>
+
 </div>
 
 <style>
@@ -150,5 +161,55 @@
 
     // Initial update on page load
     updateRowVisibility();
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let departmentFilter = document.getElementById('departmentFilter');
+    let statusFilter = document.getElementById('statusFilter');
+    let searchBar = document.getElementById('searchBar');
+    let rowCountSpan = document.getElementById('rowCount');
+    let downloadCsvButton = document.getElementById('downloadCsv');
+
+    function updateRowVisibility() {
+      // ... (previous updateRowVisibility function remains unchanged) ...
+    }
+
+    departmentFilter.addEventListener('change', updateRowVisibility);
+    statusFilter.addEventListener('change', updateRowVisibility);
+    searchBar.addEventListener('input', updateRowVisibility);
+
+    // Initial update on page load
+    updateRowVisibility();
+
+    // CSV download functionality
+    downloadCsvButton.addEventListener('click', function() {
+      let visibleRows = Array.from(document.querySelectorAll('.response-row')).filter(row => row.style.display !== 'none');
+      let csvContent = "data:text/csv;charset=utf-8,";
+
+      // Add header row
+      let headers = Array.from(document.querySelectorAll('thead th')).map(th => th.textContent);
+      csvContent += headers.join(",") + "\n";
+
+      // Add visible row data
+      visibleRows.forEach(function(row) {
+        let rowData = Array.from(row.querySelectorAll('td')).map(td => {
+          // Escape commas and double quotes in the content
+          let content = td.textContent.replace(/"/g, '""');
+          return `"${content}"`;
+        });
+        csvContent += rowData.join(",") + "\n";
+      });
+
+      // Create download link and trigger download
+      let encodedUri = encodeURI(csvContent);
+      let link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "referee_mailer_status.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
   });
 </script>
