@@ -60,57 +60,46 @@
   </div>
 
   <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="table-dark">
-        <tr>
-          <th scope="col">Application ID</th>
-          <th scope="col">Name</th>
-          <th scope="col">R1 Name</th>
-          <th scope="col">R1 Email</th>
-          <th scope="col">R1 Ph Number</th>
-          <th scope="col">R1 Affiliation</th>
-          <th scope="col">R2 Name</th>
-          <th scope="col">R2 Email</th>
-          <th scope="col">R2 Ph Number</th>
-          <th scope="col">R2 Affiliation</th>
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">Application ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">R1 Name</th>
+        <th scope="col">R1 Email</th>
+        <th scope="col">R1 Ph Number</th>
+        <th scope="col">R1 Affiliation</th>
+        <th scope="col">R2 Name</th>
+        <th scope="col">R2 Email</th>
+        <th scope="col">R2 Ph Number</th>
+        <th scope="col">R2 Affiliation</th>
+        <th scope="col">Referee Mail Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% Response.where.not(referee_mail_status: nil).each do |response| %>
+        <% profile_response = response.user.responses.find_by(profile_response: true) %>
+        <tr class="response-row <%= status_class(response.referee_mail_status) %>" data-status="<%= response.referee_mail_status %>">
+          <td class="application-id"><%= response.app_no %></td>
+          <td class="cand-name"><%= profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }).content %></td>
+          <td class="referee-1-name"><%= profile_response.answers.joins(:question).find_by(questions: { id: 535 }).content %></td>
+          <td class="referee-1-email"><%= profile_response.answers.joins(:question).find_by(questions: { id: 536 }).content %></td>
+          <td class="referee-1-ph-no"><%= profile_response.answers.joins(:question).find_by(questions: { id: 537 }).content %></td>
+          <td class="referee-1-aff"><%= profile_response.answers.joins(:question).find_by(questions: { id: 538 }).content %></td>
+          <td class="referee-2-name"><%= profile_response.answers.joins(:question).find_by(questions: { id: 540 }).content %></td>
+          <td class="referee-2-email"><%= profile_response.answers.joins(:question).find_by(questions: { id: 541 }).content %></td>
+          <td class="referee-2-ph-no"><%= profile_response.answers.joins(:question).find_by(questions: { id: 542 }).content %></td>
+          <td class="referee-2-aff"><%= profile_response.answers.joins(:question).find_by(questions: { id: 543 }).content %></td>
+          <td class="referee-mail-status"><%= response.referee_mail_status %></td>
         </tr>
-      </thead>
-      <tbody>
-        <% Response.where.not(referee_mail_status: nil).each do |response| %>
-          <% profile_response = response.user.responses.find_by(profile_response: true) %>
-          <tr class="response-row <%=
-            case response.referee_mail_status
-            when 'both_sent'
-              'table-success'
-            when 'ref1_sent', 'ref2_sent'
-              'table-warning'
-            when 'both_failed'
-              'table-danger'
-            when 'error'
-              'table-secondary'
-            else
-              ''
-            end
-          %>" data-status="<%= response.referee_mail_status %>">
-            <td class="application-id"><%= response.app_no %></td>
-            <td class="cand-name"><%= profile_response.answers.joins(:question).find_by(questions: { title: "Name in Full" }).content %></td>
-            <td class="referee-1-name"><%= profile_response.answers.joins(:question).find_by(questions: { id: 535 }).content %></td>
-            <td class="referee-1-email"><%= profile_response.answers.joins(:question).find_by(questions: { id: 536 }).content %></td>
-            <td class="referee-1-ph-no"><%= profile_response.answers.joins(:question).find_by(questions: { id: 537 }).content %></td>
-            <td class="referee-1-aff"><%= profile_response.answers.joins(:question).find_by(questions: { id: 538 }).content %></td>
-            <td class="referee-2-name"><%= profile_response.answers.joins(:question).find_by(questions: { id: 540 }).content %></td>
-            <td class="referee-2-email"><%= profile_response.answers.joins(:question).find_by(questions: { id: 541 }).content %></td>
-            <td class="referee-2-ph-no"><%= profile_response.answers.joins(:question).find_by(questions: { id: 542 }).content %></td>
-            <td class="referee-2-aff"><%= profile_response.answers.joins(:question).find_by(questions: { id: 543 }).content %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-  <div class="mt-3">
-    <button id="downloadCsv" class="btn btn-primary">Download Full CSV</button>
-  </div>
+<div class="mt-3">
+  <button id="downloadCsv" class="btn btn-primary">Download Full CSV</button>
+</div>
 </div>
 
 <style>
@@ -121,74 +110,113 @@
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    let departmentFilter = document.getElementById('departmentFilter');
-    let statusFilter = document.getElementById('statusFilter');
-    let searchBar = document.getElementById('searchBar');
-    let rowCountSpan = document.getElementById('rowCount');
-    let downloadCsvButton = document.getElementById('downloadCsv');
+document.addEventListener('DOMContentLoaded', function () {
+  let departmentFilter = document.getElementById('departmentFilter');
+  let statusFilter = document.getElementById('statusFilter');
+  let searchBar = document.getElementById('searchBar');
+  let rowCountSpan = document.getElementById('rowCount');
+  let downloadCsvButton = document.getElementById('downloadCsv');
 
-    function updateRowVisibility() {
-      let selectedDepartment = departmentFilter.value.toLowerCase();
-      let selectedStatus = statusFilter.value;
-      let searchTerm = searchBar.value.toLowerCase();
-      let rows = document.querySelectorAll('.response-row');
-      let count = 0;
+  function updateRowVisibility() {
+    let selectedDepartment = departmentFilter.value.toLowerCase();
+    let selectedStatus = statusFilter.value;
+    let searchTerm = searchBar.value.toLowerCase();
+    let rows = document.querySelectorAll('.response-row');
+    let count = 0;
 
-      rows.forEach(function (row) {
-        let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
-        let status = row.dataset.status;
-        let rowContent = row.textContent.toLowerCase();
+    rows.forEach(function (row) {
+      let applicationId = row.querySelector('.application-id').textContent.toLowerCase();
+      let status = row.dataset.status;
+      let rowContent = row.textContent.toLowerCase();
 
-        let departmentMatch = selectedDepartment === '' || applicationId.includes(selectedDepartment);
-        let statusMatch = selectedStatus === '' || status === selectedStatus;
-        let searchMatch = searchTerm === '' || rowContent.includes(searchTerm);
+      let departmentMatch = selectedDepartment === '' || applicationId.includes(selectedDepartment);
+      let statusMatch = selectedStatus === '' || status === selectedStatus;
+      let searchMatch = searchTerm === '' || rowContent.includes(searchTerm);
 
-        if (departmentMatch && statusMatch && searchMatch) {
-          row.style.display = '';
-          count++;
-        } else {
-          row.style.display = 'none';
-        }
+      if (departmentMatch && statusMatch && searchMatch) {
+        row.style.display = '';
+        count++;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
+    rowCountSpan.textContent = count;
+  }
+
+  departmentFilter.addEventListener('change', updateRowVisibility);
+  statusFilter.addEventListener('change', updateRowVisibility);
+  searchBar.addEventListener('input', updateRowVisibility);
+
+  // Initial update on page load
+  updateRowVisibility();
+
+  // CSV download functionality
+  downloadCsvButton.addEventListener('click', function() {
+    let allRows = Array.from(document.querySelectorAll('.response-row'));
+    let csvContent = "data:text/csv;charset=utf-8,";
+
+    // Add header row
+    let headers = Array.from(document.querySelectorAll('thead th')).map(th => th.textContent);
+    csvContent += headers.join(",") + "\n";
+
+    // Add all row data, regardless of visibility
+    allRows.forEach(function(row) {
+      let rowData = Array.from(row.querySelectorAll('td')).map(td => {
+        // Escape commas and double quotes in the content
+        let content = td.textContent.replace(/"/g, '""');
+        return `"${content}"`;
       });
+      csvContent += rowData.join(",") + "\n";
+    });
 
-      rowCountSpan.textContent = count;
-    }
+    // Create download link and trigger download
+    let encodedUri = encodeURI(csvContent);
+    let link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "referee_mailer_status_full.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
 
-    departmentFilter.addEventListener('change', updateRowVisibility);
-    statusFilter.addEventListener('change', updateRowVisibility);
-    searchBar.addEventListener('input', updateRowVisibility);
+  // Optional: Add sorting functionality
+  document.querySelectorAll('th').forEach(headerCell => {
+    headerCell.addEventListener('click', () => {
+      const tableElement = headerCell.closest('table');
+      const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+      const currentIsAscending = headerCell.classList.contains('th-sort-asc');
 
-    // Initial update on page load
-    updateRowVisibility();
-
-    // CSV download functionality
-    downloadCsvButton.addEventListener('click', function() {
-      let allRows = Array.from(document.querySelectorAll('.response-row'));
-      let csvContent = "data:text/csv;charset=utf-8,";
-
-      // Add header row
-      let headers = Array.from(document.querySelectorAll('thead th')).map(th => th.textContent);
-      csvContent += headers.join(",") + "\n";
-
-      // Add all row data, regardless of visibility
-      allRows.forEach(function(row) {
-        let rowData = Array.from(row.querySelectorAll('td')).map(td => {
-          // Escape commas and double quotes in the content
-          let content = td.textContent.replace(/"/g, '""');
-          return `"${content}"`;
-        });
-        csvContent += rowData.join(",") + "\n";
-      });
-
-      // Create download link and trigger download
-      let encodedUri = encodeURI(csvContent);
-      let link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", "referee_mailer_status_full.csv");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
     });
   });
+
+  // Function to sort the table
+  function sortTableByColumn(table, column, asc = true) {
+    const dirModifier = asc ? 1 : -1;
+    const tBody = table.tBodies[0];
+    const rows = Array.from(tBody.querySelectorAll('tr'));
+
+    // Sort each row
+    const sortedRows = rows.sort((a, b) => {
+      const aColText = a.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
+      const bColText = b.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
+
+      return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
+    });
+
+    // Remove all existing TRs from the table
+    while (tBody.firstChild) {
+      tBody.removeChild(tBody.firstChild);
+    }
+
+    // Re-add the newly sorted rows
+    tBody.append(...sortedRows);
+
+    // Remember how the column is currently sorted
+    table.querySelectorAll('th').forEach(th => th.classList.remove('th-sort-asc', 'th-sort-desc'));
+    table.querySelector(`th:nth-child(${column + 1})`).classList.toggle('th-sort-asc', asc);
+    table.querySelector(`th:nth-child(${column + 1})`).classList.toggle('th-sort-desc', !asc);
+  }
+});
 </script>
